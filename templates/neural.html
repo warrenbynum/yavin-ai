@@ -305,6 +305,109 @@ Final output: ŷ = a[L]
                 <p class="key-insight">Training neural networks remains part science, part art. Understanding these dynamics helps diagnose issues and guide hyperparameter choices toward successful learning.</p>
             </div>
 
+            <!-- Interactive Neural Network Builder -->
+            <div class="content-block">
+                <h3>Part VII: Interactive Neural Network Builder</h3>
+                <p class="key-insight">Now it's time to build your own neural network! This interactive simulator lets you construct networks, train them on real datasets, and visualize how backpropagation updates weights in real-time.</p>
+                
+                <div class="nn-builder-container">
+                    <div class="nn-builder-controls">
+                        <h4>Build Your Network</h4>
+                        
+                        <div class="control-group">
+                            <label>Add Layer:</label>
+                            <div class="layer-buttons">
+                                <button class="add-layer-btn" data-layer-type="input" onclick="addLayer('input')">
+                                    Input Layer
+                                </button>
+                                <button class="add-layer-btn" data-layer-type="hidden" onclick="addLayer('hidden')">
+                                    Hidden Layer
+                                </button>
+                                <button class="add-layer-btn" data-layer-type="output" onclick="addLayer('output')">
+                                    Output Layer
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="activationFunction">Activation Function:</label>
+                            <select id="activationFunction" class="nn-select">
+                                <option value="relu">ReLU</option>
+                                <option value="sigmoid">Sigmoid</option>
+                                <option value="tanh">Tanh</option>
+                                <option value="linear">Linear</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="datasetSelect">Training Dataset:</label>
+                            <select id="datasetSelect" class="nn-select">
+                                <option value="xor">XOR Problem (2→2→1)</option>
+                                <option value="iris">Iris Classification (4→3→3)</option>
+                                <option value="spiral">Spiral Dataset (2→10→2)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="learningRate">Learning Rate: <span id="lrValue">0.01</span></label>
+                            <input type="range" id="learningRate" class="nn-slider" min="0.001" max="0.1" step="0.001" value="0.01">
+                        </div>
+
+                        <div class="control-group">
+                            <label for="epochs">Epochs: <span id="epochValue">100</span></label>
+                            <input type="range" id="epochs" class="nn-slider" min="10" max="500" step="10" value="100">
+                        </div>
+
+                        <div class="control-group training-buttons">
+                            <button class="train-btn" onclick="trainNetwork()" id="trainBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                Train Network
+                            </button>
+                            <button class="reset-btn" onclick="resetNetwork()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="1 4 1 10 7 10"/>
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                                </svg>
+                                Reset
+                            </button>
+                        </div>
+
+                        <div class="training-status" id="trainingStatus">
+                            <p>Build your network and click Train to begin!</p>
+                        </div>
+                    </div>
+
+                    <div class="nn-builder-canvas-wrapper">
+                        <h4>Network Architecture</h4>
+                        <canvas id="nnCanvas" class="nn-canvas" width="600" height="400"></canvas>
+                        <p class="canvas-hint">Drag layers to rearrange. Connections form automatically.</p>
+                    </div>
+
+                    <div class="nn-builder-visualization">
+                        <h4>Training Visualization</h4>
+                        <div class="viz-panels">
+                            <div class="viz-panel">
+                                <h5>Loss Over Time</h5>
+                                <canvas id="lossChart" class="chart-canvas" width="280" height="200"></canvas>
+                            </div>
+                            <div class="viz-panel">
+                                <h5>Backpropagation Flow</h5>
+                                <div id="backpropViz" class="backprop-viz">
+                                    <p>Start training to see gradients flow backward through the network!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accuracy-display" id="accuracyDisplay">
+                            <span class="metric">Epoch: <strong id="currentEpoch">0</strong></span>
+                            <span class="metric">Loss: <strong id="currentLoss">-</strong></span>
+                            <span class="metric">Accuracy: <strong id="currentAccuracy">-</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Page Navigation -->
             <div class="page-navigation">
                 <a href="/learning" class="nav-button nav-button-prev">

@@ -152,6 +152,87 @@ async fn submit_feedback(form: web::Json<HashMap<String, String>>) -> Result<Htt
     })))
 }
 
+// API endpoint for Gemini chat
+async fn chat_with_gemini(form: web::Json<HashMap<String, String>>) -> Result<HttpResponse> {
+    let message = form.get("message").map(|s| s.as_str()).unwrap_or("");
+    
+    if message.is_empty() {
+        return Ok(HttpResponse::BadRequest().json(serde_json::json!({
+            "error": "Message is required"
+        })));
+    }
+    
+    // Get API key from environment variable
+    let api_key = match std::env::var("GEMINI_API_KEY") {
+        Ok(key) => key,
+        Err(_) => {
+            log::warn!("GEMINI_API_KEY not set, returning demo response");
+            // Return a helpful demo response if API key not configured
+            return Ok(HttpResponse::Ok().json(serde_json::json!({
+                "response": "I'm the Yavin AI assistant! To enable me, please set your GEMINI_API_KEY environment variable in Render. For now, I can help you navigate this educational platform. What would you like to learn about AI?"
+            })));
+        }
+    };
+    
+    // Call Gemini API
+    let client = reqwest::Client::new();
+    let url = format!(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={}",
+        api_key
+    );
+    
+    let request_body = serde_json::json!({
+        "contents": [{
+            "parts": [{
+                "text": format!(
+                    "You are an AI education assistant on Yavin, a comprehensive AI learning platform. \
+                    The user is learning about AI fundamentals, machine learning, neural networks, deep learning, \
+                    modern AI systems, and ethics. Provide clear, educational, and encouraging responses. \
+                    Keep answers concise but informative. User question: {}",
+                    message
+                )
+            }]
+        }],
+        "generationConfig": {
+            "temperature": 0.7,
+            "maxOutputTokens": 500
+        }
+    });
+    
+    match client.post(&url)
+        .json(&request_body)
+        .send()
+        .await
+    {
+        Ok(response) => {
+            match response.json::<serde_json::Value>().await {
+                Ok(json) => {
+                    // Extract response text from Gemini API response
+                    let response_text = json["candidates"][0]["content"]["parts"][0]["text"]
+                        .as_str()
+                        .unwrap_or("I apologize, but I couldn't generate a response. Please try again.");
+                    
+                    Ok(HttpResponse::Ok().json(serde_json::json!({
+                        "response": response_text
+                    })))
+                }
+                Err(e) => {
+                    log::error!("Failed to parse Gemini response: {}", e);
+                    Ok(HttpResponse::InternalServerError().json(serde_json::json!({
+                        "error": "Failed to parse AI response"
+                    })))
+                }
+            }
+        }
+        Err(e) => {
+            log::error!("Failed to call Gemini API: {}", e);
+            Ok(HttpResponse::InternalServerError().json(serde_json::json!({
+                "error": "Failed to connect to AI service"
+            })))
+        }
+    }
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
@@ -202,6 +283,7 @@ async fn main() -> std::io::Result<()> {
             // API endpoints
             .route("/api/quiz", web::post().to(submit_quiz))
             .route("/api/feedback", web::post().to(submit_feedback))
+            .route("/api/chat", web::post().to(chat_with_gemini))
     })
     .bind(bind_address)?
     .run()

@@ -169,9 +169,18 @@ async fn main() -> std::io::Result<()> {
     
     let tera_data = web::Data::new(tera);
     
-    let bind_address = std::env::var("FLY_APP_NAME")
-        .map(|_| ("0.0.0.0", 8080))
-        .unwrap_or(("127.0.0.1", 8080));
+    // Bind to 0.0.0.0 in production (Render, Fly, etc), localhost for dev
+    let host = std::env::var("RENDER")
+        .or(std::env::var("FLY_APP_NAME"))
+        .map(|_| "0.0.0.0")
+        .unwrap_or("127.0.0.1");
+    
+    let port = std::env::var("PORT")
+        .ok()
+        .and_then(|p| p.parse().ok())
+        .unwrap_or(8080);
+    
+    let bind_address = (host, port);
     
     log::info!("Binding to {}:{}", bind_address.0, bind_address.1);
     

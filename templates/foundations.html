@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% block title %}Foundations – Yavin{% endblock %}
+{% block description %}Deep dive into the foundations of artificial intelligence, computation, algorithms, and the paradigm shift from traditional programming to AI.{% endblock %}
+
+{% block content %}
+    <!-- Foundations Section -->
+    <section id="foundations" class="section" aria-labelledby="foundations-title">
+        <div class="container">
+            <h2 id="foundations-title" class="section-title">Foundations of Artificial Intelligence</h2>
+            
+            <!-- Part 1: What is Computation? -->
+            <div class="content-block">
+                <h3>Part I: The Nature of Computation</h3>
+                
+                <h4>Understanding Computation at Its Core</h4>
+                <p>Before we can grasp artificial intelligence, we must first understand the fundamental substrate upon which it operates: <strong>computation</strong> itself. At its most elementary level, computation is the systematic transformation of information according to well-defined rules.</p>
+                
+                <p>Think of computation not as a modern invention, but as a formalization of processes that have existed for millennia. When an ancient merchant calculated the value of goods using an abacus, they were performing computation. When medieval monks copied manuscripts using strict procedures, they followed computational processes. What changed with modern computers wasn't the concept of computation—it was the speed, scale, and automation.</p>
+
+                <div class="insight-box">
+                    <h4>The Three Essential Components of Computation</h4>
+                    <ol>
+                        <li><strong>Input:</strong> Raw information entering the system (data, observations, measurements)</li>
+                        <li><strong>Process:</strong> A sequence of operations that transform the input according to specific rules</li>
+                        <li><strong>Output:</strong> The result of applying those transformations to the input</li>
+                    </ol>
+                    <p class="formula">Computation = f(Input) → Output</p>
+                    <p style="margin-top: 1rem;">Where <em>f</em> represents a deterministic function—given the same input, it always produces the same output.</p>
+                </div>
+
+                <h4>From Physical to Digital Computation</h4>
+                <p>Modern computers represent information using bits—binary digits that can be either 0 or 1. This might seem limiting, but it's profoundly powerful. Just as the 26 letters of the English alphabet can express infinite ideas, the combination of billions of bits can represent any conceivable piece of information: numbers, text, images, sound, video, and yes—even intelligence.</p>
+
+                <p>A computer performs computation by manipulating these bits through logic gates—physical circuits that implement simple operations like AND, OR, and NOT. When billions of these simple operations cascade through layers of circuits millions of times per second, complex behaviors emerge. This is <strong>emergent complexity</strong>: simple rules, when composed and iterated at scale, produce sophisticated outcomes.</p>
+            </div>
+
+            <!-- Part 2: Algorithms - The Language of Thought -->
+            <div class="content-block">
+                <h3>Part II: Algorithms – The Language of Thought</h3>
+                
+                <h4>What Makes an Algorithm?</h4>
+                <p>An <span class="tooltip-term" data-tooltip="A precise sequence of instructions or steps designed to solve a specific problem or perform a calculation."><strong>algorithm</strong></span> is more than just a recipe or a set of instructions. It's a precisely specified method for solving a class of problems. The key word here is "class"—a good algorithm doesn't just solve one specific problem, but works for all instances of a type of problem.</p>
+
+                <p>Consider the problem of finding the largest number in a list. You could memorize the answer for specific lists, but an algorithm gives you a procedure that works for any list, regardless of size or contents.</p>
+
+                <div class="insight-box">
+                    <h4>Anatomy of the "Find Maximum" Algorithm</h4>
+                    <pre class="code-block">
+Algorithm: FindMaximum(list)
+    Input: A list of comparable numbers
+    Output: The largest number in the list
+    
+    1. If the list is empty, return "no maximum exists"
+    2. Set max ← first element of list
+    3. For each remaining element in list:
+        a. If element > max:
+            i. Set max ← element
+    4. Return max
+                    </pre>
+                    <p style="margin-top: 1rem;"><strong>Why this works:</strong> We maintain an invariant—at any point, <em>max</em> holds the largest value we've seen so far. By examining every element exactly once, we guarantee finding the true maximum.</p>
+                </div>
+
+                <h4>The Art of Algorithmic Thinking</h4>
+                <p>Algorithms embody a particular way of thinking about problems:</p>
+                <ul>
+                    <li><strong>Decomposition:</strong> Breaking complex problems into simpler subproblems</li>
+                    <li><strong>Pattern Recognition:</strong> Identifying common structures across different problems</li>
+                    <li><strong>Abstraction:</strong> Focusing on essential features while ignoring irrelevant details</li>
+                    <li><strong>Iteration and Recursion:</strong> Solving problems through repetition or self-reference</li>
+                </ul>
+
+                <p>These cognitive strategies aren't unique to computer science—they're fundamental modes of human reasoning. What makes algorithms special is their <strong>formalization</strong>: the demand for absolute precision and completeness.</p>
+
+                <h4>Complexity: Why Efficiency Matters</h4>
+                <p>Not all algorithms are created equal. Two algorithms might solve the same problem but with drastically different performance characteristics. This leads us to <strong>computational complexity</strong>—the study of how the resources required (time, memory) scale with input size.</p>
+
+                <p>Consider sorting a list of numbers. A naive approach might repeatedly find the minimum and remove it: for a list of size <em>n</em>, this requires roughly <em>n²</em> operations. But clever algorithms like mergesort achieve the same result in <em>n log n</em> operations. For a list of 1 million items, that's the difference between 1 trillion operations versus 20 million—a 50,000x speedup!</p>
+
+                <p class="key-insight">The art of algorithm design is finding not just correct solutions, but efficient solutions that scale gracefully as problems grow larger.</p>
+            </div>
+
+            <!-- Part 3: Traditional Programming -->
+            <div class="content-block">
+                <h3>Part III: The Traditional Programming Paradigm</h3>
+                
+                <h4>Explicit Rules for Every Scenario</h4>
+                <p>Traditional programming operates on a fundamental premise: the programmer must anticipate and explicitly code for every possible situation. Let's explore this through a concrete example—spam email detection.</p>
+
+                <div class="card">
+                    <h4>Building a Rule-Based Spam Filter</h4>
+                    <p><strong>Scenario:</strong> You want to automatically identify spam emails before they reach users' inboxes.</p>
+                    
+                    <p><strong>Traditional Approach:</strong></p>
+                    <ul>
+                        <li>If subject contains "FREE MONEY" → mark as spam</li>
+                        <li>If sender domain ends in .xyz or .top → mark as spam</li>
+                        <li>If email has >5 exclamation marks → mark as spam</li>
+                        <li>If email contains >3 links → mark as spam</li>
+                        <li>If sender is unknown AND email requests personal info → mark as spam</li>
+                    </ul>
+                    
+                    <p><strong>This works initially, but problems emerge:</strong></p>
+                    <ol>
+                        <li><strong>Adversarial Adaptation:</strong> Spammers learn the rules and adapt (using "FR33 M0NEY" instead)</li>
+                        <li><strong>False Positives:</strong> Legitimate marketing emails get caught</li>
+                        <li><strong>Rule Explosion:</strong> You need endless rules to cover edge cases</li>
+                        <li><strong>Maintenance Nightmare:</strong> Rules contradict each other and become unmanageable</li>
+                        <li><strong>Context Blindness:</strong> Rules can't understand context or intent</li>
+                    </ol>
+                </div>
+
+                <h4>The Fundamental Limitation</h4>
+                <p>The core problem with traditional programming for complex tasks isn't technical—it's epistemological. For many problems, we cannot explicitly articulate the rules that solve them, even when we can solve them ourselves.</p>
+
+                <p>Consider face recognition. You can instantly recognize your friend's face, even with different lighting, angles, or expressions. But try to write down the exact rules you use: "If the distance between the eyes is X, and the nose curve matches pattern Y, and..." It's impossible. Your brain has learned incredibly complex patterns through experience, patterns too intricate to explicitly codify.</p>
+
+                <p class="key-insight">Traditional programming excels when we can precisely specify the rules. It fails when the rules are too complex, too numerous, or fundamentally unknowable to us.</p>
+            </div>
+
+            <!-- Part 4: The AI Paradigm Shift -->
+            <div class="content-block">
+                <h3>Part IV: The Artificial Intelligence Paradigm</h3>
+                
+                <h4>Learning Rules from Data</h4>
+                <p>Artificial Intelligence represents a fundamental inversion of the traditional programming model:</p>
+
+                <div class="comparison-box">
+                    <div class="comparison-column">
+                        <h4>Traditional Programming</h4>
+                        <p class="formula">Data + Rules → Answers</p>
+                        <p>The programmer provides explicit rules, the computer applies them to data to generate answers.</p>
+                    </div>
+                    <div class="comparison-column">
+                        <h4>Machine Learning</h4>
+                        <p class="formula">Data + Answers → Rules</p>
+                        <p>The programmer provides data and correct answers, the computer discovers the rules that best explain the relationship.</p>
+                    </div>
+                </div>
+
+                <p>This shift is profound. Instead of telling the computer <em>how</em> to solve a problem, we show it <em>examples</em> of the problem being solved, and it infers the underlying patterns.</p>
+
+                <h4>Why This Works: The Statistical Foundation</h4>
+                <p>Machine learning rests on a crucial insight: many complex tasks that resist explicit programming actually have underlying statistical regularities. These regularities can be discovered by analyzing large amounts of example data.</p>
+
+                <p>Returning to spam detection: instead of programming rules, we show an AI system thousands of emails labeled "spam" or "not spam." The system analyzes these examples and discovers patterns:</p>
+                <ul>
+                    <li>Certain words appear more frequently in spam</li>
+                    <li>Spam emails have different structural characteristics (formatting, link density)</li>
+                    <li>Timing patterns differ between spam and legitimate mail</li>
+                    <li>Sender behavior exhibits distinct patterns</li>
+                </ul>
+
+                <p>Crucially, the system discovers patterns we might never have thought to program explicitly, and it continuously adapts as new data arrives.</p>
+
+                <h4>What Intelligence Really Means</h4>
+                <p>At its core, <strong>Artificial Intelligence</strong> is the science and engineering of creating systems that exhibit intelligent behavior—behavior that, if performed by humans, would require intelligence. This includes:</p>
+
+                <ul>
+                    <li><strong>Perception:</strong> Extracting meaning from raw sensory data (vision, sound, text)</li>
+                    <li><strong>Learning:</strong> Improving performance through experience</li>
+                    <li><strong>Reasoning:</strong> Deriving new knowledge from existing knowledge</li>
+                    <li><strong>Planning:</strong> Formulating strategies to achieve goals</li>
+                    <li><strong>Communication:</strong> Understanding and generating natural language</li>
+                    <li><strong>Creativity:</strong> Generating novel and valuable solutions</li>
+                </ul>
+
+                <p>Modern AI doesn't attempt to replicate human intelligence in all its complexity. Instead, it focuses on specific aspects of intelligence, achieving superhuman performance in narrow domains through specialized techniques.</p>
+            </div>
+
+            <!-- Part 5: The Pattern Recognition Foundation -->
+            <div class="content-block">
+                <h3>Part V: Pattern Recognition as the Cornerstone</h3>
+                
+                <h4>Why Patterns Matter</h4>
+                <p>The unifying thread through virtually all modern AI is <strong>pattern recognition</strong>—the ability to identify regularities, structures, and relationships in data. This isn't coincidental: intelligence itself might be fundamentally about pattern recognition.</p>
+
+                <p>When you learn to read, you recognize patterns in shapes that form letters, patterns in letters that form words, patterns in words that form meaning. When you understand physics, you recognize patterns in how objects move and interact. When you compose music, you employ and creatively violate patterns that create emotional resonance.</p>
+
+                <h4>From Simple to Complex Patterns</h4>
+                <p>AI systems learn patterns at multiple levels of abstraction:</p>
+
+                <div class="insight-box">
+                    <h4>Hierarchical Pattern Recognition in Image Understanding</h4>
+                    <ul>
+                        <li><strong>Level 1 - Low-level features:</strong> Edges, corners, color gradients
+                            <p style="margin-left: 1.5rem; margin-top: 0.5rem; font-size: 0.9em; color: var(--text-tertiary);">Simple patterns directly from pixel values</p>
+                        </li>
+                        <li><strong>Level 2 - Mid-level features:</strong> Textures, simple shapes, contours
+                            <p style="margin-left: 1.5rem; margin-top: 0.5rem; font-size: 0.9em; color: var(--text-tertiary);">Combinations of low-level features</p>
+                        </li>
+                        <li><strong>Level 3 - High-level features:</strong> Object parts (wheels, eyes, doors)
+                            <p style="margin-left: 1.5rem; margin-top: 0.5rem; font-size: 0.9em; color: var(--text-tertiary);">Meaningful combinations of mid-level features</p>
+                        </li>
+                        <li><strong>Level 4 - Semantic understanding:</strong> Complete objects, scenes, relationships
+                            <p style="margin-left: 1.5rem; margin-top: 0.5rem; font-size: 0.9em; color: var(--text-tertiary);">Abstract understanding from high-level features</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <p>This hierarchical structure mirrors how we believe the human visual system processes information. Early visual areas in the brain respond to simple features like edges. As signals progress through the visual cortex, neurons respond to increasingly complex and abstract patterns, eventually recognizing entire objects, faces, and scenes.</p>
+
+                <h4>The Prediction Framework</h4>
+                <p>Modern neuroscience suggests that the brain is fundamentally a prediction machine. We constantly generate predictions about incoming sensory data based on learned patterns, and update our models when predictions fail. AI systems employ remarkably similar architectures.</p>
+
+                <p>Every AI task can be framed as prediction:</p>
+                <ul>
+                    <li><strong>Image classification:</strong> Predict what objects are present</li>
+                    <li><strong>Language translation:</strong> Predict the equivalent meaning in another language</li>
+                    <li><strong>Game playing:</strong> Predict which move leads to victory</li>
+                    <li><strong>Medical diagnosis:</strong> Predict which disease explains the symptoms</li>
+                </ul>
+
+                <p class="key-insight">AI succeeds by learning statistical patterns in data that allow it to make accurate predictions about new, unseen examples. The quality of these predictions depends on the quality and quantity of training data, the sophistication of the learning algorithm, and the appropriateness of the model architecture.</p>
+            </div>
+
+            <!-- Quiz: Foundations -->
+            <div class="quiz-container" data-section="foundations">
+                <h3 class="quiz-title">Test Your Understanding: Foundations</h3>
+                <p class="quiz-subtitle">These questions assess your grasp of fundamental concepts. Take your time and think carefully.</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> What are the three essential components of computation?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="a">
+                                <span>Hardware, software, and users</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="b" data-correct="true">
+                                <span>Input, process, and output</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="c">
+                                <span>Data, memory, and storage</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="d">
+                                <span>Algorithms, functions, and variables</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> What distinguishes an algorithm from a simple set of instructions?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="a">
+                                <span>Algorithms are always faster</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="b" data-correct="true">
+                                <span>An algorithm solves a class of problems, not just one specific instance</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="c">
+                                <span>Algorithms must be written in code</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="d">
+                                <span>Algorithms only work with numbers</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> What is the fundamental paradigm shift between traditional programming and machine learning?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="a">
+                                <span>Machine learning is faster than traditional programming</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="b" data-correct="true">
+                                <span>Traditional programming uses data + rules to get answers; ML uses data + answers to discover rules</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="c">
+                                <span>Machine learning doesn't need programmers</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="d">
+                                <span>Traditional programming can't process data</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> Why does rule-based spam filtering eventually fail?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="a" data-correct="true">
+                                <span>Spammers adapt to rules, rules create false positives, and the rule set becomes unmanageable</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="b">
+                                <span>Computers aren't fast enough to process all the rules</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="c">
+                                <span>Email formats keep changing</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="d">
+                                <span>There aren't enough rules to cover all cases</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="quiz-question" data-question="5">
+                        <p class="question-text"><strong>Q5.</strong> According to the text, what is the cornerstone of modern AI?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q5" value="a">
+                                <span>Fast computers</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q5" value="b">
+                                <span>Big data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q5" value="c" data-correct="true">
+                                <span>Pattern recognition</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q5" value="d">
+                                <span>Neural networks</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('foundations')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Home</span>
+                </a>
+                <a href="/learning" class="nav-button nav-button-next">
+                    <span class="nav-label">Machine Learning</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundations – Yavin</title>
+    
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,zh-CN,ja,ko,pt,ru,ar,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    
+    <meta name="description" content="Learn the foundations of artificial intelligence, algorithms, and computation from first principles.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="yavin-logo.png">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <img src="yavin-logo.png" alt="Yavin" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">Yavin</span>
+            </a>
+            
+            <div class="nav-controls-wrapper">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                    <div class="search-dropdown" id="searchDropdown">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="Search content..."
+                            aria-label="Search site content"
+                        >
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                </div>
+                
+                <!-- Accessibility Controls -->
+                <div class="accessibility-controls">
+                    <button id="contrast-toggle" class="control-btn" aria-label="Toggle high contrast mode" title="High Contrast">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2v20"/>
+                        </svg>
+                    </button>
+                    <button id="tts-toggle" class="control-btn" aria-label="Toggle text-to-speech" title="Text-to-Speech">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M15 9a5 5 0 0 1 0 6"/>
+                            <path d="M18 6a9 9 0 0 1 0 12"/>
+                        </svg>
+                    </button>
+                    <div id="google_translate_element" class="translate-widget" role="complementary" aria-label="Language translation"></div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="foundations.html" role="menuitem">Foundations</a></li>
+                <li role="none"><a href="learning.html" role="menuitem">Machine Learning</a></li>
+                <li role="none"><a href="neural.html" role="menuitem">Neural Networks</a></li>
+                <li role="none"><a href="deep.html" role="menuitem">Deep Learning</a></li>
+                <li role="none"><a href="modern.html" role="menuitem">Modern AI</a></li>
+                <li role="none"><a href="ethics.html" role="menuitem">Ethics & Society</a></li>
+                <li role="none"><a href="glossary.html" role="menuitem">Glossary</a></li>
+                <li role="none"><a href="mission.html" role="menuitem">Our Mission</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Foundations Section -->
+    <section id="foundations" class="section" aria-labelledby="foundations-title">
+        <div class="container">
+            <h2 id="foundations-title" class="section-title">Foundations</h2>
+            
+            <div class="content-block">
+                <h3>What is Computation?</h3>
+                <p>To understand artificial intelligence, we must first understand what computers do at their most fundamental level. A computer is a machine that performs <strong>computation</strong> – the systematic execution of instructions to transform input data into output data.</p>
+                
+                <p>An <span class="tooltip-term" data-tooltip="A precise sequence of instructions or steps designed to solve a specific problem or perform a calculation."><strong>algorithm</strong></span> is simply a precise sequence of steps to solve a problem. Consider a recipe: it takes ingredients (input) and produces a cake (output) through a series of instructions. Algorithms work the same way, but with data instead of ingredients.</p>
+
+                <div class="insight-box">
+                    <h4>Simple Algorithm Example</h4>
+                    <p><strong>Problem:</strong> Find the largest number in a list</p>
+                    <p><strong>Algorithm:</strong></p>
+                    <ol>
+                        <li>Set "largest" to the first number</li>
+                        <li>For each remaining number:</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;If it's bigger than "largest", update "largest"</li>
+                        <li>Return "largest"</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>Traditional Programming vs. AI</h3>
+                <p>In traditional programming, a human programmer writes explicit rules for every scenario. If you want a program to identify spam emails, you might write rules like:</p>
+                <ul>
+                    <li>If the subject contains "FREE MONEY", mark as spam</li>
+                    <li>If there are more than 5 exclamation marks, mark as spam</li>
+                    <li>If the sender is unknown and includes links, mark as spam</li>
+                </ul>
+                
+                <p>This approach has a fundamental limitation: the programmer must anticipate every possible pattern. What about misspellings? New spam tactics? Legitimate emails that trigger these rules?</p>
+                
+                <p class="key-insight">Artificial Intelligence represents a paradigm shift: instead of programming explicit rules, we create systems that learn rules from data.</p>
+            </div>
+
+            <div class="content-block">
+                <h3>What is Artificial Intelligence?</h3>
+                <p>At its core, <strong>Artificial Intelligence (AI)</strong> is the science of creating computer systems that can perform tasks typically requiring human intelligence. These tasks include:</p>
+                <ul>
+                    <li>Recognizing patterns (faces, voices, objects)</li>
+                    <li>Understanding language</li>
+                    <li>Making decisions based on complex information</li>
+                    <li>Learning from experience</li>
+                    <li>Adapting to new situations</li>
+                </ul>
+                
+                <p>The key insight is that many intelligent behaviors emerge from the ability to recognize patterns in data and make predictions based on those patterns.</p>
+            </div>
+
+            <!-- Quiz: Foundations -->
+            <div class="quiz-container" data-section="foundations">
+                <h3 class="quiz-title">Test Your Knowledge: Foundations</h3>
+                <p class="quiz-subtitle">Answer these questions to check your understanding</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> What is the fundamental difference between traditional programming and AI?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="a">
+                                <span>AI is always faster than traditional programming</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="b" data-correct="true">
+                                <span>AI learns rules from data instead of using explicitly programmed rules</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="c">
+                                <span>Traditional programming cannot process data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q1" value="d">
+                                <span>AI doesn't require any programming</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> What is an algorithm?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="a">
+                                <span>A type of computer hardware</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="b" data-correct="true">
+                                <span>A precise sequence of steps to solve a problem</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="c">
+                                <span>A programming language</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q2" value="d">
+                                <span>A database system</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> Which of the following is an example of a task that requires artificial intelligence?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="a">
+                                <span>Calculating the sum of two numbers</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="b">
+                                <span>Storing data in a file</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="c" data-correct="true">
+                                <span>Recognizing faces in photographs</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q3" value="d">
+                                <span>Displaying text on a screen</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> In traditional spam filtering with explicit rules, what is a major limitation?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="a">
+                                <span>It works too quickly</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="b" data-correct="true">
+                                <span>Programmers must anticipate every possible spam pattern</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="c">
+                                <span>It requires too much computer memory</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="foundations-q4" value="d">
+                                <span>It can only filter text, not images</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('foundations')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="index.html" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Home</span>
+                </a>
+                <a href="learning.html" class="nav-button nav-button-next">
+                    <span class="nav-label">Machine Learning</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <img src="yavin-logo.png" alt="Yavin" class="footer-logo" onerror="this.style.display='none'">
+            <p class="footer-title">Yavin</p>
+            <p class="footer-text">Understanding Artificial Intelligence from First Principles</p>
+            <div class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="foundations.html">Foundations</a>
+                <a href="learning.html">Machine Learning</a>
+                <a href="neural.html">Neural Networks</a>
+                <a href="deep.html">Deep Learning</a>
+                <a href="modern.html">Modern AI</a>
+                <a href="ethics.html">Ethics</a>
+                <a href="glossary.html">Glossary</a>
+                <a href="mission.html">Mission</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Feedback Button -->
+    <button class="feedback-button" onclick="openFeedbackModal()" aria-label="Provide feedback">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+    </button>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="feedback-modal" role="dialog" aria-labelledby="feedback-title" aria-modal="true">
+        <div class="feedback-modal-content">
+            <button class="feedback-close" onclick="closeFeedbackModal()" aria-label="Close feedback form">&times;</button>
+            <h3 id="feedback-title" class="feedback-title">Share Your Feedback</h3>
+            <p class="feedback-subtitle">Help us improve this learning experience</p>
+            
+            <form id="feedbackForm" class="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-name">Name (optional)</label>
+                    <input type="text" id="feedback-name" name="name" placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-email">Email (optional)</label>
+                    <input type="email" id="feedback-email" name="email" placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-rating">How would you rate this content? *</label>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5" required>
+                            <span>⭐⭐⭐⭐⭐ Excellent</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4">
+                            <span>⭐⭐⭐⭐ Good</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3">
+                            <span>⭐⭐⭐ Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2">
+                            <span>⭐⭐ Below Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1">
+                            <span>⭐ Poor</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-message">Your Feedback *</label>
+                    <textarea id="feedback-message" name="message" rows="4" placeholder="What did you think? Any suggestions for improvement?" required></textarea>
+                </div>
+                
+                <button type="submit" class="feedback-submit">Submit Feedback</button>
+            </form>
+            
+            <div id="feedbackSuccess" class="feedback-success" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <h4>Thank You!</h4>
+                <p>Your feedback has been received. We appreciate your input!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

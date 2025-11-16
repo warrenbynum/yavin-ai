@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Our Mission – Yavin{% endblock %}
+{% block description %}Yavin's mission: bridging the gap between AI experts and everyday people through clear, accessible education that empowers understanding and agency in an AI-shaped world.{% endblock %}
+
+{% block content %}
+    <!-- Mission Section -->
+    <section id="mission" class="section mission-section section-alt" aria-labelledby="mission-title">
+        <div class="container">
+            <div class="mission-container">
+                <div class="mission-logo-wrapper">
+                    <img src="/static/yavin-logo.png" alt="Yavin" class="mission-logo" onerror="this.style.display='none'">
+                </div>
+                
+                <h2 id="mission-title" class="mission-title">Our Mission</h2>
+                
+                <div class="mission-content">
+                    <div class="mission-text">
+                        <p>In an age where artificial intelligence emerges as both a profound enigma and an unparalleled force for transformation, a profound divide persists: the intricate world of AI experts remains shrouded from the everyday lives of ordinary people. <strong>Yavin stands as the essential bridge across this chasm</strong>, dedicated to our inaugural phase of illumination—delivering a clear, jargon-free introduction to the core essentials of AI.</p>
+
+                        <p>From the foundational algorithms that mimic human thought to the elegant mechanics of neural networks and machine learning, we unravel how these systems learn, adapt, and create. Our mission is to empower you with the knowledge of AI's inner workings, transforming abstract concepts into accessible insights that reveal not just the <em>"what,"</em> but the <em>"how"</em> behind the tools shaping your world.</p>
+
+                        <p>This education extends beyond theory to vivid applications, showcasing AI's potential in realms as diverse as healthcare diagnostics that save lives, financial systems that detect fraud with unerring precision, and creative engines that amplify human imagination. By demystifying these applications, Yavin equips you to recognize and harness AI in your daily encounters—whether recommending a book that sparks joy or optimizing routes that reclaim precious time.</p>
+
+                        <p><strong>We believe AI holds the promise of humanity's greatest equalizer</strong>: a leveler of playing fields long tilted by access and privilege, where innovation flows not to the few, but fuels collective progress. In this first phase, our focus is resolute—to ensure every individual grasps the fundamentals, fostering confidence and agency in an era of rapid evolution.</p>
+
+                        <p>Yet, this bridge is merely the threshold to a grander vision, one where AI does not consume society unchecked, but elevates it through universal understanding. As we stand on the cusp of this technological renaissance, <strong>Yavin commits to proactive enlightenment</strong>: providing equitable access to knowledge before AI's tendrils weave deeper into our social fabric.</p>
+
+                        <p>Imagine a future where informed citizens—parents, professionals, dreamers—co-author AI's trajectory, mitigating risks like bias and opacity while amplifying its redemptive power. We are driven by excitement for this horizon, where AI becomes the great democratizer, igniting equitable opportunities and unlocking untapped human potential.</p>
+
+                        <p class="mission-cta-text"><strong>Join us in this awakening</strong>; together, we will not merely adapt to AI, but architect a world where it serves as the chorus of our shared triumph.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/glossary" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Glossary</span>
+                </a>
+                <a href="/" class="nav-button nav-button-next">
+                    <span class="nav-label">Home</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}Deep Learning – Yavin{% endblock %}
+{% block description %}Comprehensive guide to deep learning architectures: CNNs for vision, RNNs and Transformers for sequences, GANs for generation, and modern techniques that power state-of-the-art AI.{% endblock %}
+
+{% block content %}
+    <!-- Deep Learning Section -->
+    <section id="deep" class="section section-alt" aria-labelledby="deep-title">
+        <div class="container">
+            <h2 id="deep-title" class="section-title">Deep Learning</h2>
+            
+            <!-- Part 1: The Deep Learning Revolution -->
+            <div class="content-block">
+                <h3>Part I: The Deep Learning Revolution</h3>
+                
+                <h4>What Makes Learning "Deep"?</h4>
+                <p><span class="tooltip-term" data-tooltip="Machine learning using neural networks with multiple layers that learn hierarchical representations of data."><strong>Deep learning</strong></span> refers to neural networks with many layers—typically dozens or even hundreds. But depth is more than just layer count; it represents a fundamental shift in how we approach AI.</p>
+
+                <h4>The Perfect Storm: Why Now?</h4>
+                <p>Deep learning existed in theory for decades, but three convergent factors enabled its recent explosion:</p>
+
+                <div class="insight-box">
+                    <h4>The Three Pillars of Deep Learning Success</h4>
+                    <ul>
+                        <li><strong>1. Big Data:</strong> The internet era generated unprecedented amounts of labeled and unlabeled data—billions of images, petabytes of text, massive video libraries. Deep networks need this data to learn rich representations.</li>
+                        <li><strong>2. Computational Power:</strong> GPUs (Graphics Processing Units), originally designed for gaming, turn out to be perfect for the parallel matrix operations neural networks require. Training that would take years on CPUs takes hours on GPUs.</li>
+                        <li><strong>3. Algorithmic Innovations:</strong> Better activation functions (ReLU), initialization schemes, optimization algorithms, regularization techniques, and architectural designs made training deep networks practical.</li>
+                    </ul>
+                </div>
+
+                <h4>The Representation Learning Paradigm</h4>
+                <p>Traditional machine learning required extensive <strong>feature engineering</strong>—humans manually designing input representations. Deep learning automates this: networks learn their own internal representations optimized for the task.</p>
+
+                <p>This is revolutionary. Instead of hand-crafting features based on domain expertise, we let data-driven learning discover what features matter. Often, networks discover representations humans wouldn't have thought to design.</p>
+
+                <h4>Key Breakthroughs</h4>
+                <ul>
+                    <li><strong>2012 - ImageNet Victory:</strong> AlexNet achieved unprecedented image classification accuracy, reigniting neural network research</li>
+                    <li><strong>2014 - Sequence-to-Sequence:</strong> RNNs enabled neural machine translation</li>
+                    <li><strong>2016 - AlphaGo:</strong> Deep RL defeated world Go champions</li>
+                    <li><strong>2017 - Attention Is All You Need:</strong> Transformers revolutionized NLP</li>
+                    <li><strong>2018-Present - Large Language Models:</strong> GPT, BERT, and successors demonstrated emergent capabilities at scale</li>
+                </ul>
+            </div>
+
+            <!-- Part 2: Convolutional Neural Networks -->
+            <div class="content-block">
+                <h3>Part II: Convolutional Neural Networks – Mastering Vision</h3>
+                
+                <h4>The Problem with Fully Connected Networks for Images</h4>
+                <p>Consider a modest 224×224 color image. That's 224 × 224 × 3 = 150,528 pixels. A fully connected first layer with just 1,000 neurons would need 150 million weights! This is:</p>
+                <ul>
+                    <li>Computationally expensive</li>
+                    <li>Prone to overfitting (too many parameters)</li>
+                    <li>Ignoring the spatial structure of images</li>
+                </ul>
+
+                <h4>The Convolutional Solution</h4>
+                <p><span class="tooltip-term" data-tooltip="A deep learning architecture designed for processing grid-like data (images) using convolutional layers that detect local patterns."><strong>Convolutional Neural Networks (CNNs)</strong></span> exploit the spatial structure of images through three key ideas:</p>
+
+                <div class="insight-box">
+                    <h4>Core Principles of CNNs</h4>
+                    
+                    <p><strong>1. Local Connectivity</strong></p>
+                    <p style="font-size: 0.9em;">Each neuron connects only to a small local region of the input (e.g., 3×3 or 5×5 pixels). Edges, textures, and patterns are local phenomena—we don't need global connections to detect them.</p>
+
+                    <p><strong>2. Parameter Sharing</strong></p>
+                    <p style="font-size: 0.9em;">The same set of weights (called a "filter" or "kernel") slides across the entire image. If edge detection is useful in one part of an image, it's useful everywhere. This dramatically reduces parameters.</p>
+
+                    <p><strong>3. Translation Invariance</strong></p>
+                    <p style="font-size: 0.9em;">A cat in the top-left corner should be recognized the same as a cat in the bottom-right. Convolution naturally provides this property.</p>
+                </div>
+
+                <h4>How Convolution Works</h4>
+                <p>A <strong>convolutional layer</strong> applies multiple filters to the input. Each filter is a small matrix (e.g., 3×3) that slides across the image:</p>
+
+                <ol style="font-size: 0.9em;">
+                    <li>Place filter at top-left of image</li>
+                    <li>Compute element-wise multiplication between filter and corresponding image patch</li>
+                    <li>Sum all products to get one output value</li>
+                    <li>Slide filter one step (stride) right and repeat</li>
+                    <li>When reaching the end of a row, move down and restart from left</li>
+                    <li>The complete scan produces a "feature map"—highlighting where the filter's pattern appears</li>
+                </ol>
+
+                <p>Early layers learn simple filters (edge detectors at various angles, color blobs). Deeper layers combine these into complex patterns (textures, object parts, eventually whole objects).</p>
+
+                <h4>Pooling: Downsampling for Robustness</h4>
+                <p><strong>Pooling layers</strong> reduce spatial dimensions while retaining important information:</p>
+                <ul>
+                    <li><strong>Max Pooling:</strong> Take maximum value in each region (e.g., 2×2 grid) → emphasizes strongest activations</li>
+                    <li><strong>Average Pooling:</strong> Take average → smoother downsampling</li>
+                </ul>
+
+                <p><strong>Benefits:</strong> Reduces computation, provides translation invariance, prevents overfitting by reducing parameters.</p>
+
+                <h4>Canonical CNN Architecture</h4>
+                <div class="card">
+                    <p class="formula">Input Image → [Conv → ReLU → Conv → ReLU → Pool] × N → [Fully Connected → ReLU] × M → Softmax Output</p>
+                    <p style="margin-top: 1rem; font-size: 0.9em;">Multiple convolutional blocks extract hierarchical features, followed by fully connected layers for classification.</p>
+                </div>
+
+                <h4>Landmark CNN Architectures</h4>
+                <ul>
+                    <li><strong>LeNet-5 (1998):</strong> Pioneering architecture for handwritten digit recognition</li>
+                    <li><strong>AlexNet (2012):</strong> Proved CNNs work at scale; won ImageNet by huge margin</li>
+                    <li><strong>VGGNet (2014):</strong> Showed that deep, simple architectures (many 3×3 convs) work well</li>
+                    <li><strong>ResNet (2015):</strong> Introduced skip connections, enabling 100+ layer networks</li>
+                    <li><strong>EfficientNet (2019):</strong> Optimized scaling for efficiency and accuracy</li>
+                </ul>
+            </div>
+
+            <!-- Part 3: Recurrent Neural Networks -->
+            <div class="content-block">
+                <h3>Part III: Recurrent Neural Networks – Mastering Sequences</h3>
+                
+                <h4>The Sequential Data Challenge</h4>
+                <p>Images have fixed size and structure, but many important problems involve <strong>sequences</strong> of variable length:</p>
+                <ul>
+                    <li>Natural language (sentences, documents)</li>
+                    <li>Time series (stock prices, sensor readings, audio)</li>
+                    <li>Video (sequences of frames)</li>
+                    <li>DNA/protein sequences in biology</li>
+                </ul>
+
+                <p>Standard feedforward networks can't handle variable-length inputs or capture temporal dependencies. We need memory.</p>
+
+                <h4>Recurrent Neural Networks (RNNs)</h4>
+                <p><span class="tooltip-term" data-tooltip="Neural networks with loops that maintain internal state, allowing them to process sequential data and capture temporal dependencies."><strong>RNNs</strong></span> introduce feedback loops: the network's output at one time step becomes part of its input at the next step. This creates a form of memory.</p>
+
+                <div class="insight-box">
+                    <h4>RNN Processing Loop</h4>
+                    <pre class="code-block">
+Initialize hidden state h₀
+For each time step t in sequence:
+    1. Combine input xₜ with previous state hₜ₋₁
+    2. Compute new hidden state: hₜ = f(Wₓₕ·xₜ + Wₕₕ·hₜ₋₁ + b)
+    3. Optionally compute output: yₜ = g(Wₕᵧ·hₜ)
+    4. Pass hₜ to next time step
+                    </pre>
+                </div>
+
+                <p>The hidden state <strong>h</strong> acts as memory, accumulating information from previous time steps. This allows RNNs to:</p>
+                <ul>
+                    <li>Process sequences of arbitrary length</li>
+                    <li>Share parameters across time (same weights for all time steps)</li>
+                    <li>Make decisions based on context from earlier in the sequence</li>
+                </ul>
+
+                <h4>The Vanishing Gradient Problem Returns</h4>
+                <p>Simple RNNs suffer from severe vanishing gradients when learning long-range dependencies. Information from 50 steps back has negligible gradient signal—the network can't learn long-term patterns.</p>
+
+                <h4>Long Short-Term Memory (LSTM)</h4>
+                <p><strong>LSTMs</strong> solve this with a sophisticated memory cell architecture featuring gates that control information flow:</p>
+
+                <div class="card">
+                    <h4>LSTM Gates</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Forget Gate:</strong> Decides what information to discard from cell state</li>
+                        <li><strong>Input Gate:</strong> Decides what new information to store in cell state</li>
+                        <li><strong>Output Gate:</strong> Decides what information to output based on cell state</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">These gates, implemented as sigmoid activations, learn when to remember, when to forget, and when to output—enabling learning of long-range dependencies spanning hundreds of time steps.</p>
+                </div>
+
+                <h4>Gated Recurrent Units (GRU)</h4>
+                <p>A simpler alternative to LSTMs with fewer gates, often comparable performance, and faster training.</p>
+
+                <h4>Applications of RNNs/LSTMs</h4>
+                <ul>
+                    <li><strong>Language Modeling:</strong> Predicting next word given context</li>
+                    <li><strong>Machine Translation:</strong> Seq2seq models encode source language, decode to target</li>
+                    <li><strong>Speech Recognition:</strong> Audio waveforms → text transcription</li>
+                    <li><strong>Time Series Forecasting:</strong> Predict future values from historical patterns</li>
+                    <li><strong>Video Analysis:</strong> Understanding temporal dynamics across frames</li>
+                </ul>
+            </div>
+
+            <!-- Part 4: Attention and Transformers -->
+            <div class="content-block">
+                <h3>Part IV: Attention Mechanisms and Transformers</h3>
+                
+                <h4>The Attention Revolution</h4>
+                <p>In 2017, the paper "Attention Is All You Need" introduced the <span class="tooltip-term" data-tooltip="A neural architecture based on self-attention mechanisms that processes sequences in parallel without recurrence."><strong>Transformer</strong></span> architecture, which has since revolutionized NLP and beyond. The key innovation: <strong>attention mechanisms</strong>.</p>
+
+                <h4>What Is Attention?</h4>
+                <p>Attention allows the model to focus on relevant parts of the input when producing each output. Instead of compressing entire sequences into fixed-size vectors (as RNNs do), attention dynamically weights different input positions based on their relevance.</p>
+
+                <div class="insight-box">
+                    <h4>Attention Intuition: Machine Translation</h4>
+                    <p>Translating "The cat sat on the mat" to French:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>When generating "chat" (cat), attend strongly to "cat"</li>
+                        <li>When generating "assis" (sat), attend to "sat"</li>
+                        <li>When generating "tapis" (mat), attend to "mat"</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">The model learns these alignments automatically from data—no manual specification needed.</p>
+                </div>
+
+                <h4>Self-Attention: The Core Mechanism</h4>
+                <p><strong>Self-attention</strong> computes attention within a single sequence, allowing each position to attend to all other positions:</p>
+
+                <ol style="font-size: 0.9em;">
+                    <li><strong>Query, Key, Value:</strong> Transform each input position into three vectors</li>
+                    <li><strong>Compute Attention Scores:</strong> Dot product between query and all keys measures relevance</li>
+                    <li><strong>Softmax Normalization:</strong> Convert scores to probability distribution</li>
+                    <li><strong>Weighted Sum:</strong> Multiply values by attention weights and sum</li>
+                </ol>
+
+                <p class="formula">Attention(Q, K, V) = softmax(QK<sup>T</sup>/√d<sub>k</sub>)V</p>
+
+                <h4>Multi-Head Attention</h4>
+                <p>Transformers use multiple attention mechanisms in parallel ("heads"), each potentially learning different types of relationships (syntactic, semantic, long-range, local). Outputs are concatenated and projected.</p>
+
+                <h4>Why Transformers Dominate</h4>
+                <ul>
+                    <li><strong>Parallelization:</strong> Unlike RNNs, all positions process simultaneously → much faster training on GPUs</li>
+                    <li><strong>Long-Range Dependencies:</strong> Direct connections between all positions → no vanishing gradients</li>
+                    <li><strong>Interpretability:</strong> Attention weights show what the model focuses on</li>
+                    <li><strong>Scalability:</strong> Architecture scales beautifully to billions of parameters</li>
+                </ul>
+
+                <h4>Transformer Impact</h4>
+                <p>Transformers now dominate:</p>
+                <ul>
+                    <li><strong>NLP:</strong> BERT, GPT, T5—virtually all state-of-the-art language models</li>
+                    <li><strong>Computer Vision:</strong> Vision Transformers (ViTs) challenge CNN supremacy</li>
+                    <li><strong>Multi-modal:</strong> CLIP, DALL-E combine vision and language</li>
+                    <li><strong>Protein Folding:</strong> AlphaFold uses transformers</li>
+                </ul>
+            </div>
+
+            <!-- Part 5: Generative Models -->
+            <div class="content-block">
+                <h3>Part V: Generative Models – Creating New Data</h3>
+                
+                <h4>From Discrimination to Generation</h4>
+                <p>Most supervised learning is <strong>discriminative</strong>: given input, predict output. <strong>Generative models</strong> learn the underlying distribution of data itself, enabling creation of new, synthetic examples.</p>
+
+                <h4>Autoencoders: Learning Compressed Representations</h4>
+                <p>An <strong>autoencoder</strong> consists of two parts:</p>
+                <ul>
+                    <li><strong>Encoder:</strong> Compresses input into low-dimensional latent representation</li>
+                    <li><strong>Decoder:</strong> Reconstructs original input from latent code</li>
+                </ul>
+
+                <p>By forcing a bottleneck, the network learns meaningful, compressed representations. Variations include:</p>
+                <ul>
+                    <li><strong>Denoising Autoencoders:</strong> Trained to reconstruct clean data from corrupted inputs</li>
+                    <li><strong>Variational Autoencoders (VAEs):</strong> Learn probabilistic latent spaces, enabling sampling of new examples</li>
+                </ul>
+
+                <h4>Generative Adversarial Networks (GANs)</h4>
+                <p><strong>GANs</strong> frame generation as a two-player game:</p>
+
+                <div class="insight-box">
+                    <h4>The GAN Game</h4>
+                    <p><strong>Generator (G):</strong> Creates fake data from random noise</p>
+                    <p><strong>Discriminator (D):</strong> Tries to distinguish real data from fake</p>
+                    
+                    <p style="margin-top: 1rem;"><strong>Training Loop:</strong></p>
+                    <ol style="font-size: 0.9em;">
+                        <li>G generates fake samples</li>
+                        <li>D tries to classify real vs. fake</li>
+                        <li>Update D to better discriminate</li>
+                        <li>Update G to better fool D</li>
+                        <li>Repeat adversarial dance</li>
+                    </ol>
+
+                    <p style="margin-top: 1rem;">At equilibrium, G produces realistic samples indistinguishable from real data.</p>
+                </div>
+
+                <p><strong>GAN Applications:</strong></p>
+                <ul>
+                    <li>Photorealistic image generation (faces, scenes, artwork)</li>
+                    <li>Style transfer (turn photos into paintings)</li>
+                    <li>Super-resolution (enhance image quality)</li>
+                    <li>Data augmentation for training other models</li>
+                    <li>Text-to-image generation</li>
+                </ul>
+
+                <p><strong>Challenges:</strong> GANs are notoriously difficult to train—mode collapse (generating limited variety), instability, and hyperparameter sensitivity plague them.</p>
+
+                <h4>Diffusion Models: The New State-of-the-Art</h4>
+                <p><strong>Diffusion models</strong> learn to reverse a gradual noising process:</p>
+                <ol>
+                    <li>Forward process: Gradually add noise to data until it becomes pure noise</li>
+                    <li>Reverse process: Train a network to denoise—removing noise step by step</li>
+                    <li>Generation: Start with random noise, apply learned denoising iteratively</li>
+                </ol>
+
+                <p>Diffusion models (DALL-E 2, Stable Diffusion, Midjourney) now produce the most impressive image generation results, often surpassing GANs in quality and stability.</p>
+            </div>
+
+            <!-- Part 6: Modern Techniques -->
+            <div class="content-block">
+                <h3>Part VI: Modern Deep Learning Techniques</h3>
+                
+                <h4>Transfer Learning: Standing on the Shoulders of Giants</h4>
+                <p><strong>Transfer learning</strong> leverages knowledge learned on one task to accelerate learning on another. Instead of training from scratch, start with a pre-trained model and fine-tune.</p>
+
+                <p><strong>Common Pattern:</strong></p>
+                <ol style="font-size: 0.9em;">
+                    <li>Pre-train on massive dataset (e.g., ImageNet, web-scale text)</li>
+                    <li>Use pre-trained model as initialization for new task</li>
+                    <li>Fine-tune on smaller domain-specific dataset</li>
+                </ol>
+
+                <p><strong>Why it works:</strong> Early layers learn general features (edges, textures, basic patterns) useful across tasks. Only higher layers need task-specific adaptation.</p>
+
+                <h4>Self-Supervised Learning</h4>
+                <p>Manually labeling data is expensive. <strong>Self-supervised learning</strong> creates labels automatically from the data itself:</p>
+                <ul>
+                    <li><strong>Language models:</strong> Predict next word (label = actual next word)</li>
+                    <li><strong>Image rotation:</strong> Rotate images, predict rotation angle</li>
+                    <li><strong>Masked modeling:</strong> Hide parts of input, predict what's hidden (BERT, MAE)</li>
+                </ul>
+
+                <p>This unlocks learning from massive unlabeled datasets.</p>
+
+                <h4>Few-Shot and Zero-Shot Learning</h4>
+                <p>Can models learn from very few examples or even no examples?</p>
+                <ul>
+                    <li><strong>Few-shot:</strong> Learn new tasks from handful of examples</li>
+                    <li><strong>Zero-shot:</strong> Generalize to unseen tasks from task descriptions alone</li>
+                </ul>
+
+                <p>Large language models exhibit surprising few/zero-shot capabilities—with proper prompting, they can perform tasks they weren't explicitly trained on.</p>
+
+                <h4>Neural Architecture Search</h4>
+                <p>Instead of manually designing architectures, use AI to search the space of possible architectures automatically. Meta-learning at its finest.</p>
+
+                <h4>Continual Learning</h4>
+                <p>How can models learn continuously without forgetting previous knowledge? This remains an active challenge—neural networks typically suffer from <strong>catastrophic forgetting</strong> when trained on new data.</p>
+
+                <p class="key-insight">Deep learning continues to evolve rapidly. Today's cutting-edge techniques become tomorrow's standard practice. The field rewards empirical experimentation, theoretical understanding, and creative architecture design in equal measure.</p>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/neural" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Neural Networks</span>
+                </a>
+                <a href="/modern" class="nav-button nav-button-next">
+                    <span class="nav-label">Modern AI</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

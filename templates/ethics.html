@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+
+{% block title %}Ethics & Society – Yavin{% endblock %}
+{% block description %}Critical examination of AI ethics: bias and fairness, privacy, transparency, accountability, societal impact, and frameworks for responsible AI development.{% endblock %}
+
+{% block content %}
+    <!-- Ethics Section -->
+    <section id="ethics" class="section" aria-labelledby="ethics-title">
+        <div class="container">
+            <h2 id="ethics-title" class="section-title">Ethics & Society</h2>
+            
+            <!-- Part 1: Why AI Ethics Matters -->
+            <div class="content-block">
+                <h3>Part I: Why AI Ethics Matters</h3>
+                
+                <h4>The Dual Nature of Powerful Technology</h4>
+                <p>Artificial intelligence is not merely a technical achievement—it is a social and ethical phenomenon. Like all powerful technologies (nuclear energy, biotechnology, the internet), AI can amplify both human flourishing and human harm. The difference lies in how we design, deploy, and govern these systems.</p>
+
+                <h4>The Urgency of Ethical Consideration</h4>
+                <p>Unlike academic ethics debates, AI ethics demands immediate attention because:</p>
+
+                <div class="insight-box">
+                    <h4>Four Reasons AI Ethics Cannot Wait</h4>
+                    <ul>
+                        <li><strong>1. Scale of Impact:</strong> AI systems make millions of decisions daily affecting billions of people—in hiring, lending, criminal justice, healthcare, education. Individual algorithmic choices compound into societal patterns.</li>
+                        <li><strong>2. Opacity of Systems:</strong> Many AI systems are "black boxes"—even their creators can't fully explain specific decisions. This opacity challenges traditional accountability mechanisms.</li>
+                        <li><strong>3. Automation of Bias:</strong> AI can encode and amplify existing societal biases at unprecedented scale and speed, potentially entrenching discrimination.</li>
+                        <li><strong>4. Irreversibility:</strong> Once AI systems are embedded in social infrastructure, reversing course becomes extremely difficult. We must get the foundations right.</li>
+                    </ul>
+                </div>
+
+                <p class="key-insight">The question is not whether AI will transform society—it already has. The question is whether that transformation will align with human values, promote fairness, and distribute benefits equitably, or whether it will exacerbate existing inequalities and create new forms of harm.</p>
+            </div>
+
+            <!-- Part 2: Bias and Fairness -->
+            <div class="content-block">
+                <h3>Part II: Bias and Fairness</h3>
+                
+                <h4>The Problem of Bias</h4>
+                <p><span class="tooltip-term" data-tooltip="Systematic errors in AI systems that create unfair outcomes for certain groups, often reflecting historical discrimination in training data."><strong>Algorithmic bias</strong></span> occurs when AI systems produce systematically unfair outcomes for particular groups. This isn't a minor technical glitch—it has real consequences for people's lives.</p>
+
+                <h4>How Bias Enters AI Systems</h4>
+
+                <div class="card">
+                    <h4>1. Historical Bias in Training Data</h4>
+                    <p><strong>Source:</strong> Data reflects historical discrimination and inequality</p>
+                    <p><strong>Example:</strong> If historical hiring data shows mostly men in leadership, AI learns to prefer male candidates—perpetuating discrimination</p>
+                    <p style="font-size: 0.9em; margin-top: 0.5rem;"><strong>Case Study:</strong> Amazon's hiring algorithm, trained on 10 years of resumes (mostly male), learned to penalize resumes containing words like "women's" (as in "women's chess club"). The system was eventually scrapped.</p>
+                </div>
+
+                <div class="card">
+                    <h4>2. Representation Bias</h4>
+                    <p><strong>Source:</strong> Training data doesn't represent all groups equally</p>
+                    <p><strong>Example:</strong> Facial recognition systems trained predominantly on white faces perform worse on darker-skinned individuals</p>
+                    <p style="font-size: 0.9em; margin-top: 0.5rem;"><strong>Research:</strong> MIT study found commercial facial analysis systems had error rates of 0.8% for light-skinned males but up to 34.7% for dark-skinned females—a 43× difference.</p>
+                </div>
+
+                <div class="card">
+                    <h4>3. Measurement Bias</h4>
+                    <p><strong>Source:</strong> Proxy measures don't capture what we truly want to measure</p>
+                    <p><strong>Example:</strong> Using "arrest rates" as a proxy for "crime rates" in predictive policing—but arrest rates reflect policing patterns, which may themselves be biased</p>
+                </div>
+
+                <div class="card">
+                    <h4>4. Aggregation Bias</h4>
+                    <p><strong>Source:</strong> One-size-fits-all models ignore group differences</p>
+                    <p><strong>Example:</strong> Diabetes risk models trained on general population may be less accurate for specific ethnic groups with different risk factors</p>
+                </div>
+
+                <h4>Defining Fairness: Harder Than It Seems</h4>
+                <p>What does "fair" even mean for an algorithm? Computer scientists have proposed multiple mathematical definitions, but they often conflict—satisfying one notion of fairness can violate another.</p>
+
+                <div class="insight-box">
+                    <h4>Competing Definitions of Fairness</h4>
+                    
+                    <p><strong>Demographic Parity:</strong> Equal positive outcome rates across groups</p>
+                    <p style="font-size: 0.9em;">Same percentage of each demographic gets hired/approved/admitted</p>
+
+                    <p><strong>Equalized Odds:</strong> Equal error rates across groups</p>
+                    <p style="font-size: 0.9em;">False positive and false negative rates are equal for all demographics</p>
+
+                    <p><strong>Predictive Parity:</strong> Equal precision across groups</p>
+                    <p style="font-size: 0.9em;">When the algorithm predicts "positive," it's equally likely to be correct across groups</p>
+
+                    <p><strong>Individual Fairness:</strong> Similar individuals treated similarly</p>
+                    <p style="font-size: 0.9em;">People with similar characteristics receive similar predictions</p>
+
+                    <p style="margin-top: 1rem;"><strong>The Problem:</strong> Mathematical theorems prove that except in special cases, you cannot simultaneously satisfy all these definitions. <strong>Fairness requires making value judgments about trade-offs</strong>—it's not purely a technical question.</p>
+                </div>
+
+                <h4>Strategies for Mitigating Bias</h4>
+                <ul>
+                    <li><strong>Pre-processing:</strong> Modify training data to reduce bias (re-balancing, re-weighting, synthetic data)</li>
+                    <li><strong>In-processing:</strong> Modify learning algorithms to optimize for fairness constraints</li>
+                    <li><strong>Post-processing:</strong> Adjust model outputs to achieve desired fairness properties</li>
+                    <li><strong>Diverse Teams:</strong> Include diverse perspectives in design and testing</li>
+                    <li><strong>Bias Audits:</strong> Systematically test for disparate impact across groups</li>
+                    <li><strong>Context Awareness:</strong> Recognize that fairness requirements vary by application domain</li>
+                </ul>
+
+                <p class="key-insight">Technical solutions alone are insufficient. Addressing bias requires combining technical tools with domain expertise, stakeholder input, and ongoing monitoring—fairness is a process, not a one-time fix.</p>
+            </div>
+
+            <!-- Part 3: Privacy and Data Rights -->
+            <div class="content-block">
+                <h3>Part III: Privacy and Data Rights</h3>
+                
+                <h4>The Data Dilemma</h4>
+                <p>AI systems are voracious consumers of data. Their power stems from learning patterns in massive datasets. But this creates fundamental tensions with privacy—the right to control information about ourselves.</p>
+
+                <h4>Privacy Threats in the AI Era</h4>
+
+                <div class="card">
+                    <h4>Surveillance and Tracking</h4>
+                    <p>AI enables unprecedented monitoring at scale:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Facial recognition:</strong> Track individuals across cameras, potentially without consent or awareness</li>
+                        <li><strong>Behavioral profiling:</strong> Infer sensitive attributes (health, finances, political views) from digital traces</li>
+                        <li><strong>Location tracking:</strong> Reconstruct detailed movement patterns from mobile devices</li>
+                        <li><strong>Keystroke dynamics:</strong> Identify individuals by typing patterns</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>Data Breaches and Leaks</h4>
+                    <p>Centralized data repositories become attractive targets. A single breach can expose millions:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Equifax: 147 million people's sensitive financial data</li>
+                        <li>Facebook/Cambridge Analytica: 87 million profiles used without informed consent</li>
+                        <li>Healthcare breaches: Medical records, genomic data</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>Inference and Reidentification</h4>
+                    <p><strong>De-anonymization:</strong> "Anonymous" datasets can often be re-identified by combining with other data sources</p>
+                    <p style="font-size: 0.9em;"><strong>Example:</strong> Netflix Prize dataset was "anonymized," but researchers successfully re-identified users by correlating with public IMDb reviews.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Inference:</strong> AI can infer non-disclosed attributes from seemingly unrelated information</p>
+                    <p style="font-size: 0.9em;"><strong>Example:</strong> Predicting pregnancy from shopping patterns, inferring sexual orientation from Facebook likes</p>
+                </div>
+
+                <h4>Privacy-Preserving AI Techniques</h4>
+
+                <div class="insight-box">
+                    <h4>Technical Approaches to Privacy</h4>
+                    
+                    <p><strong>Differential Privacy</strong></p>
+                    <p style="font-size: 0.9em;">Add carefully calibrated noise to data or query results such that individual records cannot be distinguished, while preserving aggregate statistical properties. Used by Apple, Google, US Census.</p>
+
+                    <p><strong>Federated Learning</strong></p>
+                    <p style="font-size: 0.9em;">Train models across decentralized devices without centralizing data. Each device computes local updates; only model parameters are shared (with aggregation/encryption). Used for smartphone keyboard prediction.</p>
+
+                    <p><strong>Secure Multi-Party Computation</strong></p>
+                    <p style="font-size: 0.9em;">Cryptographic protocols allowing multiple parties to jointly compute functions on their combined data without revealing individual inputs to each other.</p>
+
+                    <p><strong>Homomorphic Encryption</strong></p>
+                    <p style="font-size: 0.9em;">Perform computations on encrypted data without decrypting it. Results remain encrypted until accessed by authorized parties.</p>
+                </div>
+
+                <h4>Regulatory Frameworks</h4>
+                <ul>
+                    <li><strong>GDPR (EU):</strong> Right to access, correct, delete personal data; right to explanation of automated decisions; data minimization principles</li>
+                    <li><strong>CCPA (California):</strong> Disclosure requirements, opt-out rights, non-discrimination provisions</li>
+                    <li><strong>Emerging regulations:</strong> Many jurisdictions developing AI-specific governance</li>
+                </ul>
+
+                <p><strong>Core Principles:</strong></p>
+                <ul>
+                    <li>Data minimization (collect only what's necessary)</li>
+                    <li>Purpose limitation (use data only for stated purposes)</li>
+                    <li>Informed consent (clear, meaningful choice)</li>
+                    <li>Right to deletion ("right to be forgotten")</li>
+                    <li>Transparency about data practices</li>
+                </ul>
+            </div>
+
+            <!-- Part 4: Transparency and Explainability -->
+            <div class="content-block">
+                <h3>Part IV: Transparency and Explainability</h3>
+                
+                <h4>The Black Box Problem</h4>
+                <p>Modern AI systems, especially deep neural networks, are often <strong>opaque</strong>. They make accurate predictions, but their reasoning is inscrutable—even to their creators. This creates accountability challenges.</p>
+
+                <h4>Why Explainability Matters</h4>
+
+                <div class="card">
+                    <h4>Different Stakes, Different Needs</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Medical Diagnosis:</strong> Doctors need to understand why AI recommends a treatment to validate its reasoning and communicate to patients</li>
+                        <li><strong>Credit Decisions:</strong> Applicants denied credit have legal right to explanation; lenders need to ensure compliance with fair lending laws</li>
+                        <li><strong>Criminal Justice:</strong> Judges using risk assessment tools in sentencing decisions need to understand and justify their reliance on algorithmic predictions</li>
+                        <li><strong>Autonomous Vehicles:</strong> When accidents occur, we need to understand what the system perceived and why it acted as it did</li>
+                    </ul>
+                </div>
+
+                <h4>The Accuracy-Interpretability Trade-off</h4>
+                <p>Generally, more complex models achieve higher accuracy but lower interpretability:</p>
+                <ul>
+                    <li><strong>Simple models (linear regression, decision trees):</strong> Interpretable but limited capacity</li>
+                    <li><strong>Complex models (deep networks, large ensembles):</strong> Powerful but opaque</li>
+                </ul>
+
+                <p>This creates dilemmas: Do we sacrifice accuracy for interpretability, or accept black boxes with better performance?</p>
+
+                <h4>Approaches to Explainability</h4>
+
+                <div class="insight-box">
+                    <h4>Explainable AI (XAI) Techniques</h4>
+                    
+                    <p><strong>Inherently Interpretable Models</strong></p>
+                    <p style="font-size: 0.9em;">Use models whose structure is inherently understandable: decision trees, linear models, rule-based systems. Accept accuracy limitations for interpretability gains.</p>
+
+                    <p><strong>Post-Hoc Explanations</strong></p>
+                    <p style="font-size: 0.9em;">Train complex black-box model, then explain its decisions:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>LIME:</strong> Locally approximate complex model with simple interpretable model around a specific prediction</li>
+                        <li><strong>SHAP:</strong> Assign each feature an importance value for a particular prediction based on game theory</li>
+                        <li><strong>Attention Visualization:</strong> Show which input parts the model focused on</li>
+                        <li><strong>Counterfactual Explanations:</strong> "If feature X were different, the prediction would change to Y"</li>
+                    </ul>
+
+                    <p><strong>Surrogate Models</strong></p>
+                    <p style="font-size: 0.9em;">Train interpretable model to approximate black-box model's behavior globally, then explain the surrogate.</p>
+                </div>
+
+                <h4>Limits of Explainability</h4>
+                <p>Even with XAI techniques, challenges remain:</p>
+                <ul>
+                    <li><strong>Fidelity:</strong> Post-hoc explanations may not accurately reflect the model's true reasoning</li>
+                    <li><strong>Complexity:</strong> For models with billions of parameters, complete explanations are impossible</li>
+                    <li><strong>Audience:</strong> Different stakeholders (data scientists, domain experts, end users, regulators) need different types of explanations</li>
+                    <li><strong>Gaming:</strong> If explanations become a requirement, developers might optimize for "explainable-looking" rather than genuinely interpretable models</li>
+                </ul>
+
+                <p class="key-insight">Transparency is multi-faceted: it includes not just explaining individual predictions, but documenting training data, model limitations, testing results, failure modes, and ongoing monitoring. True transparency requires systemic practices, not just technical tools.</p>
+            </div>
+
+            <!-- Part 5: Accountability and Governance -->
+            <div class="content-block">
+                <h3>Part V: Accountability and Governance</h3>
+                
+                <h4>Who Is Responsible?</h4>
+                <p>When an AI system causes harm—wrongful arrest, discriminatory hiring, medical error, vehicle accident—who bears responsibility? This question challenges traditional liability frameworks.</p>
+
+                <h4>The Distributed Responsibility Problem</h4>
+                <p>AI systems involve many actors:</p>
+                <ul>
+                    <li><strong>Data collectors:</strong> Gather and label training data</li>
+                    <li><strong>Algorithm developers:</strong> Design model architectures and training procedures</li>
+                    <li><strong>Model trainers:</strong> Execute training, tune hyperparameters</li>
+                    <li><strong>Deployers:</strong> Integrate AI into products or services</li>
+                    <li><strong>End users:</strong> Make final decisions (potentially) based on AI recommendations</li>
+                </ul>
+
+                <p>Harm may result from errors, biases, or interactions at any stage. Traditional models of liability struggle with this complexity.</p>
+
+                <h4>Governance Frameworks</h4>
+
+                <div class="card">
+                    <h4>AI Ethics Principles (Common Themes)</h4>
+                    <p>Many organizations have proposed AI ethics principles. Common elements include:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Beneficence:</strong> AI should benefit humanity</li>
+                        <li><strong>Non-maleficence:</strong> AI should not cause harm</li>
+                        <li><strong>Autonomy:</strong> Preserve human agency and decision-making</li>
+                        <li><strong>Justice:</strong> Distribute benefits and burdens fairly</li>
+                        <li><strong>Explicability:</strong> Make systems understandable</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-size: 0.9em;"><strong>The Challenge:</strong> These principles are abstract. Translating them into concrete design choices, operational procedures, and accountability mechanisms remains difficult.</p>
+                </div>
+
+                <h4>Proposed Regulatory Approaches</h4>
+
+                <div class="insight-box">
+                    <h4>Models for AI Governance</h4>
+                    
+                    <p><strong>1. Sector-Specific Regulation</strong></p>
+                    <p style="font-size: 0.9em;">Different rules for different domains (healthcare, finance, criminal justice) reflecting varying stakes and existing regulatory structures</p>
+
+                    <p><strong>2. Risk-Based Regulation</strong></p>
+                    <p style="font-size: 0.9em;">Stricter requirements for high-risk applications (e.g., EU AI Act categorizes applications by risk level)</p>
+
+                    <p><strong>3. Algorithmic Impact Assessments</strong></p>
+                    <p style="font-size: 0.9em;">Require documented evaluation of potential harms before deploying AI systems in sensitive domains</p>
+
+                    <p><strong>4. Certification and Auditing</strong></p>
+                    <p style="font-size: 0.9em;">Third-party verification that AI systems meet fairness, safety, or performance standards</p>
+
+                    <p><strong>5. Liability Frameworks</strong></p>
+                    <p style="font-size: 0.9em;">Clarify responsibility: strict liability for deployers, negligence standards for developers, etc.</p>
+                </div>
+
+                <h4>The Challenge of Rapid Change</h4>
+                <p>AI evolves faster than regulatory cycles. By the time regulations are enacted, technology has advanced. This creates a perpetual gap between governance and capability.</p>
+
+                <p><strong>Potential Solutions:</strong></p>
+                <ul>
+                    <li><strong>Adaptive Regulation:</strong> Flexible frameworks that update with technology</li>
+                    <li><strong>Industry Self-Regulation:</strong> Internal standards and ethics boards (though conflicts of interest exist)</li>
+                    <li><strong>Multi-Stakeholder Governance:</strong> Include technologists, policymakers, civil society, affected communities in governance design</li>
+                </ul>
+            </div>
+
+            <!-- Part 6: Societal Impact -->
+            <div class="content-block">
+                <h3>Part VI: Societal Impact and the Future</h3>
+                
+                <h4>Economic Disruption: Automation and Employment</h4>
+                <p>AI-driven automation promises productivity gains but threatens to displace workers across many sectors.</p>
+
+                <div class="card">
+                    <h4>Which Jobs Are at Risk?</h4>
+                    <p><strong>High risk (routine, structured tasks):</strong></p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Data entry, telemarketing, certain manufacturing roles</li>
+                        <li>Parts of accounting, paralegal work, customer service</li>
+                        <li>Some diagnostic tasks in medicine and law</li>
+                    </ul>
+                    <p><strong>Lower risk (creativity, complex interaction, physical dexterity):</strong></p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Creative professions, therapists, skilled trades</li>
+                        <li>Management, complex problem-solving, physical care work</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-size: 0.9em;"><strong>Reality:</strong> Most jobs won't disappear entirely; rather, specific tasks within jobs will be automated. The question is whether new tasks/jobs emerge to absorb displaced workers.</p>
+                </div>
+
+                <p><strong>Policy Responses Being Debated:</strong></p>
+                <ul>
+                    <li><strong>Universal Basic Income:</strong> Provide minimum income to all citizens regardless of employment</li>
+                    <li><strong>Job Retraining Programs:</strong> Help displaced workers transition to new roles</li>
+                    <li><strong>Taxation of Automation:</strong> Tax robots/AI to fund social programs</li>
+                    <li><strong>Reduced Work Hours:</strong> Spread remaining work across more people</li>
+                </ul>
+
+                <h4>Concentration of Power</h4>
+                <p>AI development requires massive computational resources, data, and talent—advantages that concentrate in wealthy tech companies and nations. This risks:</p>
+                <ul>
+                    <li><strong>Economic inequality:</strong> Benefits accrue to owners of AI systems, not those displaced by them</li>
+                    <li><strong>Digital colonialism:</strong> Developed nations' AI systems deployed globally without local participation in design or governance</li>
+                    <li><strong>Epistemic monoculture:</strong> AI trained on Western data reflects Western perspectives, marginalizing others</li>
+                </ul>
+
+                <h4>Information Ecosystems and Truth</h4>
+                <p>AI-generated content (text, images, video, audio) becomes increasingly sophisticated:</p>
+                <ul>
+                    <li><strong>Deepfakes:</strong> Realistic but fake videos of people saying/doing things they never did</li>
+                    <li><strong>Synthetic text:</strong> AI-generated misinformation at scale</li>
+                    <li><strong>Bot networks:</strong> Automated accounts manipulating social media discourse</li>
+                </ul>
+
+                <p>This challenges our ability to distinguish authentic from synthetic, threatening informed democratic deliberation.</p>
+
+                <h4>Existential and Long-Term Risks</h4>
+                <p>Some researchers worry about more speculative risks:</p>
+                <ul>
+                    <li><strong>Misalignment:</strong> Advanced AI systems pursuing goals misaligned with human values</li>
+                    <li><strong>Loss of control:</strong> AI systems becoming too complex or autonomous to reliably constrain</li>
+                    <li><strong>Competitive pressures:</strong> Race dynamics incentivizing deployment before adequate safety measures</li>
+                </ul>
+
+                <p>While debates continue about timelines and likelihood, many argue for proactive research on AI safety and alignment.</p>
+
+                <h4>A Path Forward</h4>
+                <p>Navigating AI's societal implications requires:</p>
+
+                <div class="insight-box">
+                    <h4>Principles for Responsible AI Development</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Inclusive Design:</strong> Include diverse stakeholders, especially affected communities, in design processes</li>
+                        <li><strong>Proactive Ethics:</strong> Consider ethical implications before deployment, not as afterthought</li>
+                        <li><strong>Continuous Monitoring:</strong> Assess real-world impacts systematically and adjust accordingly</li>
+                        <li><strong>Democratized AI Literacy:</strong> Educate broad public about AI capabilities and limitations</li>
+                        <li><strong>Equitable Access:</strong> Ensure AI benefits are distributed broadly, not concentrated</li>
+                        <li><strong>International Cooperation:</strong> Coordinate across nations on standards, safety research, governance</li>
+                        <li><strong>Humility:</strong> Recognize uncertainty, acknowledge mistakes, iterate based on feedback</li>
+                    </ul>
+                </div>
+
+                <p class="key-insight">The future of AI is not predetermined. The choices we make today—about what systems to build, how to deploy them, what regulations to enact, what values to embed—will shape whether AI becomes a tool for empowerment or oppression, equity or inequality, flourishing or harm. This is why understanding AI matters not just for technologists, but for everyone.</p>
+            </div>
+
+            <!-- Quiz: Ethics -->
+            <div class="quiz-container" data-section="ethics">
+                <h3 class="quiz-title">Test Your Understanding: Ethics & Society</h3>
+                <p class="quiz-subtitle">These questions assess your grasp of ethical challenges in AI. Consider carefully—there are nuances!</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> What is algorithmic bias?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="a">
+                                <span>When algorithms make mistakes</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="b" data-correct="true">
+                                <span>When AI systems produce systematically unfair outcomes for particular groups</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="c">
+                                <span>When developers intentionally create discriminatory systems</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="d">
+                                <span>When algorithms prefer certain data formats</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> Why can't all mathematical definitions of fairness be satisfied simultaneously?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="a">
+                                <span>We don't have powerful enough computers</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="b" data-correct="true">
+                                <span>Mathematical theorems prove they conflict—fairness requires value judgments about trade-offs</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="c">
+                                <span>Developers don't try hard enough</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="d">
+                                <span>Fairness definitions are too vague to implement</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> What is differential privacy?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="a">
+                                <span>Different users get different levels of privacy protection</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="b" data-correct="true">
+                                <span>A technique that adds noise to data so individual records can't be distinguished while preserving aggregate statistics</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="c">
+                                <span>Encrypting personal data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="d">
+                                <span>Deleting user data after analysis</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> Why is the "black box" nature of deep neural networks problematic?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="a">
+                                <span>It makes the models slower</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="b" data-correct="true">
+                                <span>It challenges accountability because we can't explain why specific decisions were made</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="c">
+                                <span>It means the models are less accurate</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="d">
+                                <span>It requires special hardware</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="quiz-question" data-question="5">
+                        <p class="question-text"><strong>Q5.</strong> What is a key challenge in governing AI?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="a" data-correct="true">
+                                <span>AI evolves faster than regulatory cycles, creating a perpetual gap between governance and capability</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="b">
+                                <span>There are too many regulations already</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="c">
+                                <span>AI is too simple to need governance</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="d">
+                                <span>Only technical experts understand AI</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('ethics')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/modern" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Modern AI</span>
+                </a>
+                <a href="/glossary" class="nav-button nav-button-next">
+                    <span class="nav-label">Glossary</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}Neural Networks – Yavin{% endblock %}
+{% block description %}Deep exploration of artificial neural networks: biological inspiration, mathematical foundations, activation functions, architectures, and the backpropagation algorithm.{% endblock %}
+
+{% block content %}
+    <!-- Neural Networks Section -->
+    <section id="neural" class="section" aria-labelledby="neural-title">
+        <div class="container">
+            <h2 id="neural-title" class="section-title">Neural Networks</h2>
+            
+            <!-- Part 1: Biological Inspiration -->
+            <div class="content-block">
+                <h3>Part I: Biological Inspiration – The Brain as Blueprint</h3>
+                
+                <h4>Nature's Computing Substrate</h4>
+                <p>The human brain is the most sophisticated information processing system known to exist. With approximately 86 billion neurons and 100 trillion synaptic connections, it achieves feats of perception, reasoning, and creativity that still elude our most advanced machines. Artificial neural networks are inspired by—though vastly simplified from—the brain's architecture.</p>
+
+                <h4>The Biological Neuron</h4>
+                <p>A biological neuron is an electrically excitable cell that processes and transmits information through electrical and chemical signals:</p>
+
+                <div class="insight-box">
+                    <h4>Components of a Biological Neuron</h4>
+                    <ul>
+                        <li><strong>Dendrites:</strong> Branch-like structures that receive signals from other neurons. Think of them as input channels.</li>
+                        <li><strong>Cell Body (Soma):</strong> Integrates all incoming signals. If the combined signal exceeds a threshold, the neuron "fires."</li>
+                        <li><strong>Axon:</strong> A long fiber that transmits the neuron's signal to other neurons. The output channel.</li>
+                        <li><strong>Synapses:</strong> Junctions where axons connect to dendrites of other neurons. The connection strength (synaptic weight) determines how much influence one neuron has on another.</li>
+                    </ul>
+                </div>
+
+                <h4>Key Principles from Neuroscience</h4>
+                <p>Several biological insights inspired artificial neural networks:</p>
+
+                <ul>
+                    <li><strong>Weighted Summation:</strong> Neurons integrate multiple input signals, with each input having a different strength (synaptic weight)</li>
+                    <li><strong>Threshold Activation:</strong> Neurons fire only when integrated input exceeds a threshold—a nonlinear "all-or-nothing" response</li>
+                    <li><strong>Parallel Processing:</strong> Billions of neurons operate simultaneously, enabling massive parallelism</li>
+                    <li><strong>Plasticity:</strong> Synaptic strengths change with experience (Hebbian learning: "neurons that fire together wire together")</li>
+                    <li><strong>Hierarchical Organization:</strong> The brain processes information through hierarchical layers, from simple features to complex abstractions</li>
+                </ul>
+
+                <p class="key-insight">While artificial neural networks borrow these concepts, they remain pale simplifications of biological reality. The brain's neurons are far more complex, incorporating temporal dynamics, chemical signaling, genetic regulation, and structural plasticity that current models don't capture.</p>
+            </div>
+
+            <!-- Part 2: The Artificial Neuron -->
+            <div class="content-block">
+                <h3>Part II: The Artificial Neuron – Mathematical Abstraction</h3>
+                
+                <h4>The Perceptron: First Artificial Neuron</h4>
+                <p>In 1958, Frank Rosenblatt introduced the <span class="tooltip-term" data-tooltip="The simplest type of artificial neuron that computes a weighted sum of inputs and applies a threshold function."><strong>perceptron</strong></span>—the first computational model of a neuron. Though simple, it established principles that underlie all modern neural networks.</p>
+
+                <div class="insight-box">
+                    <h4>Anatomy of an Artificial Neuron</h4>
+                    
+                    <p><strong>Inputs:</strong> x₁, x₂, ..., xₙ (feature values)</p>
+                    <p><strong>Weights:</strong> w₁, w₂, ..., wₙ (learned parameters representing connection strengths)</p>
+                    <p><strong>Bias:</strong> b (learned parameter allowing threshold adjustment)</p>
+                    
+                    <p><strong>Processing Steps:</strong></p>
+                    <ol style="font-size: 0.9em;">
+                        <li><strong>Weighted Sum:</strong> Compute z = w₁x₁ + w₂x₂ + ... + wₙxₙ + b</li>
+                        <li><strong>Activation:</strong> Apply activation function: a = f(z)</li>
+                        <li><strong>Output:</strong> The activation value a becomes the neuron's output</li>
+                    </ol>
+
+                    <p class="formula">Output = f(w·x + b)</p>
+                    
+                    <p style="margin-top: 1rem;">Where <strong>w·x</strong> denotes the dot product of weights and inputs—a compact way to write the weighted sum.</p>
+                </div>
+
+                <h4>The Geometric Interpretation</h4>
+                <p>A single neuron with n inputs defines a <strong>hyperplane</strong> in n-dimensional space. The equation w·x + b = 0 is the decision boundary. Points on one side are classified one way; points on the other side differently.</p>
+
+                <p>For two inputs (x₁, x₂), this is literally a line in 2D space. The neuron learns to position and orient this line to best separate classes. For higher dimensions, we get a hyperplane—a generalization of a line or plane to arbitrary dimensions.</p>
+
+                <p><strong>Limitation:</strong> A single neuron can only represent linear decision boundaries. It cannot solve problems where classes are not linearly separable—the famous XOR problem that troubled early AI research.</p>
+            </div>
+
+            <!-- Part 3: Activation Functions -->
+            <div class="content-block">
+                <h3>Part III: Activation Functions – Introducing Nonlinearity</h3>
+                
+                <h4>Why Nonlinearity Is Essential</h4>
+                <p>Without nonlinear activation functions, neural networks would collapse to simple linear models. No matter how many layers you stack, composing linear functions yields another linear function. The power of deep learning emerges from nonlinearity.</p>
+
+                <h4>Common Activation Functions</h4>
+
+                <div class="card">
+                    <h4>1. Sigmoid (Logistic Function)</h4>
+                    <p class="formula">σ(z) = 1 / (1 + e⁻ᶻ)</p>
+                    <p><strong>Range:</strong> (0, 1)</p>
+                    <p><strong>Shape:</strong> S-shaped curve</p>
+                    <p><strong>Interpretation:</strong> Converts any real number to a probability-like value</p>
+                    <p><strong>Use case:</strong> Binary classification output layers</p>
+                    <p><strong>Drawback:</strong> Vanishing gradients—extreme values have nearly zero gradient, slowing learning</p>
+                </div>
+
+                <div class="card">
+                    <h4>2. Hyperbolic Tangent (tanh)</h4>
+                    <p class="formula">tanh(z) = (eᶻ - e⁻ᶻ) / (eᶻ + e⁻ᶻ)</p>
+                    <p><strong>Range:</strong> (-1, 1)</p>
+                    <p><strong>Shape:</strong> S-shaped curve centered at zero</p>
+                    <p><strong>Advantage over sigmoid:</strong> Zero-centered outputs (helps with learning)</p>
+                    <p><strong>Drawback:</strong> Still suffers from vanishing gradients</p>
+                </div>
+
+                <div class="card">
+                    <h4>3. ReLU (Rectified Linear Unit)</h4>
+                    <p class="formula">ReLU(z) = max(0, z)</p>
+                    <p><strong>Range:</strong> [0, ∞)</p>
+                    <p><strong>Shape:</strong> Zero for negative inputs, identity for positive</p>
+                    <p><strong>Advantages:</strong> Simple, computationally efficient, no vanishing gradient for positive values, induces sparsity</p>
+                    <p><strong>Drawback:</strong> "Dying ReLU" problem—neurons can become permanently inactive if they output zero</p>
+                    <p><strong>Status:</strong> Default choice for most hidden layers in modern networks</p>
+                </div>
+
+                <div class="card">
+                    <h4>4. Leaky ReLU</h4>
+                    <p class="formula">LeakyReLU(z) = max(0.01z, z)</p>
+                    <p><strong>Modification:</strong> Small negative slope (0.01) instead of flat zero for negative inputs</p>
+                    <p><strong>Advantage:</strong> Prevents dying ReLU—all neurons can recover</p>
+                </div>
+
+                <div class="card">
+                    <h4>5. Softmax (Multi-class Output)</h4>
+                    <p class="formula">softmax(z)ᵢ = eᶻⁱ / Σⱼ eᶻʲ</p>
+                    <p><strong>Range:</strong> (0, 1) with sum = 1</p>
+                    <p><strong>Purpose:</strong> Converts raw scores (logits) into probability distribution over classes</p>
+                    <p><strong>Use case:</strong> Multi-class classification output layers</p>
+                </div>
+
+                <h4>Choosing Activation Functions</h4>
+                <p><strong>Rule of thumb:</strong></p>
+                <ul>
+                    <li><strong>Hidden layers:</strong> ReLU (or Leaky ReLU, ELU for variants)</li>
+                    <li><strong>Binary classification output:</strong> Sigmoid</li>
+                    <li><strong>Multi-class classification output:</strong> Softmax</li>
+                    <li><strong>Regression output:</strong> Linear (no activation) or ReLU if outputs must be positive</li>
+                </ul>
+            </div>
+
+            <!-- Part 4: Network Architectures -->
+            <div class="content-block">
+                <h3>Part IV: Network Architectures – From Perceptrons to Deep Networks</h3>
+                
+                <h4>The Multi-Layer Perceptron (MLP)</h4>
+                <p>A <span class="tooltip-term" data-tooltip="A feedforward neural network with one or more hidden layers between input and output."><strong>multi-layer perceptron</strong></span> (despite the confusing name, it's not multiple perceptrons but a network of neurons with nonlinear activations) is the foundational architecture of modern neural networks.</p>
+
+                <div class="insight-box">
+                    <h4>Layers in an MLP</h4>
+                    <ul>
+                        <li><strong>Input Layer:</strong> Receives raw features (not really a "layer" of neurons—just the input data)</li>
+                        <li><strong>Hidden Layer(s):</strong> One or more layers that learn increasingly abstract representations. Each neuron in a layer connects to all neurons in the previous layer (fully connected).</li>
+                        <li><strong>Output Layer:</strong> Produces final predictions (classification probabilities or regression values)</li>
+                    </ul>
+                </div>
+
+                <h4>Depth vs. Width</h4>
+                <p>Two dimensions define network capacity:</p>
+                <ul>
+                    <li><strong>Depth:</strong> Number of layers. Deeper networks can learn more complex, hierarchical representations</li>
+                    <li><strong>Width:</strong> Number of neurons per layer. Wider layers have more representational capacity at each level</li>
+                </ul>
+
+                <p><strong>Universal Approximation Theorem:</strong> A foundational result proves that even a single hidden layer network with enough neurons can approximate any continuous function to arbitrary precision (given sufficient width). However, this doesn't mean single-layer networks are practical—they might require astronomical width. In practice, <strong>depth is more efficient than width</strong> for learning complex functions.</p>
+
+                <h4>Information Flow: Forward Propagation</h4>
+                <p><strong>Forward propagation</strong> is the process of computing the network's output from inputs:</p>
+
+                <div class="insight-box">
+                    <h4>Forward Pass Algorithm</h4>
+                    <pre class="code-block">
+Given input x:
+
+For each layer l from 1 to L:
+    1. Compute weighted sum: 
+       z[l] = W[l] · a[l-1] + b[l]
+       (where a[0] = x for the first layer)
+    
+    2. Apply activation function:
+       a[l] = f[l](z[l])
+
+Final output: ŷ = a[L]
+                    </pre>
+                    <p style="margin-top: 1rem;"><strong>W[l]</strong> = weight matrix for layer l<br>
+                    <strong>b[l]</strong> = bias vector for layer l<br>
+                    <strong>a[l]</strong> = activations (outputs) of layer l</p>
+                </div>
+
+                <h4>The Feature Hierarchy</h4>
+                <p>What makes deep networks powerful is their ability to learn <strong>hierarchical representations</strong>:</p>
+
+                <ul style="font-size: 0.95em;">
+                    <li><strong>Layer 1:</strong> Learns low-level features (edges, colors, simple patterns)</li>
+                    <li><strong>Layer 2:</strong> Combines layer 1 features into mid-level patterns (corners, textures, simple shapes)</li>
+                    <li><strong>Layer 3:</strong> Builds higher-level features (object parts—wheels, eyes, windows)</li>
+                    <li><strong>Output Layer:</strong> Makes final decisions based on high-level abstractions (car, person, dog)</li>
+                </ul>
+
+                <p>This mirrors how biological visual systems process information—from simple edge detectors in early visual cortex to sophisticated object recognition in higher areas.</p>
+            </div>
+
+            <!-- Part 5: Backpropagation -->
+            <div class="content-block">
+                <h3>Part V: Backpropagation – The Learning Algorithm</h3>
+                
+                <h4>The Credit Assignment Problem</h4>
+                <p>When a neural network makes a mistake, which weights are responsible? How should we adjust thousands or millions of parameters to improve performance? This is the <strong>credit assignment problem</strong>.</p>
+
+                <p><span class="tooltip-term" data-tooltip="An algorithm that efficiently computes gradients for all parameters in a neural network by propagating errors backward through layers."><strong>Backpropagation</strong></span> (short for "backward propagation of errors") solves this elegantly by applying the chain rule from calculus to efficiently compute how much each weight contributed to the error.</p>
+
+                <h4>The Chain Rule: Connecting Cause and Effect</h4>
+                <p>The chain rule states that for composed functions, derivatives multiply:</p>
+                <p class="formula">If y = f(g(x)), then dy/dx = (df/dg) · (dg/dx)</p>
+
+                <p>In neural networks, the output is the result of many composed functions (layers). The chain rule lets us trace back from the final error through each layer to determine how each weight should change.</p>
+
+                <h4>The Backpropagation Algorithm</h4>
+
+                <div class="insight-box">
+                    <h4>Backpropagation Steps</h4>
+                    
+                    <p><strong>Step 1: Forward Pass</strong></p>
+                    <p style="font-size: 0.9em;">Compute all activations from input to output, storing intermediate values.</p>
+
+                    <p><strong>Step 2: Compute Output Error</strong></p>
+                    <p style="font-size: 0.9em;">Calculate how far the prediction is from the true value:</p>
+                    <p class="formula">δ[L] = ∂Loss/∂a[L] ⊙ f'(z[L])</p>
+                    <p style="font-size: 0.9em;">Where ⊙ denotes element-wise multiplication</p>
+
+                    <p><strong>Step 3: Propagate Error Backward</strong></p>
+                    <p style="font-size: 0.9em;">For each layer l from L-1 down to 1:</p>
+                    <p class="formula">δ[l] = (W[l+1]ᵀ · δ[l+1]) ⊙ f'(z[l])</p>
+                    <p style="font-size: 0.9em;">This computes how much each neuron contributed to the final error.</p>
+
+                    <p><strong>Step 4: Compute Gradients</strong></p>
+                    <p style="font-size: 0.9em;">For each layer:</p>
+                    <p class="formula">∂Loss/∂W[l] = δ[l] · a[l-1]ᵀ</p>
+                    <p class="formula">∂Loss/∂b[l] = δ[l]</p>
+
+                    <p><strong>Step 5: Update Parameters</strong></p>
+                    <p style="font-size: 0.9em;">Apply gradient descent:</p>
+                    <p class="formula">W[l] ← W[l] - α · ∂Loss/∂W[l]</p>
+                    <p class="formula">b[l] ← b[l] - α · ∂Loss/∂b[l]</p>
+                </div>
+
+                <h4>Why Backpropagation Is Revolutionary</h4>
+                <p>Before backpropagation, training neural networks was impractical. The algorithm's elegance lies in its efficiency:</p>
+
+                <ul>
+                    <li><strong>Computational Efficiency:</strong> Computes all gradients in roughly the same time as one forward pass</li>
+                    <li><strong>Exact Gradients:</strong> Not an approximation—gives exact derivatives through the chain rule</li>
+                    <li><strong>Scalability:</strong> Works for networks of any size or architecture</li>
+                    <li><strong>Automatic Differentiation:</strong> Modern frameworks (TensorFlow, PyTorch) implement backprop automatically</li>
+                </ul>
+
+                <p class="key-insight">Backpropagation, combined with powerful computers and large datasets, is the engine that powers modern deep learning. It transforms neural networks from theoretical curiosities into practical, trainable models capable of solving real-world problems.</p>
+            </div>
+
+            <!-- Part 6: Training Dynamics -->
+            <div class="content-block">
+                <h3>Part VI: Training Dynamics and Challenges</h3>
+                
+                <h4>Initialization: Starting on the Right Foot</h4>
+                <p>How you initialize weights dramatically affects training. Bad initialization can make networks untrainable:</p>
+
+                <ul>
+                    <li><strong>All zeros:</strong> All neurons learn identical features (symmetry problem)</li>
+                    <li><strong>Too large:</strong> Activations explode, gradients become unstable</li>
+                    <li><strong>Too small:</strong> Activations vanish, gradients disappear</li>
+                </ul>
+
+                <p><strong>Solution:</strong> Careful random initialization schemes like <strong>Xavier/Glorot initialization</strong> or <strong>He initialization</strong> scale initial weights based on layer sizes to maintain stable activations and gradients.</p>
+
+                <h4>Vanishing and Exploding Gradients</h4>
+                <p>In deep networks, gradients can become exponentially small (vanishing) or large (exploding) as they propagate through many layers:</p>
+
+                <ul>
+                    <li><strong>Vanishing gradients:</strong> Early layers learn extremely slowly or not at all</li>
+                    <li><strong>Exploding gradients:</strong> Parameter updates become huge, causing instability</li>
+                </ul>
+
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li>ReLU activations (less susceptible to vanishing)</li>
+                    <li>Batch normalization (normalizes layer inputs)</li>
+                    <li>Residual connections (allow gradients to bypass layers)</li>
+                    <li>Gradient clipping (cap maximum gradient magnitude)</li>
+                </ul>
+
+                <h4>Batch Normalization: Stabilizing Training</h4>
+                <p><strong>Batch normalization</strong> normalizes the inputs to each layer, making training more stable and allowing higher learning rates. It has become a standard component in modern architectures.</p>
+
+                <h4>Monitoring Training</h4>
+                <p>Successful training requires monitoring several metrics:</p>
+                <ul>
+                    <li><strong>Training loss:</strong> Should decrease steadily</li>
+                    <li><strong>Validation loss:</strong> Should decrease but may plateau or increase (overfitting signal)</li>
+                    <li><strong>Learning curves:</strong> Plotting loss over epochs reveals training dynamics</li>
+                    <li><strong>Gradient magnitudes:</strong> Too large or small indicates problems</li>
+                    <li><strong>Weight distributions:</strong> Should remain reasonable (not all zeros or extreme values)</li>
+                </ul>
+
+                <p class="key-insight">Training neural networks remains part science, part art. Understanding these dynamics helps diagnose issues and guide hyperparameter choices toward successful learning.</p>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/learning" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Machine Learning</span>
+                </a>
+                <a href="/deep" class="nav-button nav-button-next">
+                    <span class="nav-label">Deep Learning</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

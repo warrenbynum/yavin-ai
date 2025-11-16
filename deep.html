@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Learning – Yavin</title>
+    
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,zh-CN,ja,ko,pt,ru,ar,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    
+    <meta name="description" content="Learn about deep learning, convolutional neural networks, transformers, and generative models.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="yavin-logo.png">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <img src="yavin-logo.png" alt="Yavin" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">Yavin</span>
+            </a>
+            
+            <div class="nav-controls-wrapper">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                    <div class="search-dropdown" id="searchDropdown">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="Search content..."
+                            aria-label="Search site content"
+                        >
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                </div>
+                
+                <!-- Accessibility Controls -->
+                <div class="accessibility-controls">
+                    <button id="contrast-toggle" class="control-btn" aria-label="Toggle high contrast mode" title="High Contrast">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2v20"/>
+                        </svg>
+                    </button>
+                    <button id="tts-toggle" class="control-btn" aria-label="Toggle text-to-speech" title="Text-to-Speech">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M15 9a5 5 0 0 1 0 6"/>
+                            <path d="M18 6a9 9 0 0 1 0 12"/>
+                        </svg>
+                    </button>
+                    <div id="google_translate_element" class="translate-widget" role="complementary" aria-label="Language translation"></div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="foundations.html" role="menuitem">Foundations</a></li>
+                <li role="none"><a href="learning.html" role="menuitem">Machine Learning</a></li>
+                <li role="none"><a href="neural.html" role="menuitem">Neural Networks</a></li>
+                <li role="none"><a href="deep.html" role="menuitem">Deep Learning</a></li>
+                <li role="none"><a href="modern.html" role="menuitem">Modern AI</a></li>
+                <li role="none"><a href="ethics.html" role="menuitem">Ethics & Society</a></li>
+                <li role="none"><a href="glossary.html" role="menuitem">Glossary</a></li>
+                <li role="none"><a href="mission.html" role="menuitem">Our Mission</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Deep Learning Section -->
+    <section id="deep" class="section section-alt" aria-labelledby="deep-title">
+        <div class="container">
+            <h2 id="deep-title" class="section-title">Deep Learning</h2>
+            
+            <div class="content-block">
+                <h3>What Makes It "Deep"?</h3>
+                <p><span class="tooltip-term" data-tooltip="A subset of machine learning using neural networks with many layers to learn complex patterns and representations."><strong>Deep Learning</strong></span> refers to neural networks with many hidden layers (hence "deep"). While a traditional neural network might have 1-2 hidden layers, deep networks can have dozens or even hundreds.</p>
+                
+                <p class="key-insight">Why does depth matter? Each layer learns to represent the data at different levels of abstraction, enabling the network to understand incredibly complex patterns.</p>
+            </div>
+
+            <div class="content-block">
+                <h3>The Deep Learning Revolution</h3>
+                <p>For decades, neural networks were theoretical curiosities. Three factors converged around 2012 to trigger a revolution:</p>
+                
+                <div class="card">
+                    <h4>Big Data</h4>
+                    <p>Deep networks need massive amounts of training data. The internet provided billions of labeled images, text documents, videos, and more – fuel for training.</p>
+                </div>
+
+                <div class="card">
+                    <h4>Computational Power</h4>
+                    <p>Training deep networks requires enormous computation. Graphics Processing Units (GPUs), originally designed for video games, turned out to be perfect for the parallel calculations neural networks need.</p>
+                </div>
+
+                <div class="card">
+                    <h4>Algorithmic Improvements</h4>
+                    <p>Better activation functions (like ReLU), improved initialization techniques, and advanced optimization algorithms made training deep networks practical.</p>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>Specialized Architectures</h3>
+                <p>Different problems require different network architectures:</p>
+
+                <div class="card">
+                    <h4><span class="tooltip-term" data-tooltip="A neural network specialized for processing grid-like data such as images, using convolutional layers to detect spatial patterns.">Convolutional Neural Networks (CNNs)</span></h4>
+                    <p><strong>Purpose:</strong> Image and video processing</p>
+                    <p><strong>Key Insight:</strong> Images have spatial structure – nearby pixels are related. CNNs use "convolutional layers" that scan across the image with filters, detecting local patterns like edges and textures. These patterns combine into higher-level features.</p>
+                    <p class="card-meta">Applications: Face recognition, medical imaging, autonomous vehicles</p>
+                </div>
+
+                <div class="card">
+                    <h4>Recurrent Neural Networks (RNNs)</h4>
+                    <p><strong>Purpose:</strong> Sequential data like text, speech, and time series</p>
+                    <p><strong>Key Insight:</strong> Language and time-based data have temporal dependencies – the meaning of a word depends on previous words. RNNs maintain "memory" of previous inputs, allowing them to process sequences.</p>
+                    <p class="card-meta">Applications: Language translation, speech recognition, music generation</p>
+                </div>
+
+                <div class="card">
+                    <h4><span class="tooltip-term" data-tooltip="A neural network architecture using attention mechanisms to process sequences in parallel, revolutionizing natural language processing.">Transformers</span></h4>
+                    <p><strong>Purpose:</strong> Natural language processing and beyond</p>
+                    <p><strong>Key Insight:</strong> Instead of processing sequences one element at a time, transformers use "attention mechanisms" to weigh the importance of different parts of the input simultaneously. This allows parallel processing and better handling of long-range dependencies.</p>
+                    <p class="card-meta">Applications: ChatGPT, language translation, code generation</p>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>Generative Models</h3>
+                <p>Traditional AI focuses on analysis – classifying images, predicting values. Recent advances enable generation – creating new content:</p>
+
+                <ul>
+                    <li><strong>Generative Adversarial Networks (GANs):</strong> Two networks compete – one generates fake images, the other tries to detect fakes. Competition drives both to improve, resulting in photorealistic synthetic images.</li>
+                    <li><strong>Variational Autoencoders (VAEs):</strong> Learn compressed representations of data, then generate new examples by sampling from this learned space.</li>
+                    <li><strong>Diffusion Models:</strong> Learn to gradually denoise random noise into coherent images, enabling high-quality image generation.</li>
+                </ul>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="neural.html" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Neural Networks</span>
+                </a>
+                <a href="modern.html" class="nav-button nav-button-next">
+                    <span class="nav-label">Modern AI</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <img src="yavin-logo.png" alt="Yavin" class="footer-logo" onerror="this.style.display='none'">
+            <p class="footer-title">Yavin</p>
+            <p class="footer-text">Understanding Artificial Intelligence from First Principles</p>
+            <div class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="foundations.html">Foundations</a>
+                <a href="learning.html">Machine Learning</a>
+                <a href="neural.html">Neural Networks</a>
+                <a href="deep.html">Deep Learning</a>
+                <a href="modern.html">Modern AI</a>
+                <a href="ethics.html">Ethics</a>
+                <a href="glossary.html">Glossary</a>
+                <a href="mission.html">Mission</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Feedback Button -->
+    <button class="feedback-button" onclick="openFeedbackModal()" aria-label="Provide feedback">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+    </button>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="feedback-modal" role="dialog" aria-labelledby="feedback-title" aria-modal="true">
+        <div class="feedback-modal-content">
+            <button class="feedback-close" onclick="closeFeedbackModal()" aria-label="Close feedback form">&times;</button>
+            <h3 id="feedback-title" class="feedback-title">Share Your Feedback</h3>
+            <p class="feedback-subtitle">Help us improve this learning experience</p>
+            
+            <form id="feedbackForm" class="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-name">Name (optional)</label>
+                    <input type="text" id="feedback-name" name="name" placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-email">Email (optional)</label>
+                    <input type="email" id="feedback-email" name="email" placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-rating">How would you rate this content? *</label>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5" required>
+                            <span>⭐⭐⭐⭐⭐ Excellent</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4">
+                            <span>⭐⭐⭐⭐ Good</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3">
+                            <span>⭐⭐⭐ Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2">
+                            <span>⭐⭐ Below Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1">
+                            <span>⭐ Poor</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-message">Your Feedback *</label>
+                    <textarea id="feedback-message" name="message" rows="4" placeholder="What did you think? Any suggestions for improvement?" required></textarea>
+                </div>
+                
+                <button type="submit" class="feedback-submit">Submit Feedback</button>
+            </form>
+            
+            <div id="feedbackSuccess" class="feedback-success" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <h4>Thank You!</h4>
+                <p>Your feedback has been received. We appreciate your input!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

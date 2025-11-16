@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Yavin – Understanding Artificial Intelligence{% endblock %}</title>
+    
+    {% block head_extra %}{% endblock %}
+    
+    <meta name="description" content="{% block description %}A first-principles journey through the foundations of AI. Learn about machine learning, neural networks, deep learning, and modern AI systems.{% endblock %}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yavin.ai/">
+    <meta property="og:title" content="{% block og_title %}Yavin – Understanding Artificial Intelligence{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}A first-principles journey through the foundations of AI.{% endblock %}">
+    <meta property="og:image" content="/static/yavin-thumbnail.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yavin.ai/">
+    <meta property="twitter:title" content="{% block twitter_title %}Yavin – Understanding Artificial Intelligence{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}A first-principles journey through the foundations of AI.{% endblock %}">
+    <meta property="twitter:image" content="/static/yavin-thumbnail.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/static/yavin-logo.png">
+    
+    <link rel="stylesheet" href="/static/css/styles.css">
+    
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,zh-CN,ja,ko,pt,ru,ar,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">
+                <img src="/static/yavin-logo.png" alt="Yavin" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">Yavin</span>
+            </a>
+            
+            <div class="nav-controls-wrapper">
+                {% if page_id != "home" %}
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                    <div class="search-dropdown" id="searchDropdown">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="Search content..."
+                            aria-label="Search site content"
+                        >
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Accessibility Controls -->
+                <div class="accessibility-controls">
+                    <button id="contrast-toggle" class="control-btn" aria-label="Toggle high contrast mode" title="High Contrast">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2v20"/>
+                        </svg>
+                    </button>
+                    {% if page_id != "home" %}
+                    <button id="tts-toggle" class="control-btn" aria-label="Toggle text-to-speech" title="Text-to-Speech">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M15 9a5 5 0 0 1 0 6"/>
+                            <path d="M18 6a9 9 0 0 1 0 12"/>
+                        </svg>
+                    </button>
+                    {% endif %}
+                    <div id="google_translate_element" class="translate-widget" role="complementary" aria-label="Language translation"></div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list" role="menu">
+                <li role="none"><a href="/" role="menuitem">Home</a></li>
+                <li role="none"><a href="/foundations" role="menuitem">Foundations</a></li>
+                <li role="none"><a href="/learning" role="menuitem">Machine Learning</a></li>
+                <li role="none"><a href="/neural" role="menuitem">Neural Networks</a></li>
+                <li role="none"><a href="/deep" role="menuitem">Deep Learning</a></li>
+                <li role="none"><a href="/modern" role="menuitem">Modern AI</a></li>
+                <li role="none"><a href="/ethics" role="menuitem">Ethics & Society</a></li>
+                <li role="none"><a href="/glossary" role="menuitem">Glossary</a></li>
+                <li role="none"><a href="/mission" role="menuitem">Our Mission</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <img src="/static/yavin-logo.png" alt="Yavin" class="footer-logo" onerror="this.style.display='none'">
+            <p class="footer-title">Yavin</p>
+            <p class="footer-text">Understanding Artificial Intelligence from First Principles</p>
+            <div class="footer-nav">
+                <a href="/">Home</a>
+                <a href="/foundations">Foundations</a>
+                <a href="/learning">Machine Learning</a>
+                <a href="/neural">Neural Networks</a>
+                <a href="/deep">Deep Learning</a>
+                <a href="/modern">Modern AI</a>
+                <a href="/ethics">Ethics</a>
+                <a href="/glossary">Glossary</a>
+                <a href="/mission">Mission</a>
+            </div>
+        </div>
+    </footer>
+
+    {% if page_id != "home" %}
+    <!-- Feedback Button -->
+    <button class="feedback-button" onclick="openFeedbackModal()" aria-label="Provide feedback">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+    </button>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="feedback-modal" role="dialog" aria-labelledby="feedback-title" aria-modal="true">
+        <div class="feedback-modal-content">
+            <button class="feedback-close" onclick="closeFeedbackModal()" aria-label="Close feedback form">&times;</button>
+            <h3 id="feedback-title" class="feedback-title">Share Your Feedback</h3>
+            <p class="feedback-subtitle">Help us improve this learning experience</p>
+            
+            <form id="feedbackForm" class="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-name">Name (optional)</label>
+                    <input type="text" id="feedback-name" name="name" placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-email">Email (optional)</label>
+                    <input type="email" id="feedback-email" name="email" placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-rating">How would you rate this content? *</label>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5" required>
+                            <span>⭐⭐⭐⭐⭐ Excellent</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4">
+                            <span>⭐⭐⭐⭐ Good</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3">
+                            <span>⭐⭐⭐ Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2">
+                            <span>⭐⭐ Below Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1">
+                            <span>⭐ Poor</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-message">Your Feedback *</label>
+                    <textarea id="feedback-message" name="message" rows="4" placeholder="What did you think? Any suggestions for improvement?" required></textarea>
+                </div>
+                
+                <button type="submit" class="feedback-submit">Submit Feedback</button>
+            </form>
+            
+            <div id="feedbackSuccess" class="feedback-success" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <h4>Thank You!</h4>
+                <p>Your feedback has been received. We appreciate your input!</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
+

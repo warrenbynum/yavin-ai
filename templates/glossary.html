@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block title %}Glossary – Yavin{% endblock %}
+{% block description %}Comprehensive glossary of AI terms and concepts. Quick reference for key terminology in artificial intelligence, machine learning, and neural networks.{% endblock %}
+
+{% block content %}
+    <!-- Glossary Section -->
+    <section id="glossary" class="section" aria-labelledby="glossary-title">
+        <div class="container">
+            <h2 id="glossary-title" class="section-title">AI Glossary</h2>
+            
+            <div class="glossary-intro">
+                <p>A comprehensive reference of key terms and concepts in artificial intelligence. Each term includes a clear definition to help build your understanding of AI fundamentals.</p>
+            </div>
+
+            <div class="glossary-grid">
+                <!-- A -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Algorithm</h3>
+                    <p class="glossary-definition">A precise sequence of instructions or steps designed to solve a specific problem or perform a calculation. Algorithms are the foundation of all computer programs and AI systems.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Artificial Intelligence (AI)</h3>
+                    <p class="glossary-definition">The science and engineering of creating systems that exhibit intelligent behavior—capabilities that, if performed by humans, would require intelligence. Includes perception, learning, reasoning, planning, and natural language understanding.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Activation Function</h3>
+                    <p class="glossary-definition">A mathematical function applied to a neuron's output that introduces nonlinearity into neural networks. Common examples include ReLU, sigmoid, and tanh. Essential for networks to learn complex patterns.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Attention Mechanism</h3>
+                    <p class="glossary-definition">A technique that allows models to focus on relevant parts of input when producing output. Core component of Transformer architectures. Enables models to dynamically weight the importance of different input positions.</p>
+                </div>
+
+                <!-- B -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Backpropagation</h3>
+                    <p class="glossary-definition">The fundamental algorithm for training neural networks. Efficiently computes gradients (derivatives) for all parameters by propagating errors backward through layers using the chain rule from calculus.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Bias (Statistical)</h3>
+                    <p class="glossary-definition">Error from overly simplistic assumptions in a learning algorithm. High bias causes underfitting—the model fails to capture the underlying pattern even with infinite data. Part of the bias-variance tradeoff.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Bias (Algorithmic)</h3>
+                    <p class="glossary-definition">Systematic errors in AI systems that create unfair outcomes for certain groups, often reflecting historical discrimination in training data. Addressing algorithmic bias is a central challenge in AI ethics.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Batch Normalization</h3>
+                    <p class="glossary-definition">A technique that normalizes the inputs to each layer of a neural network, stabilizing training and enabling higher learning rates. Helps address vanishing/exploding gradient problems.</p>
+                </div>
+
+                <!-- C -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Classification</h3>
+                    <p class="glossary-definition">A supervised learning task where the goal is to assign inputs to discrete categories (classes). Examples: spam detection (spam/not spam), image recognition (cat/dog/bird), medical diagnosis (disease A/B/C/healthy).</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Clustering</h3>
+                    <p class="glossary-definition">An unsupervised learning technique that groups similar data points together without predefined labels. Common algorithms include K-means, DBSCAN, and hierarchical clustering. Used for customer segmentation, image compression, and exploratory data analysis.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Convolutional Neural Network (CNN)</h3>
+                    <p class="glossary-definition">A neural network architecture designed for processing grid-like data, especially images. Uses convolutional layers that apply filters across the input, exploiting spatial locality and translation invariance. Dominant architecture in computer vision.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Cross-Entropy Loss</h3>
+                    <p class="glossary-definition">A loss function commonly used for classification tasks. Measures the difference between predicted probability distributions and true distributions. Lower cross-entropy indicates better predictions.</p>
+                </div>
+
+                <!-- D -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Deep Learning</h3>
+                    <p class="glossary-definition">Machine learning using neural networks with multiple layers (typically dozens or hundreds). The "depth" allows learning hierarchical representations—from simple features to complex abstractions. Powers most modern AI breakthroughs.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Differential Privacy</h3>
+                    <p class="glossary-definition">A mathematical framework for privacy that adds carefully calibrated noise to data or query results, ensuring individual records cannot be distinguished while preserving aggregate statistical properties. Used by major tech companies to protect user data.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Dropout</h3>
+                    <p class="glossary-definition">A regularization technique where random neurons are ignored (set to zero) during training. Forces the network to learn redundant representations, reducing overfitting and improving generalization.</p>
+                </div>
+
+                <!-- E -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Embedding</h3>
+                    <p class="glossary-definition">A dense vector representation of discrete objects (words, users, items) in continuous space. Learned embeddings capture semantic similarity—similar objects have nearby vectors. Fundamental technique in NLP and recommendation systems.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Epoch</h3>
+                    <p class="glossary-definition">One complete pass through the entire training dataset during neural network training. Models typically train for many epochs (tens to hundreds) until convergence or early stopping criteria are met.</p>
+                </div>
+
+                <!-- F -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Feature</h3>
+                    <p class="glossary-definition">An individual measurable property or characteristic of the data being analyzed. In machine learning, features are the inputs (variables) used to make predictions. Examples: pixel values in images, word frequencies in text, patient vital signs in medical data.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Federated Learning</h3>
+                    <p class="glossary-definition">A distributed learning approach where models are trained across decentralized devices without centralizing data. Each device computes local updates; only model parameters are shared. Preserves privacy while enabling collaborative learning.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Fine-Tuning</h3>
+                    <p class="glossary-definition">Adapting a pre-trained model to a new task by continuing training on task-specific data. Leverages transfer learning—the model's pre-learned representations accelerate learning on the new task, often with limited data.</p>
+                </div>
+
+                <!-- G -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Generative Adversarial Network (GAN)</h3>
+                    <p class="glossary-definition">A framework where two neural networks compete: a generator creates fake data, and a discriminator tries to distinguish real from fake. Through adversarial training, the generator learns to produce realistic synthetic data. Used for image generation, style transfer, and data augmentation.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Gradient</h3>
+                    <p class="glossary-definition">A vector of partial derivatives indicating the direction and rate of steepest increase of a function. In machine learning, gradients point toward higher loss; moving opposite (negative gradient) minimizes loss. Computed via backpropagation.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Gradient Descent</h3>
+                    <p class="glossary-definition">An optimization algorithm that iteratively adjusts model parameters in the direction that most reduces the loss function. The workhorse optimization method for training neural networks. Variants include SGD, Adam, and RMSprop.</p>
+                </div>
+
+                <!-- H -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Hyperparameter</h3>
+                    <p class="glossary-definition">Configuration settings for learning algorithms that are set before training begins (not learned from data). Examples: learning rate, number of layers, batch size. Tuning hyperparameters is crucial for model performance.</p>
+                </div>
+
+                <!-- L -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Large Language Model (LLM)</h3>
+                    <p class="glossary-definition">Neural networks with billions of parameters trained on massive text datasets to understand and generate human-like text. Examples: GPT-4, Claude, PaLM. Exhibit emergent capabilities like few-shot learning, reasoning, and code generation.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Learning Rate</h3>
+                    <p class="glossary-definition">A hyperparameter controlling the step size in gradient descent. Determines how much parameters change in response to gradients. Too small = slow learning; too large = instability or divergence. Finding the right learning rate is critical.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Loss Function</h3>
+                    <p class="glossary-definition">A mathematical function measuring how wrong a model's predictions are compared to true values. Training aims to minimize the loss. Different tasks use different losses: MSE for regression, cross-entropy for classification.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">LSTM (Long Short-Term Memory)</h3>
+                    <p class="glossary-definition">A type of recurrent neural network with gates that control information flow, enabling learning of long-range dependencies in sequences. Solves the vanishing gradient problem that plagues simple RNNs. Widely used for time series and language modeling before Transformers.</p>
+                </div>
+
+                <!-- M -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Machine Learning</h3>
+                    <p class="glossary-definition">A subset of AI focused on systems that improve performance through experience. Instead of explicit programming, ML algorithms learn patterns from data. Core paradigm shift: Data + Answers → Rules (vs. traditional programming's Data + Rules → Answers).</p>
+                </div>
+
+                <!-- N -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Neural Network</h3>
+                    <p class="glossary-definition">Computing systems inspired by biological neurons, consisting of interconnected nodes (artificial neurons) organized in layers. Each connection has a weight; learning adjusts these weights. Foundation of modern deep learning.</p>
+                </div>
+
+                <!-- O -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Overfitting</h3>
+                    <p class="glossary-definition">When a model learns training data too well, including noise and random fluctuations, failing to generalize to new data. The model essentially memorizes rather than learns underlying patterns. Combated through regularization, dropout, and early stopping.</p>
+                </div>
+
+                <!-- P -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Perceptron</h3>
+                    <p class="glossary-definition">The simplest artificial neuron, introduced in 1958. Computes a weighted sum of inputs, adds a bias, and applies a threshold function. While limited to linear decision boundaries, the perceptron established principles underlying modern neural networks.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Pre-training</h3>
+                    <p class="glossary-definition">Training a model on a large, general dataset before fine-tuning on a specific task. Enables transfer learning—the model learns general-purpose features (edges, textures, language patterns) reusable across tasks. Reduces data and compute requirements for downstream tasks.</p>
+                </div>
+
+                <!-- R -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Recurrent Neural Network (RNN)</h3>
+                    <p class="glossary-definition">Neural networks with loops that maintain internal state (memory), allowing processing of sequential data like text, time series, and video. The hidden state at each time step depends on previous states, capturing temporal dependencies.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Regression</h3>
+                    <p class="glossary-definition">A supervised learning task predicting continuous numerical values rather than discrete categories. Examples: predicting house prices, forecasting temperature, estimating delivery times. Regression models output any real number within a range.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Regularization</h3>
+                    <p class="glossary-definition">Techniques that constrain model complexity to prevent overfitting. Methods include L1/L2 weight penalties, dropout, early stopping, and data augmentation. Regularization trades some training accuracy for better generalization.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Reinforcement Learning (RL)</h3>
+                    <p class="glossary-definition">A learning paradigm where an agent learns to make decisions by interacting with an environment, receiving rewards or penalties. The agent discovers optimal behavior through trial and error, balancing exploration (trying new actions) and exploitation (using known good actions).</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">ReLU (Rectified Linear Unit)</h3>
+                    <p class="glossary-definition">An activation function defined as f(x) = max(0, x). Despite extreme simplicity, ReLU is the default choice for hidden layers in most neural networks. Advantages: efficient computation, no vanishing gradient for positive values, induces sparsity.</p>
+                </div>
+
+                <!-- S -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Supervised Learning</h3>
+                    <p class="glossary-definition">Learning from labeled data—examples with known correct answers (inputs paired with outputs). The algorithm finds patterns mapping inputs to outputs. Dominant paradigm for classification and regression tasks. Requires labeled datasets, which can be expensive to create.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Self-Supervised Learning</h3>
+                    <p class="glossary-definition">A learning approach that creates labels automatically from the data itself, eliminating manual labeling. Examples: predict next word in text, predict masked image patches, predict image rotations. Unlocks learning from massive unlabeled datasets.</p>
+                </div>
+
+                <!-- T -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Training Data</h3>
+                    <p class="glossary-definition">The dataset used to train a machine learning model—examples the model learns from. Quality and quantity of training data profoundly impact model performance. The adage "garbage in, garbage out" applies: biased or poor-quality data produces biased or poor-quality models.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Transfer Learning</h3>
+                    <p class="glossary-definition">Leveraging knowledge learned on one task to accelerate learning on a related task. Typically involves pre-training on a large dataset, then fine-tuning on a smaller task-specific dataset. Dramatically reduces data and compute requirements, enabling practical AI in specialized domains.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Transformer</h3>
+                    <p class="glossary-definition">A neural architecture based on self-attention mechanisms that processes sequences in parallel (unlike recurrent networks). Introduced in 2017, Transformers revolutionized NLP and now dominate language models, computer vision, and multi-modal AI. Foundation of GPT, BERT, and most modern LLMs.</p>
+                </div>
+
+                <!-- U -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Underfitting</h3>
+                    <p class="glossary-definition">When a model is too simple to capture the underlying pattern in data. High training error indicates underfitting. Solution: increase model capacity (more layers, more neurons), train longer, or add relevant features.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Unsupervised Learning</h3>
+                    <p class="glossary-definition">Learning from unlabeled data without correct answers. The algorithm discovers inherent structure, patterns, or groupings. Includes clustering, dimensionality reduction, and anomaly detection. Useful for exploratory analysis and when labels are unavailable or expensive.</p>
+                </div>
+
+                <!-- V -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Validation Data</h3>
+                    <p class="glossary-definition">A dataset held out from training, used to tune hyperparameters and monitor for overfitting during development. Different from test data (final evaluation). Typical split: 60-70% training, 10-15% validation, 15-30% test.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Variance (Statistical)</h3>
+                    <p class="glossary-definition">Error from sensitivity to small fluctuations in training data. High variance causes overfitting—the model fits noise as if it were signal. Part of the bias-variance tradeoff. Reduced through regularization and collecting more training data.</p>
+                </div>
+
+                <!-- W -->
+                <div class="glossary-item">
+                    <h3 class="glossary-term">Weight</h3>
+                    <p class="glossary-definition">A learnable parameter in a neural network that determines connection strength between neurons. Weights are adjusted during training to minimize loss. A network with millions of weights can learn complex patterns, but also risks overfitting without proper regularization.</p>
+                </div>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/ethics" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Ethics & Society</span>
+                </a>
+                <a href="/mission" class="nav-button nav-button-next">
+                    <span class="nav-label">Our Mission</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

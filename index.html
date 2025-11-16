@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yavin – Understanding Artificial Intelligence</title>
+    
+    <meta name="description" content="A first-principles journey through the foundations of AI. Learn about machine learning, neural networks, deep learning, and modern AI systems.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yavin.ai/">
+    <meta property="og:title" content="Yavin – Understanding Artificial Intelligence">
+    <meta property="og:description" content="A first-principles journey through the foundations of AI. Learn about machine learning, neural networks, and modern AI systems.">
+    <meta property="og:image" content="yavin-thumbnail.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yavin.ai/">
+    <meta property="twitter:title" content="Yavin – Understanding Artificial Intelligence">
+    <meta property="twitter:description" content="A first-principles journey through the foundations of AI. Learn about machine learning, neural networks, and modern AI systems.">
+    <meta property="twitter:image" content="yavin-thumbnail.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="yavin-logo.png">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <img src="yavin-logo.png" alt="Yavin" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">Yavin</span>
+            </a>
+            
+            <div class="nav-controls-wrapper">
+                <!-- Accessibility Controls -->
+                <div class="accessibility-controls">
+                    <button id="contrast-toggle" class="control-btn" aria-label="Toggle high contrast mode" title="High Contrast">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2v20"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list" role="menu">
+                <li role="none"><a href="foundations.html" role="menuitem">Foundations</a></li>
+                <li role="none"><a href="learning.html" role="menuitem">Machine Learning</a></li>
+                <li role="none"><a href="neural.html" role="menuitem">Neural Networks</a></li>
+                <li role="none"><a href="deep.html" role="menuitem">Deep Learning</a></li>
+                <li role="none"><a href="modern.html" role="menuitem">Modern AI</a></li>
+                <li role="none"><a href="ethics.html" role="menuitem">Ethics & Society</a></li>
+                <li role="none"><a href="glossary.html" role="menuitem">Glossary</a></li>
+                <li role="none"><a href="mission.html" role="menuitem">Our Mission</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" role="banner">
+        <div class="hero-content">
+            <img src="yavin-logo.png" alt="Yavin Logo" class="hero-logo" onerror="this.style.display='none'">
+            <h1>Understanding Artificial Intelligence</h1>
+            <p class="hero-subtitle">A first-principles journey through the foundations of AI</p>
+            <a href="foundations.html" class="cta-button" role="button">Begin</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <img src="yavin-logo.png" alt="Yavin" class="footer-logo" onerror="this.style.display='none'">
+            <p class="footer-title">Yavin</p>
+            <p class="footer-text">Understanding Artificial Intelligence from First Principles</p>
+            <div class="footer-nav">
+                <a href="foundations.html">Foundations</a>
+                <a href="learning.html">Machine Learning</a>
+                <a href="neural.html">Neural Networks</a>
+                <a href="deep.html">Deep Learning</a>
+                <a href="modern.html">Modern AI</a>
+                <a href="ethics.html">Ethics</a>
+                <a href="glossary.html">Glossary</a>
+                <a href="mission.html">Mission</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

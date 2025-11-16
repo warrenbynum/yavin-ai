@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block title %}Machine Learning – Yavin{% endblock %}
+{% block description %}Comprehensive exploration of machine learning: supervised, unsupervised, and reinforcement learning, with deep dives into optimization, overfitting, and the bias-variance tradeoff.{% endblock %}
+
+{% block content %}
+    <!-- Machine Learning Section -->
+    <section id="learning" class="section section-alt" aria-labelledby="learning-title">
+        <div class="container">
+            <h2 id="learning-title" class="section-title">Machine Learning</h2>
+            
+            <!-- Part 1: What is Learning? -->
+            <div class="content-block">
+                <h3>Part I: The Nature of Learning</h3>
+                
+                <h4>Defining Learning in Computational Terms</h4>
+                <p>What does it mean for a machine to "learn"? This question touches on deep philosophical territory, but for practical purposes, we adopt a pragmatic definition from computer scientist Tom Mitchell:</p>
+
+                <div class="insight-box">
+                    <h4>Mitchell's Definition of Machine Learning (1997)</h4>
+                    <p><em>"A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E."</em></p>
+                    
+                    <p style="margin-top: 1rem;"><strong>Breaking this down:</strong></p>
+                    <ul>
+                        <li><strong>Task (T):</strong> The problem you want to solve (e.g., classify emails, predict prices, recognize faces)</li>
+                        <li><strong>Experience (E):</strong> The data the system learns from (e.g., thousands of labeled emails)</li>
+                        <li><strong>Performance (P):</strong> How we measure success (e.g., classification accuracy, prediction error)</li>
+                    </ul>
+                </div>
+
+                <p>This definition is powerful because it's <strong>measurable and empirical</strong>. We don't need to philosophize about whether the machine "understands"—we simply ask: does it get better at the task as it sees more data?</p>
+
+                <h4>Learning as Function Approximation</h4>
+                <p>At a mathematical level, most machine learning can be viewed as <strong>function approximation</strong>. Imagine there exists some unknown function <em>f</em> that maps inputs to outputs:</p>
+                
+                <p class="formula">y = f(x)</p>
+
+                <p>Where:</p>
+                <ul>
+                    <li><strong>x</strong> represents input features (pixel values, word frequencies, sensor readings)</li>
+                    <li><strong>y</strong> represents the desired output (label, prediction, action)</li>
+                    <li><strong>f</strong> is the mysterious function we want to discover</li>
+                </ul>
+
+                <p>The problem: we don't know <em>f</em>. We only have examples—pairs of (x, y) where we've observed the input and correct output. Machine learning's goal is to find an approximation <em>f̂</em> (read "f-hat") that behaves as similarly to <em>f</em> as possible:</p>
+
+                <p class="formula">ŷ = f̂(x) ≈ y</p>
+
+                <p>The better <em>f̂</em> approximates <em>f</em>, the better our predictions. The art and science of machine learning lies in:</p>
+                <ol>
+                    <li>Choosing the right <strong>model class</strong> (what form can <em>f̂</em> take?)</li>
+                    <li>Finding the best <strong>parameters</strong> for that model (optimizing <em>f̂</em>)</li>
+                    <li>Ensuring the model <strong>generalizes</strong> (works on new, unseen data)</li>
+                </ol>
+            </div>
+
+            <!-- Part 2: Supervised Learning -->
+            <div class="content-block">
+                <h3>Part II: Supervised Learning – Learning with Guidance</h3>
+                
+                <h4>The Supervised Paradigm</h4>
+                <p><span class="tooltip-term" data-tooltip="A type of machine learning where the algorithm learns from labeled training data—examples with known correct answers."><strong>Supervised learning</strong></span> is learning with a teacher. You provide the algorithm with a dataset containing both inputs and their correct outputs (labels). The algorithm's job is to find patterns that map inputs to outputs.</p>
+
+                <div class="card">
+                    <h4>Example: Predicting House Prices</h4>
+                    <p><strong>Training Data:</strong> Historical records of houses with known sale prices</p>
+                    <ul>
+                        <li>Input features: square footage, number of bedrooms, location, age, etc.</li>
+                        <li>Output label: actual sale price</li>
+                    </ul>
+                    <p><strong>Learning Process:</strong> The algorithm analyzes thousands of examples to discover relationships like "houses with more square footage tend to cost more" and "houses in certain neighborhoods command premium prices."</p>
+                    <p><strong>Prediction:</strong> Given a new house's features (without knowing its price), predict what it should sell for.</p>
+                </div>
+
+                <h4>The Two Flavors of Supervised Learning</h4>
+                
+                <h5>1. Classification – Discrete Categories</h5>
+                <p><strong>Classification</strong> involves assigning inputs to discrete categories or classes. The output is a label from a finite set of possibilities.</p>
+                
+                <p><strong>Examples:</strong></p>
+                <ul>
+                    <li><strong>Binary Classification:</strong> Spam vs. legitimate email, fraud vs. legitimate transaction, tumor vs. no tumor</li>
+                    <li><strong>Multi-class Classification:</strong> Handwritten digit recognition (0-9), object detection (car, person, dog, cat, etc.)</li>
+                    <li><strong>Multi-label Classification:</strong> Image tagging where one image can have multiple labels (beach, sunset, people)</li>
+                </ul>
+
+                <h5>2. Regression – Continuous Values</h5>
+                <p><strong>Regression</strong> involves predicting continuous numerical values. The output can be any number within a range.</p>
+                
+                <p><strong>Examples:</strong></p>
+                <ul>
+                    <li>Predicting house prices (any dollar amount)</li>
+                    <li>Forecasting temperature (any degree value)</li>
+                    <li>Estimating delivery time (any duration)</li>
+                    <li>Predicting stock prices (any price point)</li>
+                </ul>
+
+                <h4>The Training Process: An Intuitive Walkthrough</h4>
+                <p>Let's demystify how supervised learning actually works using a simple example—teaching a model to distinguish between apples and oranges based on weight and color.</p>
+
+                <div class="insight-box">
+                    <h4>Step-by-Step: Learning to Classify Fruit</h4>
+                    
+                    <p><strong>Step 1: Collect Training Data</strong></p>
+                    <p>Gather 1,000 labeled examples:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>500 apples (weight: 150-250g, color: red scale 0-10)</li>
+                        <li>500 oranges (weight: 130-180g, color: orange scale 0-10)</li>
+                    </ul>
+
+                    <p><strong>Step 2: Initialize Model</strong></p>
+                    <p>Start with random guesses—a decision boundary that separates the space randomly. Initially, the model is terrible at classification.</p>
+
+                    <p><strong>Step 3: Make Predictions</strong></p>
+                    <p>For each training example, the model predicts "apple" or "orange" based on its current (bad) understanding.</p>
+
+                    <p><strong>Step 4: Calculate Error</strong></p>
+                    <p>Compare predictions to actual labels. For example: predicted apple but it was actually orange = error!</p>
+
+                    <p><strong>Step 5: Update Model</strong></p>
+                    <p>Adjust the decision boundary to reduce errors. If the model incorrectly classified a heavy, orange-colored fruit as an apple, shift the boundary to better separate these cases.</p>
+
+                    <p><strong>Step 6: Repeat</strong></p>
+                    <p>Cycle through the data multiple times (epochs), each time refining the boundary, until predictions become accurate.</p>
+
+                    <p><strong>Step 7: Validate</strong></p>
+                    <p>Test on new, unseen fruits. If the model performs well, it has learned to generalize!</p>
+                </div>
+
+                <h4>The Loss Function: Quantifying Error</h4>
+                <p>Central to supervised learning is the concept of a <span class="tooltip-term" data-tooltip="A mathematical function that measures how wrong a model's predictions are compared to the true values."><strong>loss function</strong></span> (also called cost function or objective function). This quantifies how badly the model is performing.</p>
+
+                <p>For regression, a common loss function is <strong>Mean Squared Error (MSE)</strong>:</p>
+                <p class="formula">MSE = (1/n) Σ(y<sub>i</sub> - ŷ<sub>i</sub>)²</p>
+
+                <p>Where:</p>
+                <ul>
+                    <li><em>n</em> = number of examples</li>
+                    <li><em>y<sub>i</sub></em> = true value for example <em>i</em></li>
+                    <li><em>ŷ<sub>i</sub></em> = predicted value for example <em>i</em></li>
+                </ul>
+
+                <p>Squaring the errors penalizes larger mistakes more heavily. The goal of learning is to minimize this loss—find the model parameters that make predictions as close to reality as possible.</p>
+            </div>
+
+            <!-- Part 3: Unsupervised Learning -->
+            <div class="content-block">
+                <h3>Part III: Unsupervised Learning – Finding Hidden Structure</h3>
+                
+                <h4>Learning Without Labels</h4>
+                <p><span class="tooltip-term" data-tooltip="Machine learning where the algorithm finds patterns in data without labeled examples or correct answers."><strong>Unsupervised learning</strong></span> tackles a different challenge: what if you have data but no labels? No teacher providing correct answers. The algorithm must find structure, patterns, or groupings in the data purely from the input features themselves.</p>
+
+                <p>This mirrors much of human and animal learning. A baby doesn't need labels to recognize that some objects are similar and others different. They discover categories through observation.</p>
+
+                <h4>Clustering: Discovering Natural Groups</h4>
+                <p><strong>Clustering</strong> algorithms group similar data points together. The algorithm decides how many groups exist and which points belong to which group.</p>
+
+                <div class="card">
+                    <h4>K-Means Clustering: An Elegant Algorithm</h4>
+                    <p><strong>Goal:</strong> Partition data into <em>k</em> clusters where points in the same cluster are similar.</p>
+                    
+                    <p><strong>Algorithm:</strong></p>
+                    <ol style="font-size: 0.9em;">
+                        <li>Randomly place <em>k</em> cluster centers in the data space</li>
+                        <li>Assign each data point to its nearest cluster center</li>
+                        <li>Move each cluster center to the average position of all points assigned to it</li>
+                        <li>Repeat steps 2-3 until cluster centers stop moving (convergence)</li>
+                    </ol>
+
+                    <p><strong>Real-World Application:</strong> Customer segmentation in marketing—group customers by purchasing behavior without predefined categories. Discover natural segments like "frequent small purchases," "occasional large purchases," "discount seekers," etc.</p>
+                </div>
+
+                <h4>Dimensionality Reduction: Simplifying Complexity</h4>
+                <p>Real-world data often has hundreds or thousands of features. <strong>Dimensionality reduction</strong> finds lower-dimensional representations that preserve the most important information.</p>
+
+                <p><strong>Why this matters:</strong></p>
+                <ul>
+                    <li><strong>Visualization:</strong> Humans can't visualize 1,000 dimensions, but we can see 2D or 3D projections</li>
+                    <li><strong>Noise reduction:</strong> Many dimensions contain redundant or irrelevant information</li>
+                    <li><strong>Computational efficiency:</strong> Fewer dimensions mean faster training and prediction</li>
+                    <li><strong>Avoiding the curse of dimensionality:</strong> In high dimensions, data becomes sparse and distance metrics break down</li>
+                </ul>
+
+                <p><strong>Principal Component Analysis (PCA)</strong> is the most famous dimensionality reduction technique. It finds the directions of maximum variance in the data—the axes along which data varies the most—and projects onto those axes.</p>
+
+                <h4>Anomaly Detection: Finding the Unusual</h4>
+                <p>Sometimes the goal is to identify data points that don't fit the pattern—outliers or anomalies. This is crucial for:</p>
+                <ul>
+                    <li><strong>Fraud detection:</strong> Transactions that deviate from normal behavior</li>
+                    <li><strong>Manufacturing quality control:</strong> Defective products with unusual characteristics</li>
+                    <li><strong>Network security:</strong> Unusual traffic patterns indicating attacks</li>
+                    <li><strong>Medical diagnosis:</strong> Abnormal test results warranting investigation</li>
+                </ul>
+
+                <p>Unsupervised anomaly detection builds a model of "normal" behavior from unlabeled data, then flags anything that deviates significantly.</p>
+            </div>
+
+            <!-- Part 4: Reinforcement Learning -->
+            <div class="content-block">
+                <h3>Part IV: Reinforcement Learning – Learning Through Interaction</h3>
+                
+                <h4>The Agent-Environment Framework</h4>
+                <p><span class="tooltip-term" data-tooltip="A learning paradigm where an agent learns to make decisions by taking actions in an environment and receiving rewards or penalties."><strong>Reinforcement Learning (RL)</strong></span> differs fundamentally from supervised and unsupervised learning. Instead of learning from a fixed dataset, an RL agent learns by interacting with an environment, taking actions, and receiving feedback in the form of rewards or penalties.</p>
+
+                <div class="insight-box">
+                    <h4>The Reinforcement Learning Loop</h4>
+                    <ol>
+                        <li><strong>Observe:</strong> Agent perceives the current state of the environment</li>
+                        <li><strong>Decide:</strong> Agent chooses an action based on its current policy</li>
+                        <li><strong>Act:</strong> Agent executes the action</li>
+                        <li><strong>Receive:</strong> Environment provides a reward (positive or negative) and transitions to a new state</li>
+                        <li><strong>Learn:</strong> Agent updates its policy to increase future rewards</li>
+                        <li><strong>Repeat:</strong> Process continues iteratively</li>
+                    </ol>
+                </div>
+
+                <h4>The Explore-Exploit Dilemma</h4>
+                <p>One of RL's most fascinating challenges is the <strong>exploration-exploitation tradeoff</strong>:</p>
+                <ul>
+                    <li><strong>Exploitation:</strong> Use current knowledge to maximize immediate reward (do what you know works)</li>
+                    <li><strong>Exploration:</strong> Try new actions to potentially discover better strategies (experiment with unknowns)</li>
+                </ul>
+
+                <p>Pure exploitation means you might miss better strategies you haven't discovered. Pure exploration means you never capitalize on what you've learned. Successful RL requires balancing both.</p>
+
+                <div class="card">
+                    <h4>Real-World Example: Teaching a Robot to Walk</h4>
+                    <p><strong>State:</strong> Joint angles, orientation, velocity of each limb</p>
+                    <p><strong>Actions:</strong> How much force to apply to each motor/joint</p>
+                    <p><strong>Reward:</strong> +1 for each step forward, -10 for falling over</p>
+                    <p><strong>Learning Process:</strong></p>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Initial attempts:</strong> Random motor commands → robot immediately falls → negative reward</li>
+                        <li><strong>Exploration:</strong> Try millions of different command sequences through trial and error</li>
+                        <li><strong>Pattern discovery:</strong> Gradually learn that certain joint configurations lead to balance</li>
+                        <li><strong>Skill refinement:</strong> Optimize gait to maximize forward progress</li>
+                        <li><strong>Result:</strong> Emergent walking behavior without ever explicitly programming "how to walk"</li>
+                    </ul>
+                </div>
+
+                <h4>Applications: Where RL Shines</h4>
+                <ul>
+                    <li><strong>Game Playing:</strong> AlphaGo, chess engines, Atari games—RL agents have achieved superhuman performance</li>
+                    <li><strong>Robotics:</strong> Manipulation, locomotion, navigation in complex environments</li>
+                    <li><strong>Autonomous Vehicles:</strong> Learning to drive by maximizing safety and efficiency</li>
+                    <li><strong>Resource Management:</strong> Optimizing data center cooling, traffic light timing, inventory management</li>
+                    <li><strong>Personalization:</strong> Recommendation systems that adapt to user feedback</li>
+                </ul>
+            </div>
+
+            <!-- Part 5: Optimization and Gradient Descent -->
+            <div class="content-block">
+                <h3>Part V: The Optimization Engine – Gradient Descent</h3>
+                
+                <h4>The Central Problem of Learning</h4>
+                <p>Regardless of the learning paradigm, we face a common challenge: how do we actually find the best model parameters? This is an <strong>optimization problem</strong>—searching through a vast space of possibilities to find the configuration that minimizes loss.</p>
+
+                <p>For neural networks with millions or billions of parameters, exhaustive search is impossible. We need a smarter approach.</p>
+
+                <h4>The Gradient: Following the Slope</h4>
+                <p>Imagine you're standing on a mountainside in dense fog. You can't see the valley below, but you want to descend. What do you do? Feel the slope beneath your feet and step in the direction that descends most steeply.</p>
+
+                <p>This is exactly how <span class="tooltip-term" data-tooltip="An optimization algorithm that iteratively adjusts parameters in the direction that most reduces the loss function."><strong>gradient descent</strong></span> works. The gradient is a mathematical concept that points in the direction of steepest increase of a function. To minimize loss, we move in the opposite direction—the negative gradient.</p>
+
+                <div class="insight-box">
+                    <h4>Gradient Descent Algorithm</h4>
+                    <pre class="code-block">
+Initialize parameters θ randomly
+Repeat until convergence:
+    1. Compute loss L(θ) on training data
+    2. Compute gradient ∇L(θ) (how loss changes with each parameter)
+    3. Update: θ ← θ - α·∇L(θ)
+       where α is the learning rate (step size)
+                    </pre>
+                </div>
+
+                <h4>The Learning Rate: A Critical Hyperparameter</h4>
+                <p>The <strong>learning rate (α)</strong> determines how big a step we take in the direction of the gradient:</p>
+                <ul>
+                    <li><strong>Too small:</strong> Learning is painfully slow, may never reach the minimum</li>
+                    <li><strong>Too large:</strong> We overshoot the minimum, bouncing around or even diverging</li>
+                    <li><strong>Just right:</strong> Steady, efficient convergence to a good solution</li>
+                </ul>
+
+                <p>Choosing the right learning rate is more art than science, though techniques like <strong>learning rate schedules</strong> (decreasing over time) and <strong>adaptive learning rates</strong> (different rates for different parameters) help.</p>
+
+                <h4>Variants and Improvements</h4>
+                <p>Basic gradient descent has inspired many variants:</p>
+                <ul>
+                    <li><strong>Stochastic Gradient Descent (SGD):</strong> Update after each example (faster, noisier)</li>
+                    <li><strong>Mini-batch Gradient Descent:</strong> Update after small batches (good balance)</li>
+                    <li><strong>Momentum:</strong> Accumulate velocity from past gradients (smooths oscillations)</li>
+                    <li><strong>Adam:</strong> Adaptive learning rates with momentum (current default for many applications)</li>
+                </ul>
+            </div>
+
+            <!-- Part 6: Overfitting and Generalization -->
+            <div class="content-block">
+                <h3>Part VI: The Generalization Challenge</h3>
+                
+                <h4>The Ultimate Test: Unseen Data</h4>
+                <p>A model that performs perfectly on training data but fails on new examples has learned nothing useful—it has merely <strong>memorized</strong>. True learning requires <strong>generalization</strong>: performing well on data the model has never encountered.</p>
+
+                <h4>Overfitting: The Memorization Trap</h4>
+                <p><span class="tooltip-term" data-tooltip="When a model learns the training data too well, including noise and peculiarities, failing to generalize to new data."><strong>Overfitting</strong></span> occurs when a model becomes too complex, fitting not just the underlying pattern but also the noise and random fluctuations in the training data.</p>
+
+                <div class="card">
+                    <h4>Illustration: Polynomial Curve Fitting</h4>
+                    <p>Imagine fitting a curve to data points representing house prices vs. square footage:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Linear model (y = mx + b):</strong> Simple straight line. May <em>underfit</em>—too simple to capture the true relationship.</li>
+                        <li><strong>Quadratic model (y = ax² + bx + c):</strong> Gentle curve. Often captures the right balance.</li>
+                        <li><strong>10th degree polynomial:</strong> Wiggly curve that passes through every single training point perfectly. Training error = 0. But the curve has bizarre oscillations between points that don't reflect reality. Test error is terrible.</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">The 10th degree polynomial has <strong>overfit</strong>—it models noise as if it were signal.</p>
+                </div>
+
+                <h4>The Bias-Variance Tradeoff</h4>
+                <p>This fundamental concept explains the generalization challenge:</p>
+                
+                <ul>
+                    <li><strong>Bias:</strong> Error from overly simplistic assumptions. High bias models underfit—they can't capture the true pattern even with infinite data.</li>
+                    <li><strong>Variance:</strong> Error from sensitivity to training data fluctuations. High variance models overfit—they change dramatically with small changes in training data.</li>
+                </ul>
+
+                <p class="formula">Total Error = Bias² + Variance + Irreducible Error</p>
+
+                <p>The art of machine learning involves finding the sweet spot: a model complex enough to capture genuine patterns (low bias) but not so complex it fits noise (low variance).</p>
+
+                <h4>Combating Overfitting: Regularization</h4>
+                <p><strong>Regularization</strong> techniques constrain model complexity:</p>
+
+                <ul>
+                    <li><strong>L1/L2 Regularization:</strong> Add penalty terms to the loss function that discourage large parameter values</li>
+                    <li><strong>Dropout:</strong> Randomly ignore some neurons during training (forces redundancy and robustness)</li>
+                    <li><strong>Early Stopping:</strong> Monitor validation performance and stop training before overfitting occurs</li>
+                    <li><strong>Data Augmentation:</strong> Artificially expand training data with transformed versions</li>
+                    <li><strong>Cross-Validation:</strong> Test on multiple train/test splits to ensure robustness</li>
+                </ul>
+
+                <p class="key-insight">The goal of machine learning isn't perfect training performance—it's the best possible generalization to new situations. This requires careful balance between model capacity, training data, and regularization.</p>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/foundations" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Foundations</span>
+                </a>
+                <a href="/neural" class="nav-button nav-button-next">
+                    <span class="nav-label">Neural Networks</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

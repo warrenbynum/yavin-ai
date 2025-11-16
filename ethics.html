@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethics & Society – Yavin</title>
+    
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,zh-CN,ja,ko,pt,ru,ar,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    
+    <meta name="description" content="Learn about AI ethics, bias, privacy, transparency, and the societal implications of artificial intelligence.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="yavin-logo.png">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <img src="yavin-logo.png" alt="Yavin" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">Yavin</span>
+            </a>
+            
+            <div class="nav-controls-wrapper">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                    <div class="search-dropdown" id="searchDropdown">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="Search content..."
+                            aria-label="Search site content"
+                        >
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                </div>
+                
+                <!-- Accessibility Controls -->
+                <div class="accessibility-controls">
+                    <button id="contrast-toggle" class="control-btn" aria-label="Toggle high contrast mode" title="High Contrast">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2v20"/>
+                        </svg>
+                    </button>
+                    <button id="tts-toggle" class="control-btn" aria-label="Toggle text-to-speech" title="Text-to-Speech">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M15 9a5 5 0 0 1 0 6"/>
+                            <path d="M18 6a9 9 0 0 1 0 12"/>
+                        </svg>
+                    </button>
+                    <div id="google_translate_element" class="translate-widget" role="complementary" aria-label="Language translation"></div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="foundations.html" role="menuitem">Foundations</a></li>
+                <li role="none"><a href="learning.html" role="menuitem">Machine Learning</a></li>
+                <li role="none"><a href="neural.html" role="menuitem">Neural Networks</a></li>
+                <li role="none"><a href="deep.html" role="menuitem">Deep Learning</a></li>
+                <li role="none"><a href="modern.html" role="menuitem">Modern AI</a></li>
+                <li role="none"><a href="ethics.html" role="menuitem">Ethics & Society</a></li>
+                <li role="none"><a href="glossary.html" role="menuitem">Glossary</a></li>
+                <li role="none"><a href="mission.html" role="menuitem">Our Mission</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Ethics Section -->
+    <section id="ethics" class="section section-alt" aria-labelledby="ethics-title">
+        <div class="container">
+            <h2 id="ethics-title" class="section-title">Ethics & Society</h2>
+            
+            <div class="content-block">
+                <h3>Bias and Fairness</h3>
+                <p>AI systems learn from data created by humans – and human data contains human <span class="tooltip-term" data-tooltip="Systematic errors in AI systems that can lead to unfair outcomes, often reflecting biases present in training data.">biases</span>. If training data reflects historical discrimination, the AI will perpetuate it:</p>
+
+                <ul>
+                    <li>Facial recognition systems that perform worse on darker skin tones</li>
+                    <li>Hiring algorithms that discriminate based on gender or ethnicity</li>
+                    <li>Criminal justice systems that disproportionately flag certain demographics</li>
+                    <li>Language models that generate stereotypical or offensive content</li>
+                </ul>
+
+                <p class="key-insight">Addressing bias requires diverse training data, careful evaluation, and ongoing monitoring. Technical solutions exist, but they require acknowledging that AI systems encode societal values.</p>
+            </div>
+
+            <div class="content-block">
+                <h3>Privacy and Surveillance</h3>
+                <p>AI enables unprecedented data collection and analysis:</p>
+
+                <ul>
+                    <li>Facial recognition in public spaces</li>
+                    <li>Behavioral tracking and profiling</li>
+                    <li>Predictive policing</li>
+                    <li>Mass surveillance capabilities</li>
+                </ul>
+
+                <p>Balancing innovation with privacy rights remains an ongoing challenge. Questions include: Who owns your data? How should it be used? What consent is required?</p>
+            </div>
+
+            <div class="content-block">
+                <h3>Transparency and Accountability</h3>
+                <p>Deep neural networks are often "black boxes" – even their creators can't fully explain individual decisions. This creates challenges:</p>
+
+                <ul>
+                    <li>How do we audit AI decisions in critical domains (healthcare, criminal justice)?</li>
+                    <li>Who is liable when AI systems cause harm?</li>
+                    <li>Can we trust AI we don't understand?</li>
+                </ul>
+
+                <p>Research in "explainable AI" aims to create interpretable models, but fundamental tensions exist between performance and interpretability.</p>
+            </div>
+
+            <div class="content-block">
+                <h3>Economic Impact</h3>
+                <p>AI will transform the job market:</p>
+
+                <ul>
+                    <li><strong>Automation:</strong> Routine cognitive tasks increasingly automated</li>
+                    <li><strong>Augmentation:</strong> AI tools enhance human capabilities</li>
+                    <li><strong>New Jobs:</strong> Emerging roles in AI development, deployment, and oversight</li>
+                    <li><strong>Disruption:</strong> Entire industries may transform or disappear</li>
+                </ul>
+
+                <p>History shows technology creates new opportunities while eliminating others. The challenge is ensuring smooth transitions and equitable outcomes.</p>
+            </div>
+
+            <div class="content-block">
+                <h3>Looking Forward</h3>
+                
+                <div class="card">
+                    <h4>Artificial General Intelligence</h4>
+                    <p>Current AI excels at narrow tasks. AGI would match human-level intelligence across all domains. While predictions vary wildly, most experts believe AGI is decades away – if achievable at all.</p>
+                </div>
+
+                <div class="card">
+                    <h4>Alignment</h4>
+                    <p>How do we ensure advanced AI systems pursue goals aligned with human values? Specifying "good" behavior is surprisingly difficult – simple objectives can lead to unexpected, harmful outcomes.</p>
+                </div>
+
+                <div class="card">
+                    <h4>Governance</h4>
+                    <p>Who controls powerful AI systems? How should AI development be regulated? International cooperation, safety research, and ethical frameworks are critical.</p>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <p class="key-insight">AI is a tool – powerful, transformative, but ultimately shaped by human choices. Understanding AI empowers informed participation in decisions about its development and deployment. You don't need to be a technical expert to engage with the societal implications of this technology.</p>
+            </div>
+
+            <!-- Quiz: Ethics -->
+            <div class="quiz-container" data-section="ethics">
+                <h3 class="quiz-title">Test Your Knowledge: Ethics & Society</h3>
+                <p class="quiz-subtitle">Answer these questions to check your understanding</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> Why do AI systems sometimes perpetuate bias?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="a">
+                                <span>AI is inherently biased by design</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="b" data-correct="true">
+                                <span>AI learns from human data which contains human biases</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="c">
+                                <span>Computers are incapable of fairness</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q1" value="d">
+                                <span>AI developers intentionally add bias</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> What is a major challenge with deep neural networks regarding transparency?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="a">
+                                <span>They take too long to train</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="b" data-correct="true">
+                                <span>They are often "black boxes" where individual decisions cannot be fully explained</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="c">
+                                <span>They don't work accurately</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q2" value="d">
+                                <span>They require too much data</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> What is the "alignment" problem in AI?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="a">
+                                <span>Making sure AI systems run on compatible hardware</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="b">
+                                <span>Organizing AI code properly</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="c" data-correct="true">
+                                <span>Ensuring AI systems pursue goals aligned with human values</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q3" value="d">
+                                <span>Balancing the budget for AI research</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> According to the text, what will AI's impact on the job market likely include?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="a">
+                                <span>AI will eliminate all jobs</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="b">
+                                <span>AI will have no impact on jobs</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="c" data-correct="true">
+                                <span>Both automation of routine tasks and creation of new roles</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q4" value="d">
+                                <span>Only high-skilled jobs will be affected</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="quiz-question" data-question="5">
+                        <p class="question-text"><strong>Q5.</strong> What does the text emphasize about engaging with AI's societal implications?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="a">
+                                <span>Only technical experts should participate in AI discussions</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="b" data-correct="true">
+                                <span>Understanding AI empowers anyone to participate in decisions about its development</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="c">
+                                <span>AI decisions should be left to governments alone</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="ethics-q5" value="d">
+                                <span>Individual participation doesn't matter</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('ethics')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="modern.html" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Modern AI</span>
+                </a>
+                <a href="glossary.html" class="nav-button nav-button-next">
+                    <span class="nav-label">Glossary</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <img src="yavin-logo.png" alt="Yavin" class="footer-logo" onerror="this.style.display='none'">
+            <p class="footer-title">Yavin</p>
+            <p class="footer-text">Understanding Artificial Intelligence from First Principles</p>
+            <div class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="foundations.html">Foundations</a>
+                <a href="learning.html">Machine Learning</a>
+                <a href="neural.html">Neural Networks</a>
+                <a href="deep.html">Deep Learning</a>
+                <a href="modern.html">Modern AI</a>
+                <a href="ethics.html">Ethics</a>
+                <a href="glossary.html">Glossary</a>
+                <a href="mission.html">Mission</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Feedback Button -->
+    <button class="feedback-button" onclick="openFeedbackModal()" aria-label="Provide feedback">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+    </button>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="feedback-modal" role="dialog" aria-labelledby="feedback-title" aria-modal="true">
+        <div class="feedback-modal-content">
+            <button class="feedback-close" onclick="closeFeedbackModal()" aria-label="Close feedback form">&times;</button>
+            <h3 id="feedback-title" class="feedback-title">Share Your Feedback</h3>
+            <p class="feedback-subtitle">Help us improve this learning experience</p>
+            
+            <form id="feedbackForm" class="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-name">Name (optional)</label>
+                    <input type="text" id="feedback-name" name="name" placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-email">Email (optional)</label>
+                    <input type="email" id="feedback-email" name="email" placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-rating">How would you rate this content? *</label>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5" required>
+                            <span>⭐⭐⭐⭐⭐ Excellent</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4">
+                            <span>⭐⭐⭐⭐ Good</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3">
+                            <span>⭐⭐⭐ Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2">
+                            <span>⭐⭐ Below Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1">
+                            <span>⭐ Poor</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-message">Your Feedback *</label>
+                    <textarea id="feedback-message" name="message" rows="4" placeholder="What did you think? Any suggestions for improvement?" required></textarea>
+                </div>
+                
+                <button type="submit" class="feedback-submit">Submit Feedback</button>
+            </form>
+            
+            <div id="feedbackSuccess" class="feedback-success" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <h4>Thank You!</h4>
+                <p>Your feedback has been received. We appreciate your input!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

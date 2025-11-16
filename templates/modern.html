@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+
+{% block title %}Modern AI – Yavin{% endblock %}
+{% block description %}Explore modern AI applications: Large Language Models, Computer Vision systems, speech recognition, robotics, and the real-world impact of contemporary AI systems.{% endblock %}
+
+{% block content %}
+    <!-- Modern AI Section -->
+    <section id="modern" class="section" aria-labelledby="modern-title">
+        <div class="container">
+            <h2 id="modern-title" class="section-title">Modern AI Systems</h2>
+            
+            <!-- Part 1: Large Language Models -->
+            <div class="content-block">
+                <h3>Part I: Large Language Models – The Power of Scale</h3>
+                
+                <h4>The Language Model Revolution</h4>
+                <p><span class="tooltip-term" data-tooltip="Neural networks trained on massive text datasets that can understand and generate human-like text."><strong>Large Language Models (LLMs)</strong></span> represent perhaps the most visible face of modern AI. Systems like GPT-4, Claude, and PaLM demonstrate unprecedented language understanding and generation capabilities.</p>
+
+                <h4>What Is a Language Model?</h4>
+                <p>At their core, language models solve a deceptively simple task: <strong>predict the next token</strong> (word or sub-word) given previous context. But this simple objective, when scaled massively, leads to emergent capabilities.</p>
+
+                <div class="insight-box">
+                    <h4>From Prediction to Understanding</h4>
+                    <p>To accurately predict next words, a model must implicitly learn:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Syntax:</strong> Grammatical rules and sentence structure</li>
+                        <li><strong>Semantics:</strong> Meaning of words and phrases</li>
+                        <li><strong>World Knowledge:</strong> Facts about people, places, events, concepts</li>
+                        <li><strong>Reasoning:</strong> Logical inference and causal relationships</li>
+                        <li><strong>Context:</strong> How previous sentences influence meaning</li>
+                        <li><strong>Intent:</strong> Understanding what question or request is being made</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">These capabilities emerge from training on hundreds of billions or trillions of words from books, websites, code, and conversations.</p>
+                </div>
+
+                <h4>The Transformer Foundation</h4>
+                <p>Modern LLMs build on the Transformer architecture, stacking dozens of attention layers. Key architectural choices:</p>
+
+                <ul>
+                    <li><strong>Massive Scale:</strong> Billions to hundreds of billions of parameters</li>
+                    <li><strong>Pre-training:</strong> Train on enormous web-scale datasets</li>
+                    <li><strong>Fine-tuning:</strong> Adapt to specific tasks or align with human preferences</li>
+                    <li><strong>Context Windows:</strong> Process thousands of tokens simultaneously (recent models exceed 100K tokens)</li>
+                </ul>
+
+                <h4>Training Paradigms</h4>
+
+                <div class="card">
+                    <h4>Three-Stage Training for Modern LLMs</h4>
+                    
+                    <p><strong>Stage 1: Pre-training</strong></p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Train on massive, diverse text corpus</li>
+                        <li>Objective: Predict next token</li>
+                        <li>Duration: Weeks or months on thousands of GPUs</li>
+                        <li>Result: Model with broad language understanding</li>
+                    </ul>
+
+                    <p><strong>Stage 2: Supervised Fine-Tuning</strong></p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Train on curated instruction-following examples</li>
+                        <li>Teaches model to follow prompts and answer questions</li>
+                        <li>Duration: Hours to days</li>
+                        <li>Result: Model that responds helpfully to instructions</li>
+                    </ul>
+
+                    <p><strong>Stage 3: Reinforcement Learning from Human Feedback (RLHF)</strong></p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Humans rank model responses by quality</li>
+                        <li>Train reward model to predict human preferences</li>
+                        <li>Use RL to optimize model outputs toward higher rewards</li>
+                        <li>Result: Model aligned with human values and preferences</li>
+                    </ul>
+                </div>
+
+                <h4>Emergent Capabilities at Scale</h4>
+                <p>As models grow larger, unexpected abilities emerge:</p>
+                <ul>
+                    <li><strong>In-context Learning:</strong> Perform new tasks from examples in the prompt (few-shot learning)</li>
+                    <li><strong>Chain-of-Thought Reasoning:</strong> Solve complex problems by breaking them into steps</li>
+                    <li><strong>Multi-step Planning:</strong> Decompose goals into sub-goals</li>
+                    <li><strong>Code Generation:</strong> Write working programs from descriptions</li>
+                    <li><strong>Multi-lingual Transfer:</strong> Translate between languages not explicitly paired in training</li>
+                </ul>
+
+                <p class="key-insight">These capabilities weren't explicitly programmed—they emerged from scale and the next-token prediction objective. This suggests intelligence might be more about scale and architecture than specialized algorithms.</p>
+
+                <h4>Applications Transforming Industries</h4>
+                <ul>
+                    <li><strong>Content Creation:</strong> Writing assistance, summarization, creative writing</li>
+                    <li><strong>Code Assistance:</strong> GitHub Copilot, code explanation, debugging</li>
+                    <li><strong>Customer Service:</strong> Chatbots, automated support</li>
+                    <li><strong>Education:</strong> Tutoring, explanation, personalized learning</li>
+                    <li><strong>Research:</strong> Literature review, hypothesis generation, data analysis</li>
+                    <li><strong>Healthcare:</strong> Clinical note generation, medical knowledge Q&A</li>
+                </ul>
+
+                <h4>Limitations and Challenges</h4>
+                <ul>
+                    <li><strong>Hallucinations:</strong> Models confidently generate false information</li>
+                    <li><strong>Knowledge Cutoff:</strong> No awareness of events after training</li>
+                    <li><strong>Context Limits:</strong> Even long contexts have limits</li>
+                    <li><strong>Reasoning Gaps:</strong> Struggle with novel logical reasoning</li>
+                    <li><strong>Computational Cost:</strong> Inference is expensive at scale</li>
+                </ul>
+            </div>
+
+            <!-- Part 2: Computer Vision -->
+            <div class="content-block">
+                <h3>Part II: Computer Vision – Machines That See</h3>
+                
+                <h4>From Pixels to Perception</h4>
+                <p><strong>Computer vision</strong> enables machines to derive meaningful information from digital images and videos. Modern systems approach or exceed human performance on many visual tasks.</p>
+
+                <h4>Core Vision Tasks</h4>
+
+                <div class="card">
+                    <h4>Image Classification</h4>
+                    <p><strong>Task:</strong> Assign label to entire image</p>
+                    <p><strong>Example:</strong> "This image contains a dog"</p>
+                    <p><strong>Applications:</strong> Medical diagnosis (tumor detection), content moderation, quality control</p>
+                </div>
+
+                <div class="card">
+                    <h4>Object Detection</h4>
+                    <p><strong>Task:</strong> Locate and classify multiple objects in image</p>
+                    <p><strong>Example:</strong> Draw bounding boxes around all cars, pedestrians, traffic signs</p>
+                    <p><strong>Applications:</strong> Autonomous vehicles, surveillance, retail analytics</p>
+                    <p><strong>Key architectures:</strong> R-CNN family, YOLO, RetinaNet</p>
+                </div>
+
+                <div class="card">
+                    <h4>Semantic Segmentation</h4>
+                    <p><strong>Task:</strong> Classify every pixel in image</p>
+                    <p><strong>Example:</strong> Label each pixel as road, sidewalk, building, sky, person, etc.</p>
+                    <p><strong>Applications:</strong> Medical image analysis, scene understanding, augmented reality</p>
+                    <p><strong>Key architectures:</strong> U-Net, DeepLab, Mask R-CNN</p>
+                </div>
+
+                <div class="card">
+                    <h4>Facial Recognition</h4>
+                    <p><strong>Task:</strong> Identify or verify individuals from faces</p>
+                    <p><strong>Method:</strong> Learn face embeddings—vector representations where similar faces cluster together</p>
+                    <p><strong>Applications:</strong> Device unlocking, security, photo organization</p>
+                    <p><strong>Concerns:</strong> Privacy, bias, surveillance implications</p>
+                </div>
+
+                <h4>The Data Hunger Challenge</h4>
+                <p>Vision models require enormous labeled datasets. <strong>ImageNet</strong> (14M images, 20K categories) catalyzed progress, but creating such datasets is expensive. Modern approaches mitigate this:</p>
+
+                <ul>
+                    <li><strong>Self-supervised pre-training:</strong> Learn from unlabeled images</li>
+                    <li><strong>Synthetic data:</strong> Generate training data via simulation or GANs</li>
+                    <li><strong>Weak supervision:</strong> Use noisy labels from alt-text, hashtags, etc.</li>
+                    <li><strong>Active learning:</strong> Strategically select most informative examples to label</li>
+                </ul>
+
+                <h4>Beyond Static Images: Video Understanding</h4>
+                <p>Video adds temporal dimension, enabling:</p>
+                <ul>
+                    <li><strong>Action Recognition:</strong> Identify activities (running, jumping, cooking)</li>
+                    <li><strong>Motion Prediction:</strong> Anticipate future trajectories</li>
+                    <li><strong>Event Detection:</strong> Find specific moments in long videos</li>
+                    <li><strong>Video Generation:</strong> Create synthetic video content</li>
+                </ul>
+
+                <h4>3D Vision and Depth Perception</h4>
+                <p>Modern vision systems increasingly reason in 3D:</p>
+                <ul>
+                    <li><strong>Depth Estimation:</strong> Infer distance to surfaces from single images</li>
+                    <li><strong>3D Reconstruction:</strong> Build 3D models from multiple views</li>
+                    <li><strong>SLAM:</strong> Simultaneous Localization and Mapping for robot navigation</li>
+                    <li><strong>NeRF:</strong> Neural Radiance Fields for photorealistic 3D scene representation</li>
+                </ul>
+
+                <h4>Multimodal Vision-Language Models</h4>
+                <p>Bridging vision and language enables powerful new capabilities:</p>
+
+                <div class="insight-box">
+                    <h4>CLIP: Connecting Images and Text</h4>
+                    <p>Train vision and language encoders jointly on image-caption pairs from the web:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Learn shared embedding space where semantically similar images and text are close</li>
+                        <li>Enables zero-shot image classification by comparing image embeddings to text descriptions</li>
+                        <li>Powers text-to-image generation (DALL-E, Stable Diffusion) by guiding image synthesis toward text embeddings</li>
+                    </ul>
+                </div>
+
+                <p><strong>Applications:</strong></p>
+                <ul>
+                    <li>Visual question answering: "What color is the car?"</li>
+                    <li>Image captioning: Generate descriptions of photos</li>
+                    <li>Text-to-image generation: Create images from descriptions</li>
+                    <li>Visual reasoning: Answer complex questions requiring image understanding</li>
+                </ul>
+            </div>
+
+            <!-- Part 3: Speech and Audio AI -->
+            <div class="content-block">
+                <h3>Part III: Speech and Audio AI</h3>
+                
+                <h4>Automatic Speech Recognition (ASR)</h4>
+                <p><strong>ASR</strong> converts spoken language to text—a challenging problem requiring understanding of acoustics, phonetics, and language.</p>
+
+                <h4>The Pipeline Approach (Traditional)</h4>
+                <ol style="font-size: 0.9em;">
+                    <li><strong>Acoustic Model:</strong> Maps audio features to phonemes (smallest sound units)</li>
+                    <li><strong>Pronunciation Model:</strong> Maps phoneme sequences to words</li>
+                    <li><strong>Language Model:</strong> Scores word sequence plausibility</li>
+                </ol>
+
+                <h4>End-to-End Neural ASR</h4>
+                <p>Modern systems replace the pipeline with a single neural network (often Transformer-based) that directly maps audio to text:</p>
+                <ul>
+                    <li><strong>Simpler:</strong> One model instead of multiple components</li>
+                    <li><strong>Better:</strong> Jointly optimizes entire process</li>
+                    <li><strong>Examples:</strong> Whisper, Conformer, Speech2Text Transformers</li>
+                </ul>
+
+                <p><strong>Challenges:</strong></p>
+                <ul>
+                    <li>Accents and dialects</li>
+                    <li>Background noise</li>
+                    <li>Multiple speakers (diarization)</li>
+                    <li>Domain-specific vocabulary</li>
+                    <li>Real-time processing requirements</li>
+                </ul>
+
+                <h4>Text-to-Speech (TTS)</h4>
+                <p><strong>TTS</strong> generates natural-sounding speech from text. Modern neural TTS achieves near-human quality:</p>
+
+                <ul>
+                    <li><strong>WaveNet:</strong> Generates audio samples directly from text (computationally expensive)</li>
+                    <li><strong>Tacotron:</strong> Generates mel-spectrograms, then converts to audio</li>
+                    <li><strong>FastSpeech:</strong> Parallel generation for faster synthesis</li>
+                </ul>
+
+                <p><strong>Applications:</strong></p>
+                <ul>
+                    <li>Voice assistants (Siri, Alexa, Google Assistant)</li>
+                    <li>Accessibility (screen readers)</li>
+                    <li>Audiobook narration</li>
+                    <li>Language learning</li>
+                </ul>
+
+                <h4>Voice Cloning and Synthesis</h4>
+                <p>Modern models can clone voices from minutes of audio, raising both opportunities (personalization, accessibility) and concerns (deepfakes, impersonation).</p>
+
+                <h4>Music and Audio Generation</h4>
+                <p>AI now generates music, sound effects, and ambient audio:</p>
+                <ul>
+                    <li><strong>Jukebox:</strong> Generates music with singing</li>
+                    <li><strong>MuseNet:</strong> Composes multi-instrument pieces</li>
+                    <li><strong>AudioLM:</strong> Generates realistic soundscapes</li>
+                </ul>
+            </div>
+
+            <!-- Part 4: Robotics and Embodied AI -->
+            <div class="content-block">
+                <h3>Part IV: Robotics and Embodied AI</h3>
+                
+                <h4>Bringing AI into the Physical World</h4>
+                <p><strong>Embodied AI</strong> tackles the challenge of operating in the real, physical world with all its complexity, uncertainty, and continuous dynamics.</p>
+
+                <h4>Core Challenges in Robotics</h4>
+
+                <div class="card">
+                    <h4>Perception</h4>
+                    <p>Understanding the environment from sensors (cameras, lidar, touch, proprioception). Must handle:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Noisy, incomplete sensor data</li>
+                        <li>Dynamic, changing environments</li>
+                        <li>Occlusions and lighting variations</li>
+                        <li>Real-time processing requirements</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>Planning and Control</h4>
+                    <p>Deciding what actions to take and executing them precisely:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Path planning in complex spaces</li>
+                        <li>Collision avoidance</li>
+                        <li>Motor control (precise movement)</li>
+                        <li>Handling uncertainty and disturbances</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>Manipulation</h4>
+                    <p>Grasping and manipulating objects—deceptively difficult:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>Estimating object properties (weight, friction, fragility)</li>
+                        <li>Planning grasp points</li>
+                        <li>Applying appropriate forces</li>
+                        <li>Adapting to slippage or unexpected resistance</li>
+                    </ul>
+                </div>
+
+                <h4>Reinforcement Learning for Robotics</h4>
+                <p>RL is natural for robotics—agents learn from interaction. But real-world learning faces challenges:</p>
+
+                <ul>
+                    <li><strong>Sample Inefficiency:</strong> RL needs many trials; real robots are slow and expensive</li>
+                    <li><strong>Safety:</strong> Exploration can damage robots or surroundings</li>
+                    <li><strong>Sim-to-Real Gap:</strong> Policies learned in simulation may fail on real hardware</li>
+                </ul>
+
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li><strong>Simulation Training:</strong> Train in physics simulators, transfer to reality</li>
+                    <li><strong>Domain Randomization:</strong> Vary simulation parameters to encourage robustness</li>
+                    <li><strong>Learning from Demonstrations:</strong> Bootstrap learning from human examples</li>
+                    <li><strong>Meta-Learning:</strong> Learn to adapt quickly to new situations</li>
+                </ul>
+
+                <h4>Autonomous Vehicles</h4>
+                <p>Self-driving cars represent one of robotics' most ambitious goals. The full stack includes:</p>
+
+                <div class="insight-box">
+                    <h4>Autonomous Driving Pipeline</h4>
+                    <ul style="font-size: 0.9em;">
+                        <li><strong>Perception:</strong> Detect vehicles, pedestrians, lanes, traffic signs, lights</li>
+                        <li><strong>Localization:</strong> Determine precise position on map</li>
+                        <li><strong>Prediction:</strong> Anticipate how other agents will move</li>
+                        <li><strong>Planning:</strong> Decide path and actions (lane changes, turns, stops)</li>
+                        <li><strong>Control:</strong> Execute plan with steering, throttle, brake commands</li>
+                    </ul>
+                </div>
+
+                <p><strong>Progress and Challenges:</strong></p>
+                <ul>
+                    <li>Works well in structured environments (highways, mapped cities)</li>
+                    <li>Struggles with edge cases (construction zones, unusual weather, adversarial humans)</li>
+                    <li>Requires solving perception, prediction, and planning simultaneously</li>
+                    <li>Safety-critical nature demands near-perfect reliability</li>
+                </ul>
+            </div>
+
+            <!-- Part 5: Recommendation Systems -->
+            <div class="content-block">
+                <h3>Part V: Recommendation Systems – Personalizing the Internet</h3>
+                
+                <h4>The Most Deployed AI</h4>
+                <p><strong>Recommendation systems</strong> might be the AI you interact with most. They power:</p>
+                <ul>
+                    <li>Netflix: What to watch next</li>
+                    <li>YouTube: Video suggestions</li>
+                    <li>Amazon: Product recommendations</li>
+                    <li>Spotify: Music discovery</li>
+                    <li>Social media: Content feeds</li>
+                </ul>
+
+                <h4>Core Approaches</h4>
+
+                <div class="card">
+                    <h4>Collaborative Filtering</h4>
+                    <p><strong>Idea:</strong> Users who agreed in the past will agree in the future</p>
+                    <p style="font-size: 0.9em;"><strong>User-based:</strong> Find similar users, recommend what they liked</p>
+                    <p style="font-size: 0.9em;"><strong>Item-based:</strong> Find similar items to ones user liked</p>
+                    <p style="font-size: 0.9em;"><strong>Matrix Factorization:</strong> Learn latent factors for users and items, predict ratings as dot product</p>
+                </div>
+
+                <div class="card">
+                    <h4>Content-Based Filtering</h4>
+                    <p><strong>Idea:</strong> Recommend items similar to what user previously liked</p>
+                    <p style="font-size: 0.9em;">Analyze item features (genre, actors, keywords) and user preferences to match</p>
+                </div>
+
+                <div class="card">
+                    <h4>Hybrid and Deep Learning Approaches</h4>
+                    <p>Modern systems combine multiple signals:</p>
+                    <ul style="font-size: 0.9em;">
+                        <li>User behavior (views, clicks, watch time)</li>
+                        <li>Item features (metadata, content embeddings)</li>
+                        <li>Contextual information (time, device, location)</li>
+                        <li>Social connections</li>
+                    </ul>
+                    <p style="font-size: 0.9em; margin-top: 0.5rem;">Deep neural networks learn complex, nonlinear combinations of these signals.</p>
+                </div>
+
+                <h4>The Exploration-Exploitation Dilemma Returns</h4>
+                <p>Should the system recommend:</p>
+                <ul>
+                    <li><strong>Safe bets (exploitation):</strong> Similar to what user already likes</li>
+                    <li><strong>Novel items (exploration):</strong> Different content that might expand user interests</li>
+                </ul>
+
+                <p>Too much exploitation creates filter bubbles; too much exploration frustrates users with irrelevant content.</p>
+
+                <h4>Societal Implications</h4>
+                <p>Recommendation systems shape information access at global scale:</p>
+                <ul>
+                    <li><strong>Filter Bubbles:</strong> Narrowing of perspective by showing similar content</li>
+                    <li><strong>Engagement Optimization:</strong> Maximizing watch time may amplify sensational content</li>
+                    <li><strong>Feedback Loops:</strong> Popular items get more exposure, becoming more popular</li>
+                    <li><strong>Diversity Trade-offs:</strong> Accuracy vs. exposing diverse perspectives</li>
+                </ul>
+
+                <p class="key-insight">As AI systems become increasingly embedded in daily life—from the content we consume to the decisions made about us—understanding their capabilities, limitations, and societal impacts becomes essential for all citizens, not just technical practitioners.</p>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/deep" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Deep Learning</span>
+                </a>
+                <a href="/ethics" class="nav-button nav-button-next">
+                    <span class="nav-label">Ethics & Society</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

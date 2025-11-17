@@ -177,7 +177,7 @@ async fn chat_with_gemini(form: web::Json<HashMap<String, String>>) -> Result<Ht
     // Call Gemini API
     let client = reqwest::Client::new();
     let url = format!(
-        "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={}",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={}",
         api_key
     );
     

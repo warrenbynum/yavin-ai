@@ -205,29 +205,57 @@ async fn chat_with_gemini(form: web::Json<HashMap<String, String>>) -> Result<Ht
         .await
     {
         Ok(response) => {
-            match response.json::<serde_json::Value>().await {
-                Ok(json) => {
-                    // Extract response text from Gemini API response
-                    let response_text = json["candidates"][0]["content"]["parts"][0]["text"]
-                        .as_str()
-                        .unwrap_or("I apologize, but I couldn't generate a response. Please try again.");
+            let status = response.status();
+            match response.text().await {
+                Ok(body) => {
+                    log::info!("Gemini API response status: {}, body: {}", status, body);
                     
-                    Ok(HttpResponse::Ok().json(serde_json::json!({
-                        "response": response_text
-                    })))
+                    if !status.is_success() {
+                        log::error!("Gemini API error: {}", body);
+                        return Ok(HttpResponse::Ok().json(serde_json::json!({
+                            "response": "I apologize, but I'm having trouble connecting to my AI brain. Please check that your API key is valid and try again."
+                        })));
+                    }
+                    
+                    match serde_json::from_str::<serde_json::Value>(&body) {
+                        Ok(json) => {
+                            // Try to extract response text
+                            let response_text = json.get("candidates")
+                                .and_then(|c| c.get(0))
+                                .and_then(|c| c.get("content"))
+                                .and_then(|c| c.get("parts"))
+                                .and_then(|p| p.get(0))
+                                .and_then(|p| p.get("text"))
+                                .and_then(|t| t.as_str())
+                                .unwrap_or_else(|| {
+                                    log::warn!("Unexpected Gemini response structure: {}", body);
+                                    "I apologize, but I received an unexpected response format. Please try rephrasing your question."
+                                });
+                            
+                            Ok(HttpResponse::Ok().json(serde_json::json!({
+                                "response": response_text
+                            })))
+                        }
+                        Err(e) => {
+                            log::error!("Failed to parse Gemini JSON: {} - Body: {}", e, body);
+                            Ok(HttpResponse::Ok().json(serde_json::json!({
+                                "response": "I received a response but couldn't understand the format. Please try again."
+                            })))
+                        }
+                    }
                 }
                 Err(e) => {
-                    log::error!("Failed to parse Gemini response: {}", e);
+                    log::error!("Failed to read Gemini response body: {}", e);
                     Ok(HttpResponse::InternalServerError().json(serde_json::json!({
-                        "error": "Failed to parse AI response"
+                        "error": "Failed to read AI response"
                     })))
                 }
             }
         }
         Err(e) => {
             log::error!("Failed to call Gemini API: {}", e);
-            Ok(HttpResponse::InternalServerError().json(serde_json::json!({
-                "error": "Failed to connect to AI service"
+            Ok(HttpResponse::Ok().json(serde_json::json!({
+                "response": "I'm having trouble connecting to the AI service. Please check your internet connection and try again."
             })))
         }
     }

@@ -89,6 +89,19 @@ async fn modern(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().content_type("text/html").body(body))
 }
 
+// Sequential Flow page
+async fn sequential(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+    let mut ctx = Context::new();
+    ctx.insert("title", "Sequential Flow – Yavin");
+    ctx.insert("page_id", "sequential");
+    
+    let body = tmpl
+        .render("sequential.html", &ctx)
+        .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Template error: {}", e)))?;
+    
+    Ok(HttpResponse::Ok().content_type("text/html").body(body))
+}
+
 // Ethics page
 async fn ethics(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
     let mut ctx = Context::new();
@@ -305,6 +318,7 @@ async fn main() -> std::io::Result<()> {
             .route("/neural", web::get().to(neural))
             .route("/deep", web::get().to(deep))
             .route("/modern", web::get().to(modern))
+            .route("/sequential", web::get().to(sequential))
             .route("/ethics", web::get().to(ethics))
             .route("/glossary", web::get().to(glossary))
             .route("/mission", web::get().to(mission))

@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequential Flow – Yavin</title>
+    
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,zh-CN,ja,ko,pt,ru,ar,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Fuse.js for search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    
+    <meta name="description" content="Understand the sequential flow of machine learning hardware infrastructure - from data to CPUs, accelerators, interconnects, and supporting systems.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="yavin-logo.png">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Sequential Flow Specific Styles */
+        .flow-container {
+            position: relative;
+            margin: 4rem 0;
+            padding: 3rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .flow-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .flow-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .flow-header p {
+            color: var(--text-tertiary);
+            font-size: 0.9375rem;
+            margin-bottom: 0;
+        }
+        
+        /* Interactive Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            position: relative;
+            padding: 1.5rem;
+            background: transparent;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+        
+        .flow-step:hover {
+            border-color: var(--text-primary);
+            background: var(--bg-card-hover);
+            transform: translateX(8px);
+        }
+        
+        .flow-step.active {
+            border-color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+        
+        .flow-step.pulse {
+            animation: stepPulse 0.6s ease-out;
+        }
+        
+        @keyframes stepPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            100% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+        }
+        
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover .step-icon,
+        .flow-step.active .step-icon {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+        
+        .step-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--text-primary);
+            transition: stroke 0.3s ease;
+        }
+        
+        .flow-step:hover .step-icon svg,
+        .flow-step.active .step-icon svg {
+            stroke: var(--bg-primary);
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .step-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin: 0;
+        }
+        
+        .step-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            transition: color 0.3s ease;
+        }
+        
+        .flow-step:hover .step-arrow,
+        .flow-step.active .step-arrow {
+            color: var(--text-primary);
+        }
+        
+        /* Connector Lines */
+        .flow-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            position: relative;
+        }
+        
+        .connector-line {
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--border-color), var(--border-color));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .connector-line::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--text-primary), transparent);
+            animation: none;
+        }
+        
+        .connector-line.animate::after {
+            animation: flowPulse 1s ease-out forwards;
+        }
+        
+        @keyframes flowPulse {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+        
+        .connector-arrow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-tertiary);
+        }
+        
+        /* Data Pulse Animation Control */
+        .pulse-control {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .pulse-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid var(--text-primary);
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pulse-button:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .pulse-button.running {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+        
+        .pulse-button svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Hardware Detail Cards */
+        .hardware-section {
+            margin-top: 6rem;
+        }
+        
+        .hardware-card {
+            padding: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            transition: all 0.3s ease;
+            scroll-margin-top: 100px;
+        }
+        
+        .hardware-card:hover {
+            border-color: var(--border-color-hover);
+        }
+        
+        .hardware-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .hardware-icon {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            flex-shrink: 0;
+        }
+        
+        .hardware-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke: var(--text-primary);
+        }
+        
+        .hardware-title-group h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hardware-title-group .hardware-subtitle {
+            color: var(--text-tertiary);
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        /* Spec Grid */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .spec-item {
+            padding: 1.5rem;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+        
+        .spec-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .spec-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .spec-value.highlight {
+            color: #4CAF50;
+        }
+        
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 2rem 0;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .comparison-table th {
+            background: var(--bg-card-hover);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+        }
+        
+        .comparison-table td {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:hover td {
+            background: var(--bg-card);
+        }
+        
+        .table-highlight {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        /* Visual Flow Diagram (SVG Based) */
+        .visual-flow {
+            margin: 4rem 0;
+            padding: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+        
+        .visual-flow-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .flow-svg-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+        
+        .flow-svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .flow-svg .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-svg .node:hover rect,
+        .flow-svg .node:hover circle {
+            stroke-width: 3;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+        
+        .flow-svg .data-particle {
+            fill: #ffffff;
+            opacity: 0;
+        }
+        
+        .flow-svg .data-particle.animate {
+            animation: particleFlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes particleFlow {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        /* Architecture Diagram */
+        .architecture-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .arch-layer {
+            padding: 1.5rem;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .arch-layer-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .arch-layer-content {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        /* Bandwidth Visualization */
+        .bandwidth-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .bandwidth-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .bandwidth-label {
+            width: 120px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        
+        .bandwidth-bar-container {
+            flex: 1;
+            height: 24px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bandwidth-bar {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.5));
+            border-radius: 12px;
+            transition: width 1s ease-out;
+        }
+        
+        .bandwidth-value {
+            width: 100px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .flow-step {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem 1rem;
+            }
+            
+            .step-content {
+                text-align: center;
+            }
+            
+            .step-arrow {
+                display: none;
+            }
+            
+            .hardware-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .hardware-card-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .spec-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .architecture-diagram {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.875rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.75rem;
+            }
+            
+            .bandwidth-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .bandwidth-label,
+            .bandwidth-value {
+                width: 100%;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <img src="yavin-logo.png" alt="Yavin" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">Yavin</span>
+            </a>
+            
+            <div class="nav-controls-wrapper">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                    <div class="search-dropdown" id="searchDropdown">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="Search content..."
+                            aria-label="Search site content"
+                        >
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                </div>
+                
+                <!-- Accessibility Controls -->
+                <div class="accessibility-controls">
+                    <button id="contrast-toggle" class="control-btn" aria-label="Toggle high contrast mode" title="High Contrast">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2v20"/>
+                        </svg>
+                    </button>
+                    <button id="tts-toggle" class="control-btn" aria-label="Toggle text-to-speech" title="Text-to-Speech">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M15 9a5 5 0 0 1 0 6"/>
+                            <path d="M18 6a9 9 0 0 1 0 12"/>
+                        </svg>
+                    </button>
+                    <div id="google_translate_element" class="translate-widget" role="complementary" aria-label="Language translation"></div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="foundations.html" role="menuitem">Foundations</a></li>
+                <li role="none"><a href="learning.html" role="menuitem">Machine Learning</a></li>
+                <li role="none"><a href="neural.html" role="menuitem">Neural Networks</a></li>
+                <li role="none"><a href="deep.html" role="menuitem">Deep Learning</a></li>
+                <li role="none"><a href="modern.html" role="menuitem">Modern AI</a></li>
+                <li role="none"><a href="sequential.html" role="menuitem">Sequential Flow</a></li>
+                <li role="none"><a href="ethics.html" role="menuitem">Ethics & Society</a></li>
+                <li role="none"><a href="glossary.html" role="menuitem">Glossary</a></li>
+                <li role="none"><a href="mission.html" role="menuitem">Our Mission</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sequential Flow Section -->
+    <section id="sequential-flow" class="section" aria-labelledby="sequential-flow-title">
+        <div class="container">
+            <h2 id="sequential-flow-title" class="section-title">Sequential Flow</h2>
+            
+            <div class="content-block">
+                <h3>The Hardware Pipeline of Machine Learning</h3>
+                <p>Machine learning isn't just about algorithms and data—it's fundamentally dependent on the physical hardware that powers computation. Understanding the sequential flow of how data moves through ML infrastructure reveals why certain hardware choices matter and how each component contributes to the final result.</p>
+                
+                <p class="key-insight">Every AI model you interact with—from ChatGPT to image generators—relies on a carefully orchestrated symphony of hardware components working in perfect sequence.</p>
+            </div>
+
+            <!-- Interactive Flow Diagram -->
+            <div class="flow-container">
+                <div class="flow-header">
+                    <h3>The ML Infrastructure Pipeline</h3>
+                    <p>Click on each step to learn more, or watch data flow through the system</p>
+                </div>
+                
+                <div class="flow-diagram">
+                    <!-- Step 1: Data -->
+                    <div class="flow-step" data-step="1" data-target="data-section">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-number">Step 1</div>
+                            <div class="step-title">Data</div>
+                            <p class="step-subtitle">Storage, ingestion, and preprocessing</p>
+                        </div>
+                        <div class="step-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-connector">
+                        <div class="connector-line" data-connector="1"></div>
+                    </div>
+                    
+                    <!-- Step 2: CPUs -->
+                    <div class="flow-step" data-step="2" data-target="cpu-section">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="4" y="4" width="16" height="16" rx="2"/>
+                                <rect x="9" y="9" width="6" height="6"/>
+                                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-number">Step 2</div>
+                            <div class="step-title">CPUs</div>
+                            <p class="step-subtitle">General-purpose orchestration and control</p>
+                        </div>
+                        <div class="step-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-connector">
+                        <div class="connector-line" data-connector="2"></div>
+                    </div>
+                    
+                    <!-- Step 3: Accelerators -->
+                    <div class="flow-step" data-step="3" data-target="accelerator-section">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-number">Step 3</div>
+                            <div class="step-title">Accelerators</div>
+                            <p class="step-subtitle">GPUs, TPUs, NPUs for parallel computation</p>
+                        </div>
+                        <div class="step-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-connector">
+                        <div class="connector-line" data-connector="3"></div>
+                    </div>
+                    
+                    <!-- Step 4: Interconnects -->
+                    <div class="flow-step" data-step="4" data-target="interconnect-section">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="5" cy="12" r="3"/>
+                                <circle cx="19" cy="12" r="3"/>
+                                <circle cx="12" cy="5" r="3"/>
+                                <circle cx="12" cy="19" r="3"/>
+                                <path d="M8 12h8M12 8v8"/>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-number">Step 4</div>
+                            <div class="step-title">Interconnects & Networking</div>
+                            <p class="step-subtitle">High-speed data transfer between components</p>
+                        </div>
+                        <div class="step-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-connector">
+                        <div class="connector-line" data-connector="4"></div>
+                    </div>
+                    
+                    <!-- Step 5: Infrastructure -->
+                    <div class="flow-step" data-step="5" data-target="infrastructure-section">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                <path d="M8 21h8M12 17v4"/>
+                                <path d="M6 8h.01M6 12h.01"/>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-number">Step 5</div>
+                            <div class="step-title">Supporting Infrastructure</div>
+                            <p class="step-subtitle">Power, cooling, and orchestration systems</p>
+                        </div>
+                        <div class="step-arrow">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 8v4l2 2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Pulse Animation Control -->
+                <div class="pulse-control">
+                    <button class="pulse-button" id="startPulse">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        <span>Simulate Data Flow</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visual Architecture Diagram -->
+            <div class="visual-flow">
+                <h3 class="visual-flow-title">System Architecture Overview</h3>
+                <div class="flow-svg-container">
+                    <svg class="flow-svg" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background Grid -->
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                            </pattern>
+                            <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgba(255,255,255,0.1)"/>
+                                <stop offset="50%" style="stop-color:rgba(255,255,255,0.3)"/>
+                                <stop offset="100%" style="stop-color:rgba(255,255,255,0.1)"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)"/>
+                        
+                        <!-- Connection Lines -->
+                        <path d="M 130 200 L 230 200" stroke="rgba(255,255,255,0.2)" stroke-width="3" stroke-dasharray="5,5"/>
+                        <path d="M 330 200 L 430 200" stroke="rgba(255,255,255,0.2)" stroke-width="3" stroke-dasharray="5,5"/>
+                        <path d="M 530 200 L 630 200" stroke="rgba(255,255,255,0.2)" stroke-width="3" stroke-dasharray="5,5"/>
+                        <path d="M 730 200 L 830 200" stroke="rgba(255,255,255,0.2)" stroke-width="3" stroke-dasharray="5,5"/>
+                        
+                        <!-- Data Node -->
+                        <g class="node" data-node="data">
+                            <rect x="30" y="150" width="100" height="100" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                            <text x="80" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="600">DATA</text>
+                            <text x="80" y="215" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">Storage</text>
+                        </g>
+                        
+                        <!-- CPU Node -->
+                        <g class="node" data-node="cpu">
+                            <rect x="230" y="150" width="100" height="100" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                            <text x="280" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="600">CPU</text>
+                            <text x="280" y="215" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">Control</text>
+                        </g>
+                        
+                        <!-- Accelerator Node (larger) -->
+                        <g class="node" data-node="accelerator">
+                            <rect x="430" y="130" width="100" height="140" rx="12" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+                            <text x="480" y="175" text-anchor="middle" fill="white" font-size="11" font-weight="600">GPU</text>
+                            <text x="480" y="200" text-anchor="middle" fill="white" font-size="11" font-weight="600">TPU</text>
+                            <text x="480" y="225" text-anchor="middle" fill="white" font-size="11" font-weight="600">NPU</text>
+                            <text x="480" y="255" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">Accelerators</text>
+                        </g>
+                        
+                        <!-- Interconnect Node -->
+                        <g class="node" data-node="interconnect">
+                            <rect x="630" y="150" width="100" height="100" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                            <text x="680" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="600">NETWORK</text>
+                            <text x="680" y="215" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">Interconnect</text>
+                        </g>
+                        
+                        <!-- Infrastructure Node -->
+                        <g class="node" data-node="infra">
+                            <rect x="800" y="130" width="80" height="140" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                            <text x="840" y="185" text-anchor="middle" fill="white" font-size="10" font-weight="600">POWER</text>
+                            <text x="840" y="210" text-anchor="middle" fill="white" font-size="10" font-weight="600">COOLING</text>
+                            <text x="840" y="255" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="9">Infrastructure</text>
+                        </g>
+                        
+                        <!-- Animated Data Particles -->
+                        <circle class="data-particle" id="particle1" r="4" cx="80" cy="200"/>
+                        <circle class="data-particle" id="particle2" r="4" cx="280" cy="200"/>
+                        <circle class="data-particle" id="particle3" r="4" cx="480" cy="200"/>
+                        <circle class="data-particle" id="particle4" r="4" cx="680" cy="200"/>
+                        
+                        <!-- Flow Direction Arrows -->
+                        <polygon points="220,195 230,200 220,205" fill="rgba(255,255,255,0.4)"/>
+                        <polygon points="420,195 430,200 420,205" fill="rgba(255,255,255,0.4)"/>
+                        <polygon points="620,195 630,200 620,205" fill="rgba(255,255,255,0.4)"/>
+                        <polygon points="790,195 800,200 790,205" fill="rgba(255,255,255,0.4)"/>
+                        
+                        <!-- Labels -->
+                        <text x="175" y="320" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="10">Batch Loading</text>
+                        <text x="375" y="320" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="10">Task Distribution</text>
+                        <text x="575" y="320" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="10">Gradient Sync</text>
+                        <text x="775" y="320" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="10">System Support</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Hardware Deep Dives -->
+            <div class="hardware-section">
+                
+                <!-- DATA Section -->
+                <div class="hardware-card" id="data-section">
+                    <div class="hardware-card-header">
+                        <div class="hardware-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                            </svg>
+                        </div>
+                        <div class="hardware-title-group">
+                            <h3>Data: The Foundation</h3>
+                            <p class="hardware-subtitle">Storage systems, data pipelines, and preprocessing infrastructure</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block">
+                        <p>Data is the lifeblood of machine learning. Before any computation occurs, massive datasets must be stored, organized, and efficiently delivered to compute resources. Modern ML training often requires petabytes of data, demanding specialized storage infrastructure.</p>
+                        
+                        <h4>Storage Technologies</h4>
+                        <p>ML workloads use a hierarchy of storage systems, each optimized for different access patterns:</p>
+                        
+                        <div class="spec-grid">
+                            <div class="spec-item">
+                                <div class="spec-label">NVMe SSDs</div>
+                                <div class="spec-value">7 GB/s</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Local high-speed storage</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Object Storage</div>
+                                <div class="spec-value">Petabyte Scale</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">S3, GCS, Azure Blob</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Distributed FS</div>
+                                <div class="spec-value">100+ GB/s</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Lustre, GPFS, WekaFS</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Data Loaders</div>
+                                <div class="spec-value">Parallel I/O</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Prefetching & caching</p>
+                            </div>
+                        </div>
+                        
+                        <h4>The Data Pipeline</h4>
+                        <p>Raw data must be transformed before training. This includes:</p>
+                        <ul>
+                            <li><strong>Ingestion:</strong> Collecting data from various sources (sensors, web, databases)</li>
+                            <li><strong>Cleaning:</strong> Removing duplicates, handling missing values, filtering noise</li>
+                            <li><strong>Transformation:</strong> Normalization, tokenization, feature engineering</li>
+                            <li><strong>Batching:</strong> Organizing data into mini-batches for efficient GPU utilization</li>
+                            <li><strong>Augmentation:</strong> Creating variations to improve model generalization</li>
+                        </ul>
+                        
+                        <div class="insight-box">
+                            <h4>Why Data I/O Matters</h4>
+                            <p>A common bottleneck in ML training is <strong>data starvation</strong>—when GPUs sit idle waiting for data. Modern systems use techniques like prefetching (loading next batches while current ones train), caching hot data in memory, and parallel data loading across multiple CPU cores.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CPU Section -->
+                <div class="hardware-card" id="cpu-section">
+                    <div class="hardware-card-header">
+                        <div class="hardware-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="4" y="4" width="16" height="16" rx="2"/>
+                                <rect x="9" y="9" width="6" height="6"/>
+                                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+                            </svg>
+                        </div>
+                        <div class="hardware-title-group">
+                            <h3>CPUs: The Orchestrators</h3>
+                            <p class="hardware-subtitle">General-purpose processors that coordinate the entire ML pipeline</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block">
+                        <p>While GPUs handle the heavy parallel computation, <strong>CPUs (Central Processing Units)</strong> remain essential for orchestrating ML workflows. They handle data preprocessing, model deployment, system management, and all tasks requiring complex branching logic.</p>
+                        
+                        <h4>CPU Architecture for ML</h4>
+                        <p>Modern server CPUs are optimized for throughput and memory bandwidth:</p>
+                        
+                        <div class="spec-grid">
+                            <div class="spec-item">
+                                <div class="spec-label">Core Count</div>
+                                <div class="spec-value">64-128 cores</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">AMD EPYC, Intel Xeon</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Memory Channels</div>
+                                <div class="spec-value">8-12 channels</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Up to 6TB RAM support</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">PCIe Lanes</div>
+                                <div class="spec-value">128+ lanes</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Connecting GPUs & NVMe</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Cache</div>
+                                <div class="spec-value">256-768 MB</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">L3 cache per socket</p>
+                            </div>
+                        </div>
+                        
+                        <h4>CPU Responsibilities in ML</h4>
+                        <div class="architecture-diagram">
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Data Management</div>
+                                <div class="arch-layer-content">Loading, preprocessing, augmentation</div>
+                            </div>
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Orchestration</div>
+                                <div class="arch-layer-content">Job scheduling, GPU coordination</div>
+                            </div>
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Inference</div>
+                                <div class="arch-layer-content">Lightweight models, edge deployment</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Vector Extensions</h4>
+                        <p>Modern CPUs include vector processing units that can accelerate certain ML operations:</p>
+                        <ul>
+                            <li><strong>AVX-512:</strong> Intel's 512-bit vector instructions for matrix operations</li>
+                            <li><strong>AMX:</strong> Intel's Advanced Matrix Extensions for int8/bf16 matrix multiply</li>
+                            <li><strong>SVE/SVE2:</strong> ARM's Scalable Vector Extension for data-parallel operations</li>
+                        </ul>
+                        
+                        <p class="key-insight">While GPUs dominate training, CPUs handle ~30% of total ML infrastructure compute, especially for data preprocessing, feature engineering, and serving lightweight models.</p>
+                    </div>
+                </div>
+
+                <!-- Accelerators Section -->
+                <div class="hardware-card" id="accelerator-section">
+                    <div class="hardware-card-header">
+                        <div class="hardware-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                        </div>
+                        <div class="hardware-title-group">
+                            <h3>Accelerators: The Powerhouses</h3>
+                            <p class="hardware-subtitle">GPUs, TPUs, and NPUs that perform the heavy lifting of ML computation</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block">
+                        <p>Accelerators are specialized processors designed for the massively parallel computations that dominate machine learning. While CPUs excel at sequential tasks, accelerators can perform thousands of operations simultaneously.</p>
+                        
+                        <h4>GPU (Graphics Processing Unit)</h4>
+                        <p>Originally designed for rendering graphics, GPUs have become the workhorse of ML training due to their thousands of parallel cores.</p>
+                        
+                        <div class="spec-grid">
+                            <div class="spec-item">
+                                <div class="spec-label">NVIDIA H100</div>
+                                <div class="spec-value highlight">3,958 TFLOPS</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">FP8 Tensor Core performance</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Memory</div>
+                                <div class="spec-value">80 GB HBM3</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">3.35 TB/s bandwidth</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">CUDA Cores</div>
+                                <div class="spec-value">16,896</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Parallel processing units</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Tensor Cores</div>
+                                <div class="spec-value">528</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Matrix multiplication units</p>
+                            </div>
+                        </div>
+                        
+                        <h4>TPU (Tensor Processing Unit)</h4>
+                        <p>Google's custom ASIC designed specifically for neural network workloads. TPUs optimize for the specific operations in ML rather than general graphics.</p>
+                        
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>TPU v4</th>
+                                    <th>TPU v5e</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Peak TFLOPS (BF16)</td>
+                                    <td class="table-highlight">275</td>
+                                    <td class="table-highlight">197</td>
+                                </tr>
+                                <tr>
+                                    <td>HBM Memory</td>
+                                    <td>32 GB</td>
+                                    <td>16 GB</td>
+                                </tr>
+                                <tr>
+                                    <td>Memory Bandwidth</td>
+                                    <td>1.2 TB/s</td>
+                                    <td>819 GB/s</td>
+                                </tr>
+                                <tr>
+                                    <td>Interconnect</td>
+                                    <td>ICI (Inter-Chip)</td>
+                                    <td>ICI</td>
+                                </tr>
+                                <tr>
+                                    <td>Best For</td>
+                                    <td>Large models</td>
+                                    <td>Cost-efficient training</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>NPU (Neural Processing Unit)</h4>
+                        <p>NPUs are specialized accelerators optimized for inference (running trained models) rather than training. They prioritize energy efficiency and low latency.</p>
+                        
+                        <ul>
+                            <li><strong>Apple Neural Engine:</strong> 16-core NPU in M-series chips, 15.8 TOPS</li>
+                            <li><strong>Qualcomm Hexagon:</strong> Mobile NPU for on-device AI</li>
+                            <li><strong>Intel NPU:</strong> Integrated in Core Ultra processors</li>
+                            <li><strong>Google Edge TPU:</strong> Coral devices for edge inference</li>
+                        </ul>
+                        
+                        <div class="insight-box">
+                            <h4>Why Accelerators Matter</h4>
+                            <p>Training GPT-4 required an estimated <strong>25,000 NVIDIA A100 GPUs</strong> running for months. Without accelerators, this would take decades on CPUs. The key advantage is <strong>parallelism</strong>—while a CPU might have 64 cores, a GPU has thousands of cores optimized for the matrix multiplications that dominate neural networks.</p>
+                        </div>
+                        
+                        <h4>Memory Bandwidth: The Hidden Bottleneck</h4>
+                        <div class="bandwidth-bars">
+                            <div class="bandwidth-item">
+                                <div class="bandwidth-label">DDR5 RAM</div>
+                                <div class="bandwidth-bar-container">
+                                    <div class="bandwidth-bar" style="width: 5%;"></div>
+                                </div>
+                                <div class="bandwidth-value">~90 GB/s</div>
+                            </div>
+                            <div class="bandwidth-item">
+                                <div class="bandwidth-label">GDDR6X</div>
+                                <div class="bandwidth-bar-container">
+                                    <div class="bandwidth-bar" style="width: 30%;"></div>
+                                </div>
+                                <div class="bandwidth-value">~1 TB/s</div>
+                            </div>
+                            <div class="bandwidth-item">
+                                <div class="bandwidth-label">HBM3</div>
+                                <div class="bandwidth-bar-container">
+                                    <div class="bandwidth-bar" style="width: 100%;"></div>
+                                </div>
+                                <div class="bandwidth-value">~3.35 TB/s</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interconnects Section -->
+                <div class="hardware-card" id="interconnect-section">
+                    <div class="hardware-card-header">
+                        <div class="hardware-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="5" cy="12" r="3"/>
+                                <circle cx="19" cy="12" r="3"/>
+                                <circle cx="12" cy="5" r="3"/>
+                                <circle cx="12" cy="19" r="3"/>
+                                <path d="M8 12h8M12 8v8"/>
+                            </svg>
+                        </div>
+                        <div class="hardware-title-group">
+                            <h3>Interconnects & Networking</h3>
+                            <p class="hardware-subtitle">High-speed connections that enable distributed training at scale</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block">
+                        <p>Modern ML models are too large for a single GPU. Training requires distributing work across hundreds or thousands of accelerators. The interconnect fabric determines how fast these devices can share gradients and synchronize—often becoming the bottleneck in large-scale training.</p>
+                        
+                        <h4>Interconnect Hierarchy</h4>
+                        <p>Data flows through multiple layers of connectivity, each with different bandwidth and latency characteristics:</p>
+                        
+                        <div class="architecture-diagram">
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Intra-Node</div>
+                                <div class="arch-layer-content">NVLink, NVSwitch<br>900 GB/s per GPU</div>
+                            </div>
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Inter-Node</div>
+                                <div class="arch-layer-content">InfiniBand, RoCE<br>400 Gb/s per link</div>
+                            </div>
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Data Center</div>
+                                <div class="arch-layer-content">Ethernet Fabric<br>Spine-Leaf topology</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Key Technologies</h4>
+                        
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Technology</th>
+                                    <th>Bandwidth</th>
+                                    <th>Latency</th>
+                                    <th>Use Case</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="table-highlight">NVLink 4.0</td>
+                                    <td>900 GB/s</td>
+                                    <td>~1 μs</td>
+                                    <td>GPU-to-GPU within server</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-highlight">InfiniBand NDR</td>
+                                    <td>400 Gb/s</td>
+                                    <td>~1.5 μs</td>
+                                    <td>Server-to-server</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-highlight">PCIe 5.0</td>
+                                    <td>128 GB/s</td>
+                                    <td>~2 μs</td>
+                                    <td>CPU-to-GPU, NVMe</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-highlight">400G Ethernet</td>
+                                    <td>400 Gb/s</td>
+                                    <td>~5 μs</td>
+                                    <td>Data center networking</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>Distributed Training Patterns</h4>
+                        <p>Different parallelism strategies have different communication requirements:</p>
+                        <ul>
+                            <li><strong>Data Parallelism:</strong> Each GPU has full model copy, synchronizes gradients. High bandwidth needed for gradient all-reduce.</li>
+                            <li><strong>Model Parallelism:</strong> Model split across GPUs. Requires low latency for layer-to-layer communication.</li>
+                            <li><strong>Pipeline Parallelism:</strong> Different layers on different GPUs. Moderate bandwidth, latency-tolerant.</li>
+                            <li><strong>Tensor Parallelism:</strong> Individual operations split across GPUs. Very low latency required.</li>
+                        </ul>
+                        
+                        <div class="insight-box">
+                            <h4>The All-Reduce Operation</h4>
+                            <p>In distributed training, GPUs must average their gradients after each batch. With 1000 GPUs and a 175B parameter model like GPT-3, this means transferring <strong>700GB of gradient data</strong> every few seconds. Efficient all-reduce algorithms (ring, tree, hierarchical) and fast interconnects are critical.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supporting Infrastructure Section -->
+                <div class="hardware-card" id="infrastructure-section">
+                    <div class="hardware-card-header">
+                        <div class="hardware-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                <path d="M8 21h8M12 17v4"/>
+                                <path d="M6 8h.01M6 12h.01"/>
+                            </svg>
+                        </div>
+                        <div class="hardware-title-group">
+                            <h3>Supporting Infrastructure</h3>
+                            <p class="hardware-subtitle">Power delivery, cooling, and orchestration that keeps everything running</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-block">
+                        <p>Behind every AI cluster is a massive infrastructure investment. A single NVIDIA H100 GPU consumes 700W—a rack of 8 GPUs needs 10+ kW just for compute, before cooling and support systems. At scale, these requirements become a defining constraint.</p>
+                        
+                        <h4>Power Infrastructure</h4>
+                        <div class="spec-grid">
+                            <div class="spec-item">
+                                <div class="spec-label">GPU Power Draw</div>
+                                <div class="spec-value">700W</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">NVIDIA H100 SXM</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">8-GPU Server</div>
+                                <div class="spec-value">10+ kW</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">DGX H100 system</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">AI Data Center</div>
+                                <div class="spec-value">100+ MW</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Large training clusters</p>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">PUE Target</div>
+                                <div class="spec-value">1.1-1.2</div>
+                                <p style="font-size: 0.8125rem; color: var(--text-tertiary); margin: 0.5rem 0 0 0;">Power Usage Effectiveness</p>
+                            </div>
+                        </div>
+                        
+                        <h4>Cooling Systems</h4>
+                        <p>Heat removal is one of the biggest challenges in AI infrastructure. Modern approaches include:</p>
+                        <ul>
+                            <li><strong>Air Cooling:</strong> Traditional CRAC units, hot/cold aisle containment. Limited to ~20kW per rack.</li>
+                            <li><strong>Rear-Door Heat Exchangers:</strong> Water-cooled doors that capture heat at the rack. 30-40kW per rack.</li>
+                            <li><strong>Direct Liquid Cooling:</strong> Cold plates attached directly to CPUs/GPUs. 80+ kW per rack.</li>
+                            <li><strong>Immersion Cooling:</strong> Components submerged in dielectric fluid. 100+ kW per rack, near-silent operation.</li>
+                        </ul>
+                        
+                        <h4>Orchestration & Management</h4>
+                        <p>Running thousands of GPUs requires sophisticated software infrastructure:</p>
+                        
+                        <div class="architecture-diagram">
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Job Scheduler</div>
+                                <div class="arch-layer-content">Slurm, Kubernetes<br>Resource allocation</div>
+                            </div>
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">Monitoring</div>
+                                <div class="arch-layer-content">Prometheus, Grafana<br>Health & metrics</div>
+                            </div>
+                            <div class="arch-layer">
+                                <div class="arch-layer-title">ML Platform</div>
+                                <div class="arch-layer-content">MLflow, Weights & Biases<br>Experiment tracking</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Reliability & Fault Tolerance</h4>
+                        <p>At scale, hardware failures are constant. A 10,000 GPU cluster might see multiple GPU failures per day. Systems must handle:</p>
+                        <ul>
+                            <li><strong>Checkpointing:</strong> Saving model state periodically to resume after failures</li>
+                            <li><strong>Automatic failover:</strong> Detecting and routing around failed components</li>
+                            <li><strong>Graceful degradation:</strong> Continuing training with reduced capacity</li>
+                            <li><strong>Health monitoring:</strong> Predictive maintenance using GPU telemetry</li>
+                        </ul>
+                        
+                        <div class="insight-box">
+                            <h4>The True Cost of AI</h4>
+                            <p>Training a large language model isn't just about GPU hours. Consider: a 100MW data center costs $500M+ to build, consumes $50M/year in electricity, and requires constant maintenance. The infrastructure supporting AI is a massive, ongoing investment that shapes who can participate in frontier research.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz: Sequential Flow -->
+            <div class="quiz-container" data-section="sequential-flow">
+                <h3 class="quiz-title">Test Your Knowledge: Sequential Flow</h3>
+                <p class="quiz-subtitle">Answer these questions to check your understanding</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> What is the primary role of CPUs in ML infrastructure?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q1" value="a">
+                                <span>Training neural networks directly</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q1" value="b" data-correct="true">
+                                <span>Orchestrating workflows and data preprocessing</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q1" value="c">
+                                <span>Storing training data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q1" value="d">
+                                <span>Cooling the GPU clusters</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> Why are GPUs better than CPUs for ML training?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q2" value="a">
+                                <span>They have larger hard drives</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q2" value="b">
+                                <span>They use less electricity</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q2" value="c" data-correct="true">
+                                <span>They have thousands of cores for parallel computation</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q2" value="d">
+                                <span>They are cheaper to manufacture</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> What is HBM3 and why is it important?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q3" value="a">
+                                <span>A type of neural network architecture</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q3" value="b" data-correct="true">
+                                <span>High-bandwidth memory that provides 3.35 TB/s to GPUs</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q3" value="c">
+                                <span>A cooling system for data centers</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q3" value="d">
+                                <span>A programming framework for ML</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> What is the "all-reduce" operation in distributed training?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q4" value="a">
+                                <span>Compressing the model to use less memory</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q4" value="b">
+                                <span>Reducing the number of GPUs in a cluster</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q4" value="c" data-correct="true">
+                                <span>Synchronizing gradients across all GPUs by averaging</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="sequential-q4" value="d">
+                                <span>Reducing power consumption</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('sequential-flow')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="modern.html" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Modern AI</span>
+                </a>
+                <a href="ethics.html" class="nav-button nav-button-next">
+                    <span class="nav-label">Ethics & Society</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <img src="yavin-logo.png" alt="Yavin" class="footer-logo" onerror="this.style.display='none'">
+            <p class="footer-title">Yavin</p>
+            <p class="footer-text">Understanding Artificial Intelligence from First Principles</p>
+            <div class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="foundations.html">Foundations</a>
+                <a href="learning.html">Machine Learning</a>
+                <a href="neural.html">Neural Networks</a>
+                <a href="deep.html">Deep Learning</a>
+                <a href="modern.html">Modern AI</a>
+                <a href="sequential.html">Sequential Flow</a>
+                <a href="ethics.html">Ethics</a>
+                <a href="glossary.html">Glossary</a>
+                <a href="mission.html">Mission</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Feedback Button -->
+    <button class="feedback-button" onclick="openFeedbackModal()" aria-label="Provide feedback">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+    </button>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="feedback-modal" role="dialog" aria-labelledby="feedback-title" aria-modal="true">
+        <div class="feedback-modal-content">
+            <button class="feedback-close" onclick="closeFeedbackModal()" aria-label="Close feedback form">&times;</button>
+            <h3 id="feedback-title" class="feedback-title">Share Your Feedback</h3>
+            <p class="feedback-subtitle">Help us improve this learning experience</p>
+            
+            <form id="feedbackForm" class="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-name">Name (optional)</label>
+                    <input type="text" id="feedback-name" name="name" placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-email">Email (optional)</label>
+                    <input type="email" id="feedback-email" name="email" placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-rating">How would you rate this content? *</label>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5" required>
+                            <span>⭐⭐⭐⭐⭐ Excellent</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4">
+                            <span>⭐⭐⭐⭐ Good</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3">
+                            <span>⭐⭐⭐ Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2">
+                            <span>⭐⭐ Below Average</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1">
+                            <span>⭐ Poor</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-message">Your Feedback *</label>
+                    <textarea id="feedback-message" name="message" rows="4" placeholder="What did you think? Any suggestions for improvement?" required></textarea>
+                </div>
+                
+                <button type="submit" class="feedback-submit">Submit Feedback</button>
+            </form>
+            
+            <div id="feedbackSuccess" class="feedback-success" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <h4>Thank You!</h4>
+                <p>Your feedback has been received. We appreciate your input!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Sequential Flow Interactive Features
+        document.addEventListener('DOMContentLoaded', function() {
+            const flowSteps = document.querySelectorAll('.flow-step');
+            const connectorLines = document.querySelectorAll('.connector-line');
+            const pulseButton = document.getElementById('startPulse');
+            let isAnimating = false;
+            
+            // Click on flow step to scroll to section
+            flowSteps.forEach(step => {
+                step.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        
+                        // Add active state temporarily
+                        flowSteps.forEach(s => s.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        setTimeout(() => {
+                            this.classList.remove('active');
+                        }, 2000);
+                    }
+                });
+            });
+            
+            // Data Flow Animation
+            function animateDataFlow() {
+                if (isAnimating) return;
+                isAnimating = true;
+                
+                pulseButton.classList.add('running');
+                pulseButton.querySelector('span').textContent = 'Data Flowing...';
+                
+                let stepIndex = 0;
+                const totalSteps = flowSteps.length;
+                
+                function animateStep() {
+                    if (stepIndex >= totalSteps) {
+                        // Animation complete
+                        setTimeout(() => {
+                            isAnimating = false;
+                            pulseButton.classList.remove('running');
+                            pulseButton.querySelector('span').textContent = 'Simulate Data Flow';
+                            flowSteps.forEach(s => s.classList.remove('active', 'pulse'));
+                        }, 500);
+                        return;
+                    }
+                    
+                    // Activate current step
+                    const currentStep = flowSteps[stepIndex];
+                    currentStep.classList.add('active', 'pulse');
+                    
+                    // Animate connector line (if not last step)
+                    if (stepIndex < totalSteps - 1) {
+                        const connector = connectorLines[stepIndex];
+                        if (connector) {
+                            connector.classList.add('animate');
+                            setTimeout(() => connector.classList.remove('animate'), 1000);
+                        }
+                    }
+                    
+                    // Deactivate previous step
+                    if (stepIndex > 0) {
+                        flowSteps[stepIndex - 1].classList.remove('active');
+                    }
+                    
+                    stepIndex++;
+                    setTimeout(animateStep, 800);
+                }
+                
+                animateStep();
+            }
+            
+            pulseButton.addEventListener('click', animateDataFlow);
+            
+            // Animate bandwidth bars on scroll
+            const bandwidthBars = document.querySelectorAll('.bandwidth-bar');
+            const observerOptions = {
+                threshold: 0.5
+            };
+            
+            const bandwidthObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transition = 'width 1.5s ease-out';
+                    }
+                });
+            }, observerOptions);
+            
+            bandwidthBars.forEach(bar => bandwidthObserver.observe(bar));
+            
+            // SVG Node hover effects
+            const svgNodes = document.querySelectorAll('.flow-svg .node');
+            svgNodes.forEach(node => {
+                node.addEventListener('click', function() {
+                    const nodeType = this.getAttribute('data-node');
+                    const targetMap = {
+                        'data': 'data-section',
+                        'cpu': 'cpu-section',
+                        'accelerator': 'accelerator-section',
+                        'interconnect': 'interconnect-section',
+                        'infra': 'infrastructure-section'
+                    };
+                    
+                    const targetSection = document.getElementById(targetMap[nodeType]);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

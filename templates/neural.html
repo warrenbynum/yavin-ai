@@ -408,6 +408,132 @@ Final output: ŷ = a[L]
                 </div>
             </div>
 
+            <!-- Quiz: Neural Networks -->
+            <div class="quiz-container" data-section="neural">
+                <h3 class="quiz-title">Test Your Understanding: Neural Networks</h3>
+                <p class="quiz-subtitle">Assess your knowledge of neural network fundamentals.</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> What is the primary function of an activation function in a neural network?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q1" value="a">
+                                <span>To speed up training</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q1" value="b" data-correct="true">
+                                <span>To introduce non-linearity, allowing the network to learn complex patterns</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q1" value="c">
+                                <span>To reduce the number of parameters</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q1" value="d">
+                                <span>To normalize the input data</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> What does backpropagation calculate?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q2" value="a">
+                                <span>The output of the network</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q2" value="b">
+                                <span>The optimal learning rate</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q2" value="c" data-correct="true">
+                                <span>The gradient of the loss with respect to each weight</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q2" value="d">
+                                <span>The number of hidden layers needed</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> What is the "vanishing gradient problem"?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q3" value="a" data-correct="true">
+                                <span>Gradients become extremely small in deep networks, preventing early layers from learning</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q3" value="b">
+                                <span>The network forgets what it learned</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q3" value="c">
+                                <span>Too many parameters cause memory overflow</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q3" value="d">
+                                <span>The learning rate decreases over time</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> In a fully connected (dense) layer, how are neurons connected?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q4" value="a">
+                                <span>Each neuron connects only to nearby neurons</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q4" value="b" data-correct="true">
+                                <span>Every neuron in one layer connects to every neuron in the next layer</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q4" value="c">
+                                <span>Neurons are connected randomly</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q4" value="d">
+                                <span>Neurons only connect within the same layer</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="quiz-question" data-question="5">
+                        <p class="question-text"><strong>Q5.</strong> Why is ReLU (Rectified Linear Unit) often preferred over sigmoid in hidden layers?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q5" value="a">
+                                <span>ReLU outputs are always between 0 and 1</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q5" value="b">
+                                <span>ReLU is more mathematically elegant</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q5" value="c" data-correct="true">
+                                <span>ReLU helps avoid vanishing gradients and is computationally efficient</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="neural-q5" value="d">
+                                <span>ReLU was invented more recently</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('neural')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
             <!-- Page Navigation -->
             <div class="page-navigation">
                 <a href="/learning" class="nav-button nav-button-prev">

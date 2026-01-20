@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+
+{% block title %}Code Playground – Yavin{% endblock %}
+{% block description %}Interactive Python playground for AI and machine learning experiments. Write, run, and learn with real code.{% endblock %}
+
+{% block content %}
+    <section id="playground" class="section" aria-labelledby="playground-title">
+        <div class="container">
+            <h2 id="playground-title" class="section-title">Code Playground</h2>
+            <p class="section-intro">Write and run Python code directly in your browser. Experiment with AI and machine learning concepts hands-on.</p>
+            
+            <div class="playground-container">
+                <!-- Editor Panel -->
+                <div class="playground-editor-panel">
+                    <div class="playground-toolbar">
+                        <div class="playground-tabs">
+                            <button class="playground-tab active" data-example="intro">Introduction</button>
+                            <button class="playground-tab" data-example="gradient">Gradient Descent</button>
+                            <button class="playground-tab" data-example="perceptron">Perceptron</button>
+                            <button class="playground-tab" data-example="kmeans">K-Means</button>
+                            <button class="playground-tab" data-example="neural">Neural Network</button>
+                        </div>
+                        <div class="playground-actions">
+                            <button id="runCode" class="playground-btn playground-btn-run" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Run
+                            </button>
+                            <button id="clearOutput" class="playground-btn">Clear Output</button>
+                        </div>
+                    </div>
+                    
+                    <div class="playground-editor-wrapper">
+                        <textarea id="codeEditor" class="playground-editor" spellcheck="false"># Welcome to the Yavin Code Playground!
+# Python runs directly in your browser using Pyodide.
+# Click "Run" to execute the code below.
+
+import math
+
+def greet(name):
+    """A simple greeting function."""
+    return f"Hello, {name}! Welcome to AI learning."
+
+# Try calling the function
+message = greet("Learner")
+print(message)
+
+# Basic math
+print(f"\nPi is approximately {math.pi:.6f}")
+print(f"e is approximately {math.e:.6f}")
+
+# Let's do some simple calculations
+numbers = [1, 2, 3, 4, 5]
+print(f"\nNumbers: {numbers}")
+print(f"Sum: {sum(numbers)}")
+print(f"Average: {sum(numbers)/len(numbers)}")
+</textarea>
+                    </div>
+                </div>
+                
+                <!-- Output Panel -->
+                <div class="playground-output-panel">
+                    <div class="playground-output-header">
+                        <span>Output</span>
+                        <span id="pyodideStatus" class="playground-status">Loading Python...</span>
+                    </div>
+                    <pre id="codeOutput" class="playground-output">Python is loading. Please wait...</pre>
+                </div>
+            </div>
+            
+            <!-- Example Descriptions -->
+            <div class="playground-examples">
+                <h3>Learning Exercises</h3>
+                <div class="playground-example-grid">
+                    <div class="playground-example-card" data-example="intro">
+                        <h4>Introduction</h4>
+                        <p>Get started with Python basics and see how the playground works.</p>
+                    </div>
+                    <div class="playground-example-card" data-example="gradient">
+                        <h4>Gradient Descent</h4>
+                        <p>Implement gradient descent from scratch to minimize a function.</p>
+                    </div>
+                    <div class="playground-example-card" data-example="perceptron">
+                        <h4>Perceptron</h4>
+                        <p>Build a simple perceptron to learn binary classification.</p>
+                    </div>
+                    <div class="playground-example-card" data-example="kmeans">
+                        <h4>K-Means Clustering</h4>
+                        <p>Implement unsupervised clustering with the K-means algorithm.</p>
+                    </div>
+                    <div class="playground-example-card" data-example="neural">
+                        <h4>Neural Network</h4>
+                        <p>Create a simple neural network with forward and backward propagation.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tips -->
+            <div class="playground-tips">
+                <h4>Tips</h4>
+                <ul>
+                    <li>Use <code>print()</code> to see output</li>
+                    <li>NumPy is available as <code>np</code> after importing</li>
+                    <li>Matplotlib plots will display in the output area</li>
+                    <li>Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to run code quickly</li>
+                </ul>
+            </div>
+
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <a href="/" class="nav-button nav-button-prev">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-label">Home</span>
+                </a>
+                <a href="/foundations" class="nav-button nav-button-next">
+                    <span class="nav-label">Start Learning</span>
+                    <span class="nav-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Code Examples (hidden, loaded by JS) -->
+    <script id="example-intro" type="text/plain"># Welcome to the Yavin Code Playground!
+# Python runs directly in your browser using Pyodide.
+# Click "Run" to execute the code below.
+
+import math
+
+def greet(name):
+    """A simple greeting function."""
+    return f"Hello, {name}! Welcome to AI learning."
+
+# Try calling the function
+message = greet("Learner")
+print(message)
+
+# Basic math
+print(f"\nPi is approximately {math.pi:.6f}")
+print(f"e is approximately {math.e:.6f}")
+
+# Let's do some simple calculations
+numbers = [1, 2, 3, 4, 5]
+print(f"\nNumbers: {numbers}")
+print(f"Sum: {sum(numbers)}")
+print(f"Average: {sum(numbers)/len(numbers)}")
+</script>
+
+    <script id="example-gradient" type="text/plain"># Gradient Descent from Scratch
+# Finding the minimum of f(x) = x^2
+
+def f(x):
+    """The function we want to minimize: f(x) = x^2"""
+    return x ** 2
+
+def df(x):
+    """The derivative: f'(x) = 2x"""
+    return 2 * x
+
+def gradient_descent(start_x, learning_rate, num_iterations):
+    """
+    Perform gradient descent to find the minimum of f(x).
+    
+    Args:
+        start_x: Starting point
+        learning_rate: Step size (alpha)
+        num_iterations: Number of steps to take
+    
+    Returns:
+        List of (x, f(x)) pairs showing the optimization path
+    """
+    x = start_x
+    history = [(x, f(x))]
+    
+    for i in range(num_iterations):
+        # Compute gradient
+        gradient = df(x)
+        
+        # Update x in the direction that reduces f(x)
+        x = x - learning_rate * gradient
+        
+        # Record history
+        history.append((x, f(x)))
+        
+        # Print progress every 5 iterations
+        if (i + 1) % 5 == 0:
+            print(f"Step {i+1}: x = {x:.6f}, f(x) = {f(x):.6f}, gradient = {gradient:.6f}")
+    
+    return history
+
+# Run gradient descent
+print("Starting gradient descent to minimize f(x) = x^2")
+print("=" * 50)
+
+start = 5.0  # Start at x = 5
+lr = 0.1     # Learning rate
+iterations = 30
+
+history = gradient_descent(start, lr, iterations)
+
+print("=" * 50)
+print(f"\nFinal result: x = {history[-1][0]:.8f}")
+print(f"Minimum found: f(x) = {history[-1][1]:.8f}")
+print(f"True minimum is at x = 0, f(0) = 0")
+
+# Try changing the learning rate!
+# What happens with lr = 0.01? (too slow)
+# What happens with lr = 1.0? (overshoots)
+# What happens with lr = 0.5? (oscillates)
+</script>
+
+    <script id="example-perceptron" type="text/plain"># Perceptron: The Simplest Neural Network
+# Learning to classify points (AND gate)
+
+import random
+
+class Perceptron:
+    def __init__(self, num_inputs, learning_rate=0.1):
+        # Initialize weights randomly
+        self.weights = [random.uniform(-1, 1) for _ in range(num_inputs)]
+        self.bias = random.uniform(-1, 1)
+        self.lr = learning_rate
+    
+    def activation(self, x):
+        """Step function: 1 if x > 0, else 0"""
+        return 1 if x > 0 else 0
+    
+    def predict(self, inputs):
+        """Forward pass: compute weighted sum and apply activation"""
+        weighted_sum = sum(w * x for w, x in zip(self.weights, inputs))
+        weighted_sum += self.bias
+        return self.activation(weighted_sum)
+    
+    def train(self, inputs, target):
+        """Train on a single example using the perceptron learning rule"""
+        prediction = self.predict(inputs)
+        error = target - prediction
+        
+        # Update weights: w_new = w_old + lr * error * input
+        for i in range(len(self.weights)):
+            self.weights[i] += self.lr * error * inputs[i]
+        self.bias += self.lr * error
+        
+        return error
+
+# Training data for AND gate
+# Input: (x1, x2), Output: x1 AND x2
+training_data = [
+    ([0, 0], 0),
+    ([0, 1], 0),
+    ([1, 0], 0),
+    ([1, 1], 1),
+]
+
+# Create and train the perceptron
+perceptron = Perceptron(num_inputs=2, learning_rate=0.1)
+
+print("Training a Perceptron to learn AND gate")
+print("=" * 40)
+
+# Train for multiple epochs
+for epoch in range(10):
+    total_error = 0
+    for inputs, target in training_data:
+        error = perceptron.train(inputs, target)
+        total_error += abs(error)
+    
+    if epoch % 2 == 0:
+        print(f"Epoch {epoch}: Total error = {total_error}")
+    
+    if total_error == 0:
+        print(f"\nConverged at epoch {epoch}!")
+        break
+
+print("\n" + "=" * 40)
+print("Final weights:", [f"{w:.3f}" for w in perceptron.weights])
+print("Final bias:", f"{perceptron.bias:.3f}")
+
+print("\nTesting the trained perceptron:")
+for inputs, target in training_data:
+    prediction = perceptron.predict(inputs)
+    status = "✓" if prediction == target else "✗"
+    print(f"  {inputs[0]} AND {inputs[1]} = {prediction} (expected {target}) {status}")
+
+# Try modifying this to learn OR or XOR!
+# Hint: XOR is not linearly separable - the perceptron cannot learn it!
+</script>
+
+    <script id="example-kmeans" type="text/plain"># K-Means Clustering from Scratch
+# Unsupervised learning to find groups in data
+
+import random
+import math
+
+def euclidean_distance(p1, p2):
+    """Calculate Euclidean distance between two points"""
+    return math.sqrt(sum((a - b) ** 2 for a, b in zip(p1, p2)))
+
+def kmeans(data, k, max_iterations=100):
+    """
+    K-Means clustering algorithm.
+    
+    Args:
+        data: List of points (each point is a list of coordinates)
+        k: Number of clusters
+        max_iterations: Maximum iterations
+    
+    Returns:
+        centroids: Final cluster centers
+        assignments: Cluster assignment for each point
+    """
+    # Initialize centroids randomly from data points
+    centroids = random.sample(data, k)
+    
+    for iteration in range(max_iterations):
+        # Step 1: Assign each point to nearest centroid
+        assignments = []
+        for point in data:
+            distances = [euclidean_distance(point, c) for c in centroids]
+            assignments.append(distances.index(min(distances)))
+        
+        # Step 2: Update centroids to mean of assigned points
+        new_centroids = []
+        for cluster_id in range(k):
+            cluster_points = [data[i] for i in range(len(data)) if assignments[i] == cluster_id]
+            
+            if cluster_points:
+                # Calculate mean of all points in cluster
+                mean = [sum(p[dim] for p in cluster_points) / len(cluster_points) 
+                        for dim in range(len(data[0]))]
+                new_centroids.append(mean)
+            else:
+                # Keep old centroid if cluster is empty
+                new_centroids.append(centroids[cluster_id])
+        
+        # Check for convergence
+        if new_centroids == centroids:
+            print(f"Converged at iteration {iteration}")
+            break
+        
+        centroids = new_centroids
+    
+    return centroids, assignments
+
+# Generate sample data: 3 clusters
+random.seed(42)
+
+def generate_cluster(center, n_points, spread):
+    return [[center[0] + random.gauss(0, spread), 
+             center[1] + random.gauss(0, spread)] for _ in range(n_points)]
+
+# Three clusters at different locations
+cluster1 = generate_cluster([2, 2], 15, 0.5)
+cluster2 = generate_cluster([8, 8], 15, 0.5)
+cluster3 = generate_cluster([2, 8], 15, 0.5)
+
+data = cluster1 + cluster2 + cluster3
+random.shuffle(data)
+
+print("K-Means Clustering")
+print("=" * 40)
+print(f"Data: {len(data)} points")
+print(f"Finding k=3 clusters...\n")
+
+# Run K-Means
+centroids, assignments = kmeans(data, k=3)
+
+print("\nFinal Centroids:")
+for i, c in enumerate(centroids):
+    count = assignments.count(i)
+    print(f"  Cluster {i}: ({c[0]:.2f}, {c[1]:.2f}) - {count} points")
+
+print("\nCluster assignments (first 10 points):")
+for i in range(min(10, len(data))):
+    print(f"  Point ({data[i][0]:.2f}, {data[i][1]:.2f}) -> Cluster {assignments[i]}")
+
+# Challenge: Try with k=2 or k=4 and see what happens!
+</script>
+
+    <script id="example-neural" type="text/plain"># Simple Neural Network from Scratch
+# Two-layer network for XOR problem
+
+import math
+import random
+
+def sigmoid(x):
+    """Sigmoid activation function"""
+    return 1 / (1 + math.exp(-max(-500, min(500, x))))
+
+def sigmoid_derivative(x):
+    """Derivative of sigmoid"""
+    return x * (1 - x)
+
+class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size):
+        # Initialize weights randomly
+        self.weights_ih = [[random.uniform(-1, 1) for _ in range(input_size)] 
+                           for _ in range(hidden_size)]
+        self.weights_ho = [[random.uniform(-1, 1) for _ in range(hidden_size)] 
+                           for _ in range(output_size)]
+        self.bias_h = [random.uniform(-1, 1) for _ in range(hidden_size)]
+        self.bias_o = [random.uniform(-1, 1) for _ in range(output_size)]
+        self.lr = 0.5
+    
+    def forward(self, inputs):
+        """Forward pass through the network"""
+        # Input to hidden
+        self.hidden = []
+        for i in range(len(self.weights_ih)):
+            h = sum(w * x for w, x in zip(self.weights_ih[i], inputs)) + self.bias_h[i]
+            self.hidden.append(sigmoid(h))
+        
+        # Hidden to output
+        self.output = []
+        for i in range(len(self.weights_ho)):
+            o = sum(w * h for w, h in zip(self.weights_ho[i], self.hidden)) + self.bias_o[i]
+            self.output.append(sigmoid(o))
+        
+        return self.output
+    
+    def backward(self, inputs, targets):
+        """Backward pass to update weights"""
+        # Output layer error
+        output_errors = [targets[i] - self.output[i] for i in range(len(targets))]
+        output_deltas = [output_errors[i] * sigmoid_derivative(self.output[i]) 
+                         for i in range(len(output_errors))]
+        
+        # Hidden layer error
+        hidden_errors = [sum(self.weights_ho[o][h] * output_deltas[o] 
+                            for o in range(len(self.weights_ho)))
+                         for h in range(len(self.hidden))]
+        hidden_deltas = [hidden_errors[i] * sigmoid_derivative(self.hidden[i])
+                         for i in range(len(hidden_errors))]
+        
+        # Update weights
+        for o in range(len(self.weights_ho)):
+            for h in range(len(self.hidden)):
+                self.weights_ho[o][h] += self.lr * output_deltas[o] * self.hidden[h]
+            self.bias_o[o] += self.lr * output_deltas[o]
+        
+        for h in range(len(self.weights_ih)):
+            for i in range(len(inputs)):
+                self.weights_ih[h][i] += self.lr * hidden_deltas[h] * inputs[i]
+            self.bias_h[h] += self.lr * hidden_deltas[h]
+        
+        return sum(e ** 2 for e in output_errors)
+    
+    def train(self, inputs, targets):
+        """Train on one example"""
+        self.forward(inputs)
+        return self.backward(inputs, targets)
+
+# XOR problem - not linearly separable!
+training_data = [
+    ([0, 0], [0]),
+    ([0, 1], [1]),
+    ([1, 0], [1]),
+    ([1, 1], [0]),
+]
+
+print("Training Neural Network for XOR")
+print("=" * 40)
+
+# Create network: 2 inputs -> 4 hidden -> 1 output
+random.seed(42)
+nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1)
+
+# Train
+for epoch in range(5000):
+    total_error = 0
+    for inputs, targets in training_data:
+        error = nn.train(inputs, targets)
+        total_error += error
+    
+    if epoch % 1000 == 0:
+        print(f"Epoch {epoch}: Error = {total_error:.6f}")
+
+print("=" * 40)
+print("\nTesting trained network:")
+for inputs, targets in training_data:
+    output = nn.forward(inputs)
+    prediction = round(output[0])
+    actual = targets[0]
+    status = "✓" if prediction == actual else "✗"
+    print(f"  {inputs[0]} XOR {inputs[1]} = {output[0]:.4f} (rounded: {prediction}, expected: {actual}) {status}")
+
+print("\nThe network learned XOR - something a single perceptron cannot do!")
+</script>
+{% endblock %}

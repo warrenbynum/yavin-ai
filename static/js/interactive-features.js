@@ -123,7 +123,7 @@ const YavinProgress = {
         return data;
     },
     
-    async submitQuiz(section, score, total) {
+    async submitQuizToServer(section, score, total) {
         const response = await fetch('/api/quiz', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -132,6 +132,107 @@ const YavinProgress = {
         return await response.json();
     }
 };
+
+// ============================================================================
+// Quiz System
+// ============================================================================
+
+async function submitQuiz(sectionId) {
+    const container = document.querySelector(`.quiz-container[data-section="${sectionId}"]`);
+    if (!container) return;
+    
+    const questions = container.querySelectorAll('.quiz-question');
+    const submitBtn = container.querySelector('.quiz-submit');
+    const resultsDiv = container.querySelector('.quiz-results');
+    
+    let score = 0;
+    let total = questions.length;
+    let unanswered = 0;
+    
+    // Check each question
+    questions.forEach(question => {
+        const selected = question.querySelector('input[type="radio"]:checked');
+        const options = question.querySelectorAll('.quiz-option');
+        
+        if (!selected) {
+            unanswered++;
+            return;
+        }
+        
+        const isCorrect = selected.dataset.correct === 'true';
+        
+        // Mark options
+        options.forEach(option => {
+            const input = option.querySelector('input[type="radio"]');
+            option.style.position = 'relative';
+            
+            if (input.dataset.correct === 'true') {
+                option.classList.add('correct');
+            } else if (input.checked && !isCorrect) {
+                option.classList.add('incorrect');
+            }
+            
+            // Disable further changes
+            input.disabled = true;
+        });
+        
+        if (isCorrect) score++;
+    });
+    
+    // Check if all questions answered
+    if (unanswered > 0) {
+        showToast(`Please answer all ${unanswered} remaining question${unanswered > 1 ? 's' : ''}`);
+        return;
+    }
+    
+    // Calculate percentage
+    const percentage = Math.round((score / total) * 100);
+    
+    // Submit to server if logged in
+    const serverResult = await YavinProgress.submitQuizToServer(sectionId, score, total);
+    
+    // Update UI
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitted';
+    
+    // Show results
+    let feedbackMessage = '';
+    let feedbackClass = '';
+    
+    if (percentage === 100) {
+        feedbackMessage = 'Perfect score! You have mastered this section.';
+        feedbackClass = 'perfect';
+    } else if (percentage >= 80) {
+        feedbackMessage = 'Excellent work! You have a strong understanding.';
+        feedbackClass = 'excellent';
+    } else if (percentage >= 60) {
+        feedbackMessage = 'Good effort! Consider reviewing some concepts.';
+        feedbackClass = 'good';
+    } else {
+        feedbackMessage = 'Keep learning! Review the section and try again.';
+        feedbackClass = 'needs-work';
+    }
+    
+    resultsDiv.innerHTML = `
+        <h4>Quiz Results</h4>
+        <div class="quiz-score ${feedbackClass}">${score}/${total}</div>
+        <p class="quiz-percentage">${percentage}%</p>
+        <p class="quiz-feedback">${feedbackMessage}</p>
+        ${serverResult.bonus_xp ? `<p class="quiz-bonus">+${serverResult.bonus_xp} bonus XP for perfect score!</p>` : ''}
+        ${!serverResult.logged_in ? '<p class="quiz-login-hint">Sign in to save your progress and earn XP!</p>' : ''}
+    `;
+    resultsDiv.style.display = 'block';
+    
+    // Scroll to results
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Show toast
+    if (serverResult.bonus_xp) {
+        showToast(`+${serverResult.bonus_xp} XP bonus for perfect score!`);
+    } else {
+        showToast(`Quiz complete: ${score}/${total} correct`);
+    }
+}
 
 // ============================================================================
 // Newsletter Subscription
@@ -1178,6 +1279,188 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+// ============================================================================
+// Code Playground with Pyodide
+// ============================================================================
+
+const CodePlayground = {
+    pyodide: null,
+    isLoading: false,
+    isReady: false,
+    
+    async init() {
+        if (this.isLoading || this.isReady) return;
+        if (!document.getElementById('codeEditor')) return;
+        
+        this.isLoading = true;
+        this.updateStatus('Loading Python...', 'loading');
+        
+        try {
+            // Load Pyodide from CDN
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
+            document.head.appendChild(script);
+            
+            await new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = reject;
+            });
+            
+            // Initialize Pyodide
+            this.pyodide = await loadPyodide({
+                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/'
+            });
+            
+            // Load numpy (commonly used)
+            await this.pyodide.loadPackage(['numpy']);
+            
+            this.isReady = true;
+            this.isLoading = false;
+            this.updateStatus('Ready', 'ready');
+            
+            // Enable run button
+            const runBtn = document.getElementById('runCode');
+            if (runBtn) runBtn.disabled = false;
+            
+            // Set initial output
+            this.setOutput('Python is ready! Click "Run" to execute your code.\n\nNumPy is available as: import numpy as np');
+            
+        } catch (error) {
+            this.isLoading = false;
+            this.updateStatus('Failed to load', 'error');
+            this.setOutput('Error loading Python: ' + error.message, true);
+        }
+    },
+    
+    async run() {
+        if (!this.isReady) {
+            this.setOutput('Python is still loading. Please wait...', true);
+            return;
+        }
+        
+        const editor = document.getElementById('codeEditor');
+        const code = editor.value;
+        
+        this.updateStatus('Running...', 'loading');
+        
+        try {
+            // Redirect stdout
+            this.pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+            `);
+            
+            // Run user code
+            await this.pyodide.runPythonAsync(code);
+            
+            // Get output
+            const stdout = this.pyodide.runPython('sys.stdout.getvalue()');
+            const stderr = this.pyodide.runPython('sys.stderr.getvalue()');
+            
+            let output = stdout;
+            if (stderr) {
+                output += '\n\nStderr:\n' + stderr;
+            }
+            
+            if (!output.trim()) {
+                output = '(No output. Use print() to see results.)';
+            }
+            
+            this.setOutput(output);
+            this.updateStatus('Ready', 'ready');
+            
+        } catch (error) {
+            this.setOutput('Error:\n' + error.message, true);
+            this.updateStatus('Error', 'error');
+        }
+    },
+    
+    setOutput(text, isError = false) {
+        const output = document.getElementById('codeOutput');
+        if (output) {
+            output.textContent = text;
+            output.classList.toggle('error', isError);
+        }
+    },
+    
+    clearOutput() {
+        this.setOutput('');
+    },
+    
+    updateStatus(text, state) {
+        const status = document.getElementById('pyodideStatus');
+        if (status) {
+            status.textContent = text;
+            status.className = 'playground-status';
+            if (state === 'ready') status.classList.add('ready');
+            if (state === 'error') status.classList.add('error');
+        }
+    },
+    
+    loadExample(exampleId) {
+        const exampleScript = document.getElementById('example-' + exampleId);
+        const editor = document.getElementById('codeEditor');
+        
+        if (exampleScript && editor) {
+            editor.value = exampleScript.textContent.trim();
+            this.clearOutput();
+            
+            // Update active tab
+            document.querySelectorAll('.playground-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.example === exampleId);
+            });
+        }
+    }
+};
+
+// Initialize playground when on playground page
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('codeEditor')) {
+        CodePlayground.init();
+        
+        // Run button
+        const runBtn = document.getElementById('runCode');
+        if (runBtn) {
+            runBtn.addEventListener('click', () => CodePlayground.run());
+        }
+        
+        // Clear button
+        const clearBtn = document.getElementById('clearOutput');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => CodePlayground.clearOutput());
+        }
+        
+        // Tab buttons
+        document.querySelectorAll('.playground-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                CodePlayground.loadExample(tab.dataset.example);
+            });
+        });
+        
+        // Example cards
+        document.querySelectorAll('.playground-example-card').forEach(card => {
+            card.addEventListener('click', () => {
+                CodePlayground.loadExample(card.dataset.example);
+                // Scroll to editor
+                document.querySelector('.playground-container')?.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            });
+        });
+        
+        // Keyboard shortcut: Ctrl+Enter to run
+        document.getElementById('codeEditor')?.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                CodePlayground.run();
+            }
+        });
+    }
+});
+
 // Export for global access
 window.GradientDescentDemo = GradientDescentDemo;
 window.DecisionBoundaryDemo = DecisionBoundaryDemo;
@@ -1193,3 +1476,5 @@ window.toggleAIChat = toggleAIChat;
 window.addLayer = addLayer;
 window.resetNetwork = resetNetwork;
 window.trainNetwork = trainNetwork;
+window.submitQuiz = submitQuiz;
+window.CodePlayground = CodePlayground;

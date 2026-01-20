@@ -283,6 +283,10 @@ async fn mission(tmpl: web::Data<Tera>, session: Session, pool: web::Data<PgPool
     render_page(&tmpl, "mission.html", "mission", "Our Mission – Yavin", &session, &pool).await
 }
 
+async fn playground(tmpl: web::Data<Tera>, session: Session, pool: web::Data<PgPool>) -> Result<HttpResponse> {
+    render_page(&tmpl, "playground.html", "playground", "Code Playground – Yavin", &session, &pool).await
+}
+
 // ============================================================================
 // Authentication API
 // ============================================================================
@@ -827,6 +831,7 @@ async fn main() -> std::io::Result<()> {
             .route("/ethics", web::get().to(ethics))
             .route("/glossary", web::get().to(glossary))
             .route("/mission", web::get().to(mission))
+            .route("/playground", web::get().to(playground))
             // Auth API
             .route("/api/auth/register", web::post().to(register))
             .route("/api/auth/login", web::post().to(login))

@@ -421,6 +421,132 @@ Repeat until convergence:
                 <p class="key-insight">The goal of machine learning isn't perfect training performance—it's the best possible generalization to new situations. This requires careful balance between model capacity, training data, and regularization.</p>
             </div>
 
+            <!-- Quiz: Machine Learning -->
+            <div class="quiz-container" data-section="learning">
+                <h3 class="quiz-title">Test Your Understanding: Machine Learning</h3>
+                <p class="quiz-subtitle">Assess your grasp of core machine learning concepts.</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> According to Mitchell's definition, what three components define machine learning?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q1" value="a">
+                                <span>Data, algorithms, and computers</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q1" value="b" data-correct="true">
+                                <span>Task, Experience, and Performance measure</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q1" value="c">
+                                <span>Input, hidden layers, and output</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q1" value="d">
+                                <span>Training, validation, and testing</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> What is the key difference between supervised and unsupervised learning?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q2" value="a">
+                                <span>Supervised learning is faster</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q2" value="b">
+                                <span>Unsupervised learning requires more data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q2" value="c" data-correct="true">
+                                <span>Supervised learning uses labeled data with known outputs; unsupervised learning finds patterns in unlabeled data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q2" value="d">
+                                <span>Supervised learning only works for classification</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> What happens when a model overfits?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q3" value="a">
+                                <span>It performs poorly on both training and test data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q3" value="b" data-correct="true">
+                                <span>It performs well on training data but poorly on new, unseen data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q3" value="c">
+                                <span>It takes too long to train</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q3" value="d">
+                                <span>It uses too much memory</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> In reinforcement learning, what does the agent learn from?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q4" value="a">
+                                <span>Labeled examples provided by humans</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q4" value="b">
+                                <span>Clustering similar data points</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q4" value="c" data-correct="true">
+                                <span>Rewards and punishments from interacting with an environment</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q4" value="d">
+                                <span>Comparing predictions to ground truth</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="quiz-question" data-question="5">
+                        <p class="question-text"><strong>Q5.</strong> What is the purpose of gradient descent?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q5" value="a">
+                                <span>To increase the complexity of the model</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q5" value="b">
+                                <span>To generate more training data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q5" value="c">
+                                <span>To classify data into categories</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="learning-q5" value="d" data-correct="true">
+                                <span>To minimize the loss function by iteratively adjusting model parameters</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('learning')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
             <!-- Page Navigation -->
             <div class="page-navigation">
                 <a href="/foundations" class="nav-button nav-button-prev">

@@ -400,6 +400,132 @@
                 <p class="key-insight">As AI systems become increasingly embedded in daily life—from the content we consume to the decisions made about us—understanding their capabilities, limitations, and societal impacts becomes essential for all citizens, not just technical practitioners.</p>
             </div>
 
+            <!-- Quiz: Modern AI -->
+            <div class="quiz-container" data-section="modern">
+                <h3 class="quiz-title">Test Your Understanding: Modern AI</h3>
+                <p class="quiz-subtitle">Assess your knowledge of contemporary AI systems.</p>
+                
+                <div class="quiz-questions">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <p class="question-text"><strong>Q1.</strong> What is the primary training objective of Large Language Models (LLMs)?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q1" value="a">
+                                <span>Classifying text into categories</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q1" value="b" data-correct="true">
+                                <span>Predicting the next token given previous tokens</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q1" value="c">
+                                <span>Translating between languages</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q1" value="d">
+                                <span>Answering questions correctly</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text"><strong>Q2.</strong> What is "prompt engineering"?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q2" value="a">
+                                <span>Building new AI models from scratch</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q2" value="b">
+                                <span>Fine-tuning model weights on new data</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q2" value="c" data-correct="true">
+                                <span>Crafting effective inputs to get desired outputs from AI models</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q2" value="d">
+                                <span>Optimizing model inference speed</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text"><strong>Q3.</strong> What is the "cold start problem" in recommendation systems?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q3" value="a">
+                                <span>The system running slowly on startup</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q3" value="b" data-correct="true">
+                                <span>Difficulty making recommendations for new users or items with no history</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q3" value="c">
+                                <span>Users not engaging with recommendations</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q3" value="d">
+                                <span>The model forgetting learned patterns</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <p class="question-text"><strong>Q4.</strong> What is RLHF (Reinforcement Learning from Human Feedback) used for?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q4" value="a">
+                                <span>Training robots to walk</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q4" value="b">
+                                <span>Generating training data automatically</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q4" value="c" data-correct="true">
+                                <span>Aligning AI behavior with human preferences and values</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q4" value="d">
+                                <span>Reducing model size</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="quiz-question" data-question="5">
+                        <p class="question-text"><strong>Q5.</strong> What is a "hallucination" in the context of LLMs?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q5" value="a">
+                                <span>When the model generates images</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q5" value="b" data-correct="true">
+                                <span>When the model generates plausible-sounding but factually incorrect information</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q5" value="c">
+                                <span>When the model refuses to answer</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="modern-q5" value="d">
+                                <span>When the model generates creative content</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-submit" onclick="submitQuiz('modern')">Submit Answers</button>
+                <div class="quiz-results" style="display: none;"></div>
+            </div>
+
             <!-- Page Navigation -->
             <div class="page-navigation">
                 <a href="/deep" class="nav-button nav-button-prev">

@@ -1,9 +1,9 @@
 use actix_files as fs;
 use actix_session::{Session, SessionMiddleware, storage::CookieSessionStore};
-use actix_web::{web, App, HttpResponse, HttpServer, Result, cookie::Key, HttpRequest};
+use actix_web::{web, App, HttpResponse, HttpServer, Result, cookie::Key};
 use argon2::{Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 use argon2::password_hash::SaltString;
-use chrono::{Utc, NaiveDate};
+use chrono::Utc;
 use rand::rngs::OsRng;
 use serde::{Deserialize, Serialize};
 use sqlx::{PgPool, postgres::PgPoolOptions};
@@ -95,6 +95,71 @@ const SECTIONS: &[(&str, &str, i32)] = &[
     ("sequential", "Sequential Flow", 100),
     ("ethics", "Ethics & Society", 100),
     ("glossary", "Glossary", 50),
+];
+
+// Badge definitions
+#[derive(Debug, Clone, Serialize)]
+struct BadgeDefinition {
+    id: &'static str,
+    name: &'static str,
+    description: &'static str,
+    icon: &'static str,
+    xp_reward: i32,
+}
+
+const BADGES: &[BadgeDefinition] = &[
+    BadgeDefinition { id: "first_steps", name: "First Steps", description: "Complete your first section", icon: "🚀", xp_reward: 25 },
+    BadgeDefinition { id: "quiz_taker", name: "Quiz Taker", description: "Complete your first quiz", icon: "📝", xp_reward: 25 },
+    BadgeDefinition { id: "quiz_master", name: "Quiz Master", description: "Score 100% on 3 quizzes", icon: "🏆", xp_reward: 100 },
+    BadgeDefinition { id: "code_runner", name: "Code Runner", description: "Run code in the playground", icon: "💻", xp_reward: 25 },
+    BadgeDefinition { id: "week_warrior", name: "Week Warrior", description: "Maintain a 7-day streak", icon: "🔥", xp_reward: 100 },
+    BadgeDefinition { id: "foundations_complete", name: "Foundation Builder", description: "Complete the Foundations section", icon: "🏗️", xp_reward: 50 },
+    BadgeDefinition { id: "ml_complete", name: "ML Explorer", description: "Complete Machine Learning", icon: "🤖", xp_reward: 50 },
+    BadgeDefinition { id: "neural_complete", name: "Neural Navigator", description: "Complete Neural Networks", icon: "🧠", xp_reward: 50 },
+    BadgeDefinition { id: "deep_complete", name: "Deep Diver", description: "Complete Deep Learning", icon: "🌊", xp_reward: 75 },
+    BadgeDefinition { id: "modern_complete", name: "Modern Master", description: "Complete Modern AI", icon: "⚡", xp_reward: 50 },
+    BadgeDefinition { id: "ethics_complete", name: "Ethics Expert", description: "Complete Ethics & Society", icon: "⚖️", xp_reward: 50 },
+    BadgeDefinition { id: "all_sections", name: "AI Scholar", description: "Complete all learning sections", icon: "🎓", xp_reward: 200 },
+    BadgeDefinition { id: "xp_100", name: "Century Club", description: "Earn 100 XP", icon: "💯", xp_reward: 0 },
+    BadgeDefinition { id: "xp_500", name: "Rising Star", description: "Earn 500 XP", icon: "⭐", xp_reward: 0 },
+    BadgeDefinition { id: "xp_1000", name: "AI Champion", description: "Earn 1000 XP", icon: "👑", xp_reward: 0 },
+];
+
+// Search content index
+struct SearchEntry {
+    section: &'static str,
+    title: &'static str,
+    url: &'static str,
+    keywords: &'static [&'static str],
+}
+
+const SEARCH_INDEX: &[SearchEntry] = &[
+    SearchEntry { section: "Foundations", title: "What is Computation?", url: "/foundations#computation", keywords: &["computation", "algorithm", "input", "output", "process", "bits", "binary"] },
+    SearchEntry { section: "Foundations", title: "Algorithms", url: "/foundations#algorithms", keywords: &["algorithm", "complexity", "efficiency", "sorting", "search", "decomposition"] },
+    SearchEntry { section: "Foundations", title: "Traditional vs AI Programming", url: "/foundations#paradigm", keywords: &["traditional", "rules", "programming", "paradigm", "shift", "data"] },
+    SearchEntry { section: "Machine Learning", title: "Mitchell's Definition", url: "/learning#definition", keywords: &["mitchell", "definition", "task", "experience", "performance", "learning"] },
+    SearchEntry { section: "Machine Learning", title: "Supervised Learning", url: "/learning#supervised", keywords: &["supervised", "labeled", "classification", "regression", "training"] },
+    SearchEntry { section: "Machine Learning", title: "Unsupervised Learning", url: "/learning#unsupervised", keywords: &["unsupervised", "clustering", "dimensionality", "patterns", "unlabeled"] },
+    SearchEntry { section: "Machine Learning", title: "Reinforcement Learning", url: "/learning#reinforcement", keywords: &["reinforcement", "agent", "reward", "environment", "policy", "action"] },
+    SearchEntry { section: "Machine Learning", title: "Gradient Descent", url: "/learning#gradient-descent", keywords: &["gradient", "descent", "optimization", "loss", "learning rate", "convergence"] },
+    SearchEntry { section: "Machine Learning", title: "Overfitting", url: "/learning#overfitting", keywords: &["overfitting", "underfitting", "bias", "variance", "regularization", "generalization"] },
+    SearchEntry { section: "Neural Networks", title: "Biological Inspiration", url: "/neural#biological", keywords: &["neuron", "biological", "brain", "synapse", "dendrite", "axon"] },
+    SearchEntry { section: "Neural Networks", title: "Artificial Neurons", url: "/neural#artificial", keywords: &["perceptron", "weights", "bias", "activation", "artificial neuron"] },
+    SearchEntry { section: "Neural Networks", title: "Activation Functions", url: "/neural#activation", keywords: &["activation", "relu", "sigmoid", "tanh", "softmax", "non-linear"] },
+    SearchEntry { section: "Neural Networks", title: "Backpropagation", url: "/neural#backprop", keywords: &["backpropagation", "gradient", "chain rule", "derivatives", "training"] },
+    SearchEntry { section: "Deep Learning", title: "Convolutional Networks", url: "/deep#cnn", keywords: &["cnn", "convolutional", "convolution", "pooling", "filters", "kernels", "image"] },
+    SearchEntry { section: "Deep Learning", title: "Recurrent Networks", url: "/deep#rnn", keywords: &["rnn", "recurrent", "lstm", "gru", "sequence", "memory", "time series"] },
+    SearchEntry { section: "Deep Learning", title: "Transformers", url: "/deep#transformers", keywords: &["transformer", "attention", "self-attention", "encoder", "decoder", "bert", "gpt"] },
+    SearchEntry { section: "Deep Learning", title: "Attention Mechanism", url: "/deep#attention", keywords: &["attention", "query", "key", "value", "weights", "context"] },
+    SearchEntry { section: "Deep Learning", title: "Generative Models", url: "/deep#generative", keywords: &["gan", "generative", "discriminator", "generator", "vae", "diffusion"] },
+    SearchEntry { section: "Modern AI", title: "Large Language Models", url: "/modern#llm", keywords: &["llm", "language model", "gpt", "claude", "chatgpt", "tokens", "context"] },
+    SearchEntry { section: "Modern AI", title: "Prompt Engineering", url: "/modern#prompts", keywords: &["prompt", "engineering", "few-shot", "zero-shot", "chain of thought"] },
+    SearchEntry { section: "Modern AI", title: "Computer Vision", url: "/modern#vision", keywords: &["vision", "image", "object detection", "segmentation", "recognition"] },
+    SearchEntry { section: "Modern AI", title: "Recommendation Systems", url: "/modern#recommendations", keywords: &["recommendation", "collaborative", "content-based", "filtering", "cold start"] },
+    SearchEntry { section: "Ethics", title: "Bias in AI", url: "/ethics#bias", keywords: &["bias", "fairness", "discrimination", "training data", "representation"] },
+    SearchEntry { section: "Ethics", title: "Privacy", url: "/ethics#privacy", keywords: &["privacy", "data", "consent", "surveillance", "anonymization"] },
+    SearchEntry { section: "Ethics", title: "Accountability", url: "/ethics#accountability", keywords: &["accountability", "responsibility", "explainability", "transparency", "audit"] },
+    SearchEntry { section: "Glossary", title: "AI Glossary", url: "/glossary", keywords: &["glossary", "terms", "definitions", "vocabulary", "concepts"] },
 ];
 
 // ============================================================================
@@ -750,6 +815,306 @@ async fn chat_with_gemini(form: web::Json<HashMap<String, String>>) -> Result<Ht
 }
 
 // ============================================================================
+// Badges API
+// ============================================================================
+
+#[derive(Debug, Serialize)]
+struct UserBadge {
+    id: String,
+    name: String,
+    description: String,
+    icon: String,
+    earned_at: chrono::DateTime<Utc>,
+}
+
+async fn get_user_badges(
+    session: Session,
+    pool: web::Data<PgPool>,
+) -> Result<HttpResponse> {
+    let user = match get_user_from_session(&session, pool.get_ref()).await {
+        Some(u) => u,
+        None => {
+            return Ok(HttpResponse::Ok().json(serde_json::json!({
+                "badges": [],
+                "available": BADGES.iter().map(|b| serde_json::json!({
+                    "id": b.id,
+                    "name": b.name,
+                    "description": b.description,
+                    "icon": b.icon
+                })).collect::<Vec<_>>()
+            })));
+        }
+    };
+    
+    // Get earned badges
+    let earned: Vec<(String, chrono::DateTime<Utc>)> = sqlx::query_as(
+        "SELECT achievement_id, earned_at FROM user_achievements WHERE user_id = $1"
+    )
+    .bind(user.id)
+    .fetch_all(pool.get_ref())
+    .await
+    .unwrap_or_default();
+    
+    let earned_ids: std::collections::HashSet<String> = earned.iter().map(|(id, _)| id.clone()).collect();
+    
+    let user_badges: Vec<UserBadge> = earned.iter()
+        .filter_map(|(id, earned_at)| {
+            BADGES.iter().find(|b| b.id == id).map(|b| UserBadge {
+                id: b.id.to_string(),
+                name: b.name.to_string(),
+                description: b.description.to_string(),
+                icon: b.icon.to_string(),
+                earned_at: *earned_at,
+            })
+        })
+        .collect();
+    
+    let available: Vec<serde_json::Value> = BADGES.iter()
+        .filter(|b| !earned_ids.contains(b.id))
+        .map(|b| serde_json::json!({
+            "id": b.id,
+            "name": b.name,
+            "description": b.description,
+            "icon": b.icon
+        }))
+        .collect();
+    
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "badges": user_badges,
+        "available": available
+    })))
+}
+
+#[derive(Debug, Deserialize)]
+struct BadgeCheckRequest {
+    trigger: String,
+}
+
+async fn check_badges(
+    session: Session,
+    pool: web::Data<PgPool>,
+    form: web::Json<BadgeCheckRequest>,
+) -> Result<HttpResponse> {
+    let user = match get_user_from_session(&session, pool.get_ref()).await {
+        Some(u) => u,
+        None => {
+            return Ok(HttpResponse::Ok().json(serde_json::json!({
+                "new_badges": []
+            })));
+        }
+    };
+    
+    // Get current badges
+    let current_badges: Vec<String> = sqlx::query_scalar(
+        "SELECT achievement_id FROM user_achievements WHERE user_id = $1"
+    )
+    .bind(user.id)
+    .fetch_all(pool.get_ref())
+    .await
+    .unwrap_or_default();
+    
+    let current_set: std::collections::HashSet<&str> = current_badges.iter().map(|s| s.as_str()).collect();
+    
+    // Get user stats for badge checking
+    let progress: Vec<UserProgress> = sqlx::query_as(
+        "SELECT section_id, completed, quiz_score FROM user_progress WHERE user_id = $1"
+    )
+    .bind(user.id)
+    .fetch_all(pool.get_ref())
+    .await
+    .unwrap_or_default();
+    
+    let completed_sections: Vec<&str> = progress.iter()
+        .filter(|p| p.completed)
+        .map(|p| p.section_id.as_str())
+        .collect();
+    
+    let perfect_quizzes = progress.iter()
+        .filter(|p| p.quiz_score == Some(100))
+        .count();
+    
+    let mut new_badges: Vec<&BadgeDefinition> = Vec::new();
+    
+    // Check each badge condition
+    for badge in BADGES {
+        if current_set.contains(badge.id) {
+            continue;
+        }
+        
+        let earned = match badge.id {
+            "first_steps" => !completed_sections.is_empty(),
+            "quiz_taker" => progress.iter().any(|p| p.quiz_score.is_some()),
+            "quiz_master" => perfect_quizzes >= 3,
+            "code_runner" => form.trigger == "code_run",
+            "week_warrior" => user.streak_days >= 7,
+            "foundations_complete" => completed_sections.contains(&"foundations"),
+            "ml_complete" => completed_sections.contains(&"learning"),
+            "neural_complete" => completed_sections.contains(&"neural"),
+            "deep_complete" => completed_sections.contains(&"deep"),
+            "modern_complete" => completed_sections.contains(&"modern"),
+            "ethics_complete" => completed_sections.contains(&"ethics"),
+            "all_sections" => {
+                ["foundations", "learning", "neural", "deep", "modern", "ethics"]
+                    .iter().all(|s| completed_sections.contains(s))
+            },
+            "xp_100" => user.total_xp >= 100,
+            "xp_500" => user.total_xp >= 500,
+            "xp_1000" => user.total_xp >= 1000,
+            _ => false,
+        };
+        
+        if earned {
+            // Award badge
+            let _ = sqlx::query!(
+                "INSERT INTO user_achievements (user_id, achievement_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+                user.id,
+                badge.id
+            )
+            .execute(pool.get_ref())
+            .await;
+            
+            // Award XP
+            if badge.xp_reward > 0 {
+                let _ = add_xp(pool.get_ref(), user.id, badge.xp_reward).await;
+            }
+            
+            new_badges.push(badge);
+        }
+    }
+    
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "new_badges": new_badges.iter().map(|b| serde_json::json!({
+            "id": b.id,
+            "name": b.name,
+            "description": b.description,
+            "icon": b.icon,
+            "xp_reward": b.xp_reward
+        })).collect::<Vec<_>>()
+    })))
+}
+
+// ============================================================================
+// Search API
+// ============================================================================
+
+#[derive(Debug, Deserialize)]
+struct SearchQuery {
+    q: String,
+}
+
+async fn search_content(query: web::Query<SearchQuery>) -> Result<HttpResponse> {
+    let search_term = query.q.to_lowercase();
+    
+    if search_term.len() < 2 {
+        return Ok(HttpResponse::Ok().json(serde_json::json!({
+            "results": [],
+            "query": query.q
+        })));
+    }
+    
+    let results: Vec<serde_json::Value> = SEARCH_INDEX.iter()
+        .filter(|entry| {
+            entry.title.to_lowercase().contains(&search_term) ||
+            entry.section.to_lowercase().contains(&search_term) ||
+            entry.keywords.iter().any(|k| k.contains(&search_term))
+        })
+        .map(|entry| serde_json::json!({
+            "title": entry.title,
+            "section": entry.section,
+            "url": entry.url,
+            "keywords": entry.keywords
+        }))
+        .collect();
+    
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "results": results,
+        "query": query.q,
+        "count": results.len()
+    })))
+}
+
+// ============================================================================
+// Certificate API
+// ============================================================================
+
+async fn get_certificate(
+    session: Session,
+    pool: web::Data<PgPool>,
+) -> Result<HttpResponse> {
+    let user = match get_user_from_session(&session, pool.get_ref()).await {
+        Some(u) => u,
+        None => {
+            return Ok(HttpResponse::Unauthorized().json(serde_json::json!({
+                "error": "Please log in to access certificates"
+            })));
+        }
+    };
+    
+    // Get progress
+    let progress: Vec<UserProgress> = sqlx::query_as(
+        "SELECT section_id, completed, quiz_score FROM user_progress WHERE user_id = $1"
+    )
+    .bind(user.id)
+    .fetch_all(pool.get_ref())
+    .await
+    .unwrap_or_default();
+    
+    let completed_sections: Vec<&str> = progress.iter()
+        .filter(|p| p.completed)
+        .map(|p| p.section_id.as_str())
+        .collect();
+    
+    // Check if eligible for certificate
+    let core_sections = ["foundations", "learning", "neural", "deep", "modern", "ethics"];
+    let all_complete = core_sections.iter().all(|s| completed_sections.contains(s));
+    
+    if !all_complete {
+        let remaining: Vec<&str> = core_sections.iter()
+            .filter(|s| !completed_sections.contains(*s))
+            .copied()
+            .collect();
+        
+        return Ok(HttpResponse::Ok().json(serde_json::json!({
+            "eligible": false,
+            "completed": completed_sections.len(),
+            "total": core_sections.len(),
+            "remaining": remaining
+        })));
+    }
+    
+    // Calculate average quiz score
+    let quiz_scores: Vec<i32> = progress.iter()
+        .filter_map(|p| p.quiz_score)
+        .collect();
+    let avg_score = if quiz_scores.is_empty() { 0 } else {
+        quiz_scores.iter().sum::<i32>() / quiz_scores.len() as i32
+    };
+    
+    // Generate certificate data
+    let cert_id = format!("YAVIN-{}-{}", 
+        user.id.to_string()[..8].to_uppercase(),
+        Utc::now().format("%Y%m%d")
+    );
+    
+    let user_name = user.name.unwrap_or_else(|| user.email.split('@').next().unwrap_or("Learner").to_string());
+    
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "eligible": true,
+        "certificate": {
+            "id": cert_id,
+            "recipient_name": user_name,
+            "recipient_email": user.email,
+            "issued_date": Utc::now().format("%B %d, %Y").to_string(),
+            "total_xp": user.total_xp,
+            "average_quiz_score": avg_score,
+            "sections_completed": core_sections.len(),
+            "title": "Yavin AI Foundations Certificate",
+            "description": "Has successfully completed the Yavin AI comprehensive learning program covering Foundations, Machine Learning, Neural Networks, Deep Learning, Modern AI, and AI Ethics."
+        }
+    })))
+}
+
+// ============================================================================
 // Main Server
 // ============================================================================
 
@@ -846,6 +1211,13 @@ async fn main() -> std::io::Result<()> {
             .route("/api/feedback", web::post().to(submit_feedback))
             // AI Chat API
             .route("/api/chat", web::post().to(chat_with_gemini))
+            // Badges API
+            .route("/api/badges", web::get().to(get_user_badges))
+            .route("/api/badges/check", web::post().to(check_badges))
+            // Search API
+            .route("/api/search", web::get().to(search_content))
+            // Certificate API
+            .route("/api/certificate", web::get().to(get_certificate))
     })
     .bind((host, port))?
     .run()

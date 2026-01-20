@@ -1152,6 +1152,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize auth
     await YavinAuth.init();
     
+    // Load badges if logged in
+    if (YavinAuth.user) {
+        await YavinBadges.load();
+        // Check badges on page load
+        YavinBadges.checkBadges('page_load');
+    }
+    
+    // Search keyboard shortcut (Cmd/Ctrl + K)
+    document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            YavinSearch.open();
+        }
+        if (e.key === 'Escape') {
+            YavinSearch.close();
+            YavinBadges.closeModal();
+            YavinCertificate.closeModal();
+        }
+    });
+    
+    // Search input handler
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                YavinSearch.search(e.target.value);
+            }, 200);
+        });
+    }
+    
+    // Search button click
+    const searchBtn = document.getElementById('searchButton');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => YavinSearch.open());
+    }
+    
     // Initialize demos if present
     if (document.getElementById('gdCanvas')) {
         GradientDescentDemo.init('gdCanvas');
@@ -1278,6 +1316,365 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 });
+
+// ============================================================================
+// Badges System
+// ============================================================================
+
+const YavinBadges = {
+    badges: [],
+    available: [],
+    
+    async load() {
+        try {
+            const response = await fetch('/api/badges');
+            const data = await response.json();
+            this.badges = data.badges || [];
+            this.available = data.available || [];
+            this.updateUI();
+        } catch (e) {
+            console.log('Could not load badges');
+        }
+    },
+    
+    async checkBadges(trigger = 'general') {
+        try {
+            const response = await fetch('/api/badges/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ trigger })
+            });
+            const data = await response.json();
+            
+            if (data.new_badges && data.new_badges.length > 0) {
+                for (const badge of data.new_badges) {
+                    this.showBadgeNotification(badge);
+                }
+                await this.load(); // Refresh badges
+            }
+            
+            return data.new_badges || [];
+        } catch (e) {
+            return [];
+        }
+    },
+    
+    showBadgeNotification(badge) {
+        const notification = document.createElement('div');
+        notification.className = 'badge-notification';
+        notification.innerHTML = `
+            <div class="badge-notification-content">
+                <div class="badge-icon">${badge.icon}</div>
+                <div class="badge-info">
+                    <strong>Badge Earned!</strong>
+                    <span>${badge.name}</span>
+                    ${badge.xp_reward ? `<small>+${badge.xp_reward} XP</small>` : ''}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        requestAnimationFrame(() => notification.classList.add('visible'));
+        
+        setTimeout(() => {
+            notification.classList.remove('visible');
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    },
+    
+    updateUI() {
+        const container = document.getElementById('badgesContainer');
+        if (!container) return;
+        
+        container.innerHTML = this.badges.length > 0 
+            ? this.badges.map(b => `
+                <div class="badge-item earned" title="${b.description}">
+                    <span class="badge-icon">${b.icon}</span>
+                    <span class="badge-name">${b.name}</span>
+                </div>
+            `).join('')
+            : '<p class="no-badges">Complete sections to earn badges!</p>';
+    },
+    
+    openModal() {
+        const modal = document.getElementById('badgesModal');
+        if (modal) {
+            this.renderModal();
+            modal.classList.add('active');
+        }
+    },
+    
+    closeModal() {
+        const modal = document.getElementById('badgesModal');
+        if (modal) modal.classList.remove('active');
+    },
+    
+    renderModal() {
+        const content = document.getElementById('badgesModalContent');
+        if (!content) return;
+        
+        const earnedHtml = this.badges.length > 0
+            ? this.badges.map(b => `
+                <div class="badge-card earned">
+                    <div class="badge-card-icon">${b.icon}</div>
+                    <div class="badge-card-info">
+                        <strong>${b.name}</strong>
+                        <p>${b.description}</p>
+                    </div>
+                </div>
+            `).join('')
+            : '<p>No badges earned yet. Keep learning!</p>';
+        
+        const availableHtml = this.available.map(b => `
+            <div class="badge-card locked">
+                <div class="badge-card-icon">${b.icon}</div>
+                <div class="badge-card-info">
+                    <strong>${b.name}</strong>
+                    <p>${b.description}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        content.innerHTML = `
+            <h4>Earned Badges (${this.badges.length})</h4>
+            <div class="badges-grid">${earnedHtml}</div>
+            <h4>Available Badges (${this.available.length})</h4>
+            <div class="badges-grid">${availableHtml}</div>
+        `;
+    }
+};
+
+// ============================================================================
+// Search System
+// ============================================================================
+
+const YavinSearch = {
+    isOpen: false,
+    
+    open() {
+        const modal = document.getElementById('searchModal');
+        if (modal) {
+            modal.classList.add('active');
+            this.isOpen = true;
+            setTimeout(() => {
+                document.getElementById('searchInput')?.focus();
+            }, 100);
+        }
+    },
+    
+    close() {
+        const modal = document.getElementById('searchModal');
+        if (modal) {
+            modal.classList.remove('active');
+            this.isOpen = false;
+        }
+    },
+    
+    async search(query) {
+        if (query.length < 2) {
+            this.showResults([]);
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            this.showResults(data.results || []);
+        } catch (e) {
+            this.showResults([]);
+        }
+    },
+    
+    showResults(results) {
+        const container = document.getElementById('searchResults');
+        if (!container) return;
+        
+        if (results.length === 0) {
+            container.innerHTML = '<p class="search-no-results">No results found. Try different keywords.</p>';
+            return;
+        }
+        
+        container.innerHTML = results.map(r => `
+            <a href="${r.url}" class="search-result" onclick="YavinSearch.close()">
+                <span class="search-result-section">${r.section}</span>
+                <span class="search-result-title">${r.title}</span>
+            </a>
+        `).join('');
+    }
+};
+
+// ============================================================================
+// Certificate System
+// ============================================================================
+
+const YavinCertificate = {
+    async check() {
+        try {
+            const response = await fetch('/api/certificate');
+            return await response.json();
+        } catch (e) {
+            return { eligible: false };
+        }
+    },
+    
+    async openModal() {
+        const modal = document.getElementById('certificateModal');
+        if (!modal) return;
+        
+        const content = document.getElementById('certificateContent');
+        content.innerHTML = '<p>Loading...</p>';
+        modal.classList.add('active');
+        
+        const data = await this.check();
+        
+        if (!data.eligible) {
+            content.innerHTML = `
+                <div class="certificate-not-eligible">
+                    <h4>Keep Learning!</h4>
+                    <p>Complete all sections to earn your certificate.</p>
+                    <div class="certificate-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${(data.completed / data.total) * 100}%"></div>
+                        </div>
+                        <span>${data.completed}/${data.total} sections completed</span>
+                    </div>
+                    ${data.remaining ? `<p class="remaining-sections">Remaining: ${data.remaining.join(', ')}</p>` : ''}
+                </div>
+            `;
+            return;
+        }
+        
+        const cert = data.certificate;
+        content.innerHTML = `
+            <div class="certificate-preview" id="certificatePreview">
+                <div class="certificate-border">
+                    <div class="certificate-header">
+                        <img src="/static/yavin-logo.png" alt="Yavin" class="certificate-logo">
+                        <h2>Certificate of Completion</h2>
+                    </div>
+                    <div class="certificate-body">
+                        <p class="certificate-awarded">This is to certify that</p>
+                        <h3 class="certificate-name">${cert.recipient_name}</h3>
+                        <p class="certificate-text">${cert.description}</p>
+                        <div class="certificate-stats">
+                            <div class="cert-stat">
+                                <span class="cert-stat-value">${cert.total_xp}</span>
+                                <span class="cert-stat-label">Total XP</span>
+                            </div>
+                            <div class="cert-stat">
+                                <span class="cert-stat-value">${cert.average_quiz_score}%</span>
+                                <span class="cert-stat-label">Avg Quiz Score</span>
+                            </div>
+                            <div class="cert-stat">
+                                <span class="cert-stat-value">${cert.sections_completed}</span>
+                                <span class="cert-stat-label">Sections</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="certificate-footer">
+                        <p class="certificate-date">Issued: ${cert.issued_date}</p>
+                        <p class="certificate-id">Certificate ID: ${cert.id}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="certificate-actions">
+                <button onclick="YavinCertificate.download()" class="btn-primary">
+                    Download Certificate
+                </button>
+                <button onclick="YavinCertificate.share()" class="btn-secondary">
+                    Share on LinkedIn
+                </button>
+            </div>
+        `;
+    },
+    
+    closeModal() {
+        const modal = document.getElementById('certificateModal');
+        if (modal) modal.classList.remove('active');
+    },
+    
+    download() {
+        // Use html2canvas to capture and download
+        const preview = document.getElementById('certificatePreview');
+        if (!preview) return;
+        
+        // Simple print-based download
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Yavin AI Certificate</title>
+                <style>
+                    body { 
+                        font-family: 'Georgia', serif; 
+                        margin: 0; 
+                        padding: 40px;
+                        background: white;
+                    }
+                    .certificate-border {
+                        border: 3px solid #333;
+                        padding: 40px;
+                        text-align: center;
+                    }
+                    .certificate-header h2 {
+                        font-size: 28px;
+                        margin: 20px 0;
+                    }
+                    .certificate-name {
+                        font-size: 32px;
+                        color: #333;
+                        margin: 20px 0;
+                    }
+                    .certificate-text {
+                        font-size: 14px;
+                        max-width: 500px;
+                        margin: 20px auto;
+                        line-height: 1.6;
+                    }
+                    .certificate-stats {
+                        display: flex;
+                        justify-content: center;
+                        gap: 40px;
+                        margin: 30px 0;
+                    }
+                    .cert-stat {
+                        text-align: center;
+                    }
+                    .cert-stat-value {
+                        font-size: 24px;
+                        font-weight: bold;
+                        display: block;
+                    }
+                    .cert-stat-label {
+                        font-size: 12px;
+                        color: #666;
+                    }
+                    .certificate-footer {
+                        margin-top: 30px;
+                        font-size: 12px;
+                        color: #666;
+                    }
+                    @media print {
+                        body { padding: 0; }
+                    }
+                </style>
+            </head>
+            <body>
+                ${preview.innerHTML}
+                <script>window.print(); window.close();</script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+    },
+    
+    share() {
+        const text = "I just earned my Yavin AI Foundations Certificate! 🎓 #AI #MachineLearning #Learning";
+        const url = "https://yavin.ai";
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&summary=${encodeURIComponent(text)}`, '_blank');
+    }
+};
 
 // ============================================================================
 // Code Playground with Pyodide
@@ -1478,3 +1875,6 @@ window.resetNetwork = resetNetwork;
 window.trainNetwork = trainNetwork;
 window.submitQuiz = submitQuiz;
 window.CodePlayground = CodePlayground;
+window.YavinBadges = YavinBadges;
+window.YavinSearch = YavinSearch;
+window.YavinCertificate = YavinCertificate;

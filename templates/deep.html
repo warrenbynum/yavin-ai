@@ -228,6 +228,49 @@ For each time step t in sequence:
                     <li><strong>Multi-modal:</strong> CLIP, DALL-E combine vision and language</li>
                     <li><strong>Protein Folding:</strong> AlphaFold uses transformers</li>
                 </ul>
+
+                <!-- Interactive Attention Visualizer -->
+                <div class="interactive-demo" id="attention">
+                    <h4>Interactive: Self-Attention Visualizer</h4>
+                    <p class="demo-description">See how self-attention allows each word to "attend to" other words in a sentence. Click on a word (bottom row) to see which words it attends to (top row). Line thickness and color intensity show attention strength.</p>
+                    
+                    <div class="demo-container">
+                        <div class="demo-canvas-wrapper attention-wrapper">
+                            <canvas id="attentionCanvas" width="600" height="250"></canvas>
+                        </div>
+                        
+                        <div class="demo-controls">
+                            <div class="control-group">
+                                <label for="attentionInput">Try your own sentence:</label>
+                                <div class="input-group">
+                                    <input type="text" id="attentionInput" placeholder="Enter a sentence..." value="The cat sat on the mat">
+                                    <button class="demo-btn" onclick="AttentionDemo.setTokens(document.getElementById('attentionInput').value)">Update</button>
+                                </div>
+                            </div>
+                            
+                            <div class="demo-buttons">
+                                <button class="demo-btn" onclick="AttentionDemo.regenerate()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="1 4 1 10 7 10"/>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                                    </svg>
+                                    New Attention Weights
+                                </button>
+                            </div>
+                            
+                            <p class="demo-hint">In real transformers, these weights are learned during training.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-insights">
+                        <p><strong>What to notice:</strong></p>
+                        <ul>
+                            <li>Tokens often attend strongly to themselves (self-loops)</li>
+                            <li>Adjacent words typically have stronger connections</li>
+                            <li>Attention weights always sum to 100% (softmax normalization)</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- Part 5: Generative Models -->

@@ -292,6 +292,86 @@ Repeat until convergence:
                     <li><strong>Momentum:</strong> Accumulate velocity from past gradients (smooths oscillations)</li>
                     <li><strong>Adam:</strong> Adaptive learning rates with momentum (current default for many applications)</li>
                 </ul>
+
+                <!-- Interactive Gradient Descent Demo -->
+                <div class="interactive-demo" id="gradient-descent">
+                    <h4>Interactive: Gradient Descent Visualizer</h4>
+                    <p class="demo-description">Watch gradient descent find the minimum of f(x) = x². The green dot moves toward x=0 (the minimum) by following the negative gradient. Adjust the learning rate to see how it affects convergence.</p>
+                    
+                    <div class="demo-container">
+                        <div class="demo-canvas-wrapper">
+                            <canvas id="gdCanvas" width="500" height="300"></canvas>
+                        </div>
+                        
+                        <div class="demo-controls">
+                            <div class="control-group">
+                                <label for="gdLearningRate">Learning Rate: <span id="gdLrValue">0.100</span></label>
+                                <input type="range" id="gdLearningRate" min="0.01" max="0.5" step="0.01" value="0.1" 
+                                       onchange="GradientDescentDemo.setLearningRate(parseFloat(this.value))">
+                            </div>
+                            
+                            <div class="demo-buttons">
+                                <button class="demo-btn primary" onclick="GradientDescentDemo.run()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="5 3 19 12 5 21 5 3"/>
+                                    </svg>
+                                    Start
+                                </button>
+                                <button class="demo-btn" onclick="GradientDescentDemo.stop()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="6" y="4" width="4" height="16"/>
+                                        <rect x="14" y="4" width="4" height="16"/>
+                                    </svg>
+                                    Pause
+                                </button>
+                                <button class="demo-btn" onclick="GradientDescentDemo.reset(); GradientDescentDemo.draw();">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="1 4 1 10 7 10"/>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                                    </svg>
+                                    Reset
+                                </button>
+                            </div>
+                            
+                            <p id="gdStatus" class="demo-status">Click "Start" to begin gradient descent</p>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-insights">
+                        <p><strong>Try this:</strong></p>
+                        <ul>
+                            <li>Set learning rate to 0.5 and watch it overshoot</li>
+                            <li>Set learning rate to 0.01 and observe slow convergence</li>
+                            <li>Find the sweet spot around 0.1-0.2</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Interactive Decision Boundary Demo -->
+                <div class="interactive-demo" id="decision-boundary">
+                    <h4>Interactive: Decision Boundary Visualizer</h4>
+                    <p class="demo-description">Watch a logistic regression classifier learn to separate two classes. Click on the canvas to add new points. The line represents the decision boundary.</p>
+                    
+                    <div class="demo-container">
+                        <div class="demo-canvas-wrapper">
+                            <canvas id="dbCanvas" width="400" height="400"></canvas>
+                        </div>
+                        
+                        <div class="demo-controls">
+                            <div class="demo-buttons">
+                                <button class="demo-btn primary" onclick="DecisionBoundaryDemo.train(100)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="5 3 19 12 5 21 5 3"/>
+                                    </svg>
+                                    Train (100 epochs)
+                                </button>
+                                <button class="demo-btn" onclick="DecisionBoundaryDemo.stop()">Stop</button>
+                                <button class="demo-btn" onclick="DecisionBoundaryDemo.reset()">Reset Data</button>
+                            </div>
+                            <p class="demo-hint">Blue = Class 0, Orange = Class 1. Click to add points.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Part 6: Overfitting and Generalization -->

@@ -1,21 +1,16 @@
-# Optimized Dockerfile for Render
-FROM rust:1.80-slim-bookworm AS builder
+# Use latest Rust
+FROM rust:latest AS builder
 
 WORKDIR /app
 
-# Install minimal build dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    pkg-config \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy and build
-COPY Cargo.toml Cargo.lock ./
+# Copy source
+COPY Cargo.toml ./
 COPY src ./src
 
+# Build
 RUN cargo build --release
 
-# Runtime stage
+# Runtime
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

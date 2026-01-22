@@ -1,11 +1,5 @@
 target/
 .git/
-.gitignore
-*.md
+.env
+*.log
 .DS_Store
-# Keep these
-!static/
-!templates/
-!Cargo.toml
-!Cargo.lock
-

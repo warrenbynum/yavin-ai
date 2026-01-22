@@ -3,7 +3,7 @@ services:
   - type: web
     name: yavin-ai
     runtime: docker
-    repo: https://github.com/YOUR_USERNAME/yavin-ai
+    repo: https://github.com/warrenbynum/yavin-ai
     plan: free
     healthCheckPath: /
     envVars:

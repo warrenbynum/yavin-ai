@@ -1,42 +1,42 @@
 # Build stage
-FROM rust:1.75-bookworm AS builder
+FROM rust:1.75 AS builder
 
 WORKDIR /app
 
-# Copy manifests
+# Copy manifests first for better caching
 COPY Cargo.toml Cargo.lock ./
 
-# Create dummy main.rs to cache dependencies
-RUN mkdir src && echo "fn main() {}" > src/main.rs
-RUN cargo build --release
+# Create dummy src to build dependencies
+RUN mkdir src && echo "fn main() {println!(\"placeholder\");}" > src/main.rs
+RUN cargo build --release || true
 RUN rm -rf src
 
-# Copy actual source code
+# Copy actual source
 COPY src ./src
 
-# Build the actual binary
-RUN touch src/main.rs && cargo build --release
+# Touch to invalidate cache and rebuild
+RUN touch src/main.rs
+RUN cargo build --release
 
 # Runtime stage
 FROM debian:bookworm-slim
 
-# Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     ca-certificates \
-    libssl3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy the binary from builder
+# Copy binary
 COPY --from=builder /app/target/release/yavin-ai .
 
-# Copy static files and templates
+# Copy static assets
 COPY static ./static
 COPY templates ./templates
 
-# Expose port
+ENV RUST_LOG=info
+ENV PORT=8080
+
 EXPOSE 8080
 
-# Run the binary
 CMD ["./yavin-ai"]

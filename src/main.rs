@@ -1127,21 +1127,107 @@ async fn main() -> std::io::Result<()> {
     
     log::info!("Starting Yavin AI server v0.2.0...");
     
-    // Database connection
+    // Database connection - Railway uses DATABASE_URL or DATABASE_PRIVATE_URL
     let database_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://localhost/yavin".to_string());
+        .or_else(|_| std::env::var("DATABASE_PRIVATE_URL"))
+        .expect("DATABASE_URL must be set");
     
-    let pool = PgPoolOptions::new()
-        .max_connections(10)
-        .connect(&database_url)
-        .await
-        .unwrap_or_else(|e| {
-            log::warn!("Database connection failed: {}. Running in demo mode without persistence.", e);
-            // Return a dummy pool for demo mode - features requiring DB will gracefully fail
-            panic!("Database required. Set DATABASE_URL environment variable.");
-        });
+    log::info!("Connecting to database...");
+    
+    // Retry connection up to 5 times (Railway DB might take time to be ready)
+    let mut pool = None;
+    for attempt in 1..=5 {
+        match PgPoolOptions::new()
+            .max_connections(10)
+            .acquire_timeout(std::time::Duration::from_secs(10))
+            .connect(&database_url)
+            .await
+        {
+            Ok(p) => {
+                pool = Some(p);
+                break;
+            }
+            Err(e) => {
+                log::warn!("Database connection attempt {} failed: {}", attempt, e);
+                if attempt < 5 {
+                    log::info!("Retrying in 3 seconds...");
+                    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+                }
+            }
+        }
+    }
+    
+    let pool = pool.expect("Failed to connect to database after 5 attempts");
     
     log::info!("Connected to database");
+    
+    // Run migrations / create tables if they don't exist
+    log::info!("Running database migrations...");
+    sqlx::query(r#"
+        CREATE TABLE IF NOT EXISTS users (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            name VARCHAR(255),
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+            email_verified BOOLEAN DEFAULT FALSE,
+            streak_days INTEGER DEFAULT 0,
+            last_activity_date DATE,
+            total_xp INTEGER DEFAULT 0
+        )
+    "#).execute(&pool).await.ok();
+    
+    sqlx::query(r#"
+        CREATE TABLE IF NOT EXISTS user_progress (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            section_id VARCHAR(50) NOT NULL,
+            completed BOOLEAN DEFAULT FALSE,
+            completed_at TIMESTAMP WITH TIME ZONE,
+            time_spent_seconds INTEGER DEFAULT 0,
+            quiz_score INTEGER,
+            quiz_completed_at TIMESTAMP WITH TIME ZONE,
+            UNIQUE(user_id, section_id)
+        )
+    "#).execute(&pool).await.ok();
+    
+    sqlx::query(r#"
+        CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            email VARCHAR(255) UNIQUE NOT NULL,
+            subscribed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+            source VARCHAR(50) DEFAULT 'website',
+            confirmed BOOLEAN DEFAULT FALSE,
+            unsubscribed BOOLEAN DEFAULT FALSE,
+            unsubscribed_at TIMESTAMP WITH TIME ZONE
+        )
+    "#).execute(&pool).await.ok();
+    
+    sqlx::query(r#"
+        CREATE TABLE IF NOT EXISTS user_achievements (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            achievement_id VARCHAR(50) NOT NULL,
+            earned_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+            UNIQUE(user_id, achievement_id)
+        )
+    "#).execute(&pool).await.ok();
+    
+    sqlx::query(r#"
+        CREATE TABLE IF NOT EXISTS feedback (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+            name VARCHAR(255),
+            email VARCHAR(255),
+            rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+            message TEXT NOT NULL,
+            page_url VARCHAR(500),
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        )
+    "#).execute(&pool).await.ok();
+    
+    log::info!("Database migrations complete");
     
     // Initialize Tera templating engine
     let tera = match Tera::new("templates/**/*.html") {

@@ -1,5 +1,5 @@
 # Optimized Dockerfile for Render
-FROM rust:1.82-slim-bookworm AS builder
+FROM rust:1.80-slim-bookworm AS builder
 
 WORKDIR /app
 

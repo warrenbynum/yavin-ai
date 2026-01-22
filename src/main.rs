@@ -211,48 +211,46 @@ async fn get_user_from_session(session: &Session, pool: &PgPool) -> Option<UserS
 async fn update_user_streak(pool: &PgPool, user_id: Uuid) -> Result<i32, sqlx::Error> {
     let today = Utc::now().date_naive();
     
-    let user = sqlx::query!(
-        "SELECT last_activity_date, streak_days FROM users WHERE id = $1",
-        user_id
+    let row: (Option<chrono::NaiveDate>, Option<i32>) = sqlx::query_as(
+        "SELECT last_activity_date, streak_days FROM users WHERE id = $1"
     )
+    .bind(user_id)
     .fetch_one(pool)
     .await?;
     
-    let new_streak = if let Some(last_date) = user.last_activity_date {
+    let new_streak = if let Some(last_date) = row.0 {
         let days_diff = (today - last_date).num_days();
         if days_diff == 0 {
-            user.streak_days.unwrap_or(0)
+            row.1.unwrap_or(0)
         } else if days_diff == 1 {
-            user.streak_days.unwrap_or(0) + 1
+            row.1.unwrap_or(0) + 1
         } else {
-            1 // Reset streak
+            1
         }
     } else {
-        1 // First activity
+        1
     };
     
-    sqlx::query!(
-        "UPDATE users SET streak_days = $1, last_activity_date = $2 WHERE id = $3",
-        new_streak,
-        today,
-        user_id
-    )
-    .execute(pool)
-    .await?;
+    sqlx::query("UPDATE users SET streak_days = $1, last_activity_date = $2 WHERE id = $3")
+        .bind(new_streak)
+        .bind(today)
+        .bind(user_id)
+        .execute(pool)
+        .await?;
     
     Ok(new_streak)
 }
 
 async fn add_xp(pool: &PgPool, user_id: Uuid, xp: i32) -> Result<i32, sqlx::Error> {
-    let result = sqlx::query!(
-        "UPDATE users SET total_xp = total_xp + $1 WHERE id = $2 RETURNING total_xp",
-        xp,
-        user_id
+    let row: (i32,) = sqlx::query_as(
+        "UPDATE users SET total_xp = total_xp + $1 WHERE id = $2 RETURNING total_xp"
     )
+    .bind(xp)
+    .bind(user_id)
     .fetch_one(pool)
     .await?;
     
-    Ok(result.total_xp.unwrap_or(0))
+    Ok(row.0)
 }
 
 // ============================================================================
@@ -376,7 +374,8 @@ async fn register(
     }
     
     // Check if email already exists
-    let existing = sqlx::query!("SELECT id FROM users WHERE email = $1", form.email)
+    let existing: Option<(Uuid,)> = sqlx::query_as("SELECT id FROM users WHERE email = $1")
+        .bind(&form.email)
         .fetch_optional(pool.get_ref())
         .await
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
@@ -393,16 +392,14 @@ async fn register(
     
     // Create user
     let user_id = Uuid::new_v4();
-    sqlx::query!(
-        "INSERT INTO users (id, email, password_hash, name) VALUES ($1, $2, $3, $4)",
-        user_id,
-        form.email,
-        password_hash,
-        form.name
-    )
-    .execute(pool.get_ref())
-    .await
-    .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+    sqlx::query("INSERT INTO users (id, email, password_hash, name) VALUES ($1, $2, $3, $4)")
+        .bind(user_id)
+        .bind(&form.email)
+        .bind(&password_hash)
+        .bind(&form.name)
+        .execute(pool.get_ref())
+        .await
+        .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     // Set session
     session.insert("user_id", user_id.to_string())
@@ -531,32 +528,32 @@ async fn update_progress(
         .unwrap_or(50);
     
     // Check if already completed
-    let existing = sqlx::query!(
-        "SELECT completed FROM user_progress WHERE user_id = $1 AND section_id = $2",
-        user.id,
-        form.section_id
+    let existing: Option<(bool,)> = sqlx::query_as(
+        "SELECT completed FROM user_progress WHERE user_id = $1 AND section_id = $2"
     )
+    .bind(user.id)
+    .bind(&form.section_id)
     .fetch_optional(pool.get_ref())
     .await
     .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
-    let was_completed = existing.as_ref().map(|e| e.completed.unwrap_or(false)).unwrap_or(false);
+    let was_completed = existing.map(|e| e.0).unwrap_or(false);
     
     // Upsert progress
-    sqlx::query!(
+    sqlx::query(
         r#"INSERT INTO user_progress (user_id, section_id, completed, completed_at, time_spent_seconds)
            VALUES ($1, $2, $3, $4, COALESCE($5, 0))
            ON CONFLICT (user_id, section_id)
            DO UPDATE SET 
                completed = EXCLUDED.completed,
                completed_at = CASE WHEN EXCLUDED.completed THEN NOW() ELSE user_progress.completed_at END,
-               time_spent_seconds = user_progress.time_spent_seconds + COALESCE($5, 0)"#,
-        user.id,
-        form.section_id,
-        form.completed,
-        if form.completed { Some(Utc::now()) } else { None },
-        form.time_spent
+               time_spent_seconds = user_progress.time_spent_seconds + COALESCE($5, 0)"#
     )
+    .bind(user.id)
+    .bind(&form.section_id)
+    .bind(form.completed)
+    .bind(if form.completed { Some(Utc::now()) } else { None })
+    .bind(form.time_spent)
     .execute(pool.get_ref())
     .await
     .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
@@ -600,17 +597,17 @@ async fn submit_quiz(
     let percentage = (form.score as f32 / form.total as f32 * 100.0) as i32;
     
     // Update quiz score in progress
-    sqlx::query!(
+    sqlx::query(
         r#"INSERT INTO user_progress (user_id, section_id, quiz_score, quiz_completed_at)
            VALUES ($1, $2, $3, NOW())
            ON CONFLICT (user_id, section_id)
            DO UPDATE SET 
                quiz_score = GREATEST(user_progress.quiz_score, EXCLUDED.quiz_score),
-               quiz_completed_at = NOW()"#,
-        user.id,
-        form.section,
-        percentage
+               quiz_completed_at = NOW()"#
     )
+    .bind(user.id)
+    .bind(&form.section)
+    .bind(percentage)
     .execute(pool.get_ref())
     .await
     .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
@@ -647,24 +644,22 @@ async fn subscribe_newsletter(
     }
     
     // Check if already subscribed
-    let existing = sqlx::query!(
-        "SELECT id, unsubscribed FROM newsletter_subscribers WHERE email = $1",
-        form.email
+    let existing: Option<(Uuid, Option<bool>)> = sqlx::query_as(
+        "SELECT id, unsubscribed FROM newsletter_subscribers WHERE email = $1"
     )
+    .bind(&form.email)
     .fetch_optional(pool.get_ref())
     .await
     .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     if let Some(sub) = existing {
-        if sub.unsubscribed.unwrap_or(false) {
+        if sub.1.unwrap_or(false) {
             // Re-subscribe
-            sqlx::query!(
-                "UPDATE newsletter_subscribers SET unsubscribed = false, subscribed_at = NOW() WHERE id = $1",
-                sub.id
-            )
-            .execute(pool.get_ref())
-            .await
-            .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+            sqlx::query("UPDATE newsletter_subscribers SET unsubscribed = false, subscribed_at = NOW() WHERE id = $1")
+                .bind(sub.0)
+                .execute(pool.get_ref())
+                .await
+                .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
             
             return Ok(HttpResponse::Ok().json(serde_json::json!({
                 "success": true,
@@ -679,14 +674,12 @@ async fn subscribe_newsletter(
     }
     
     // Add new subscriber
-    sqlx::query!(
-        "INSERT INTO newsletter_subscribers (email, source) VALUES ($1, $2)",
-        form.email,
-        form.source.as_deref().unwrap_or("website")
-    )
-    .execute(pool.get_ref())
-    .await
-    .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+    sqlx::query("INSERT INTO newsletter_subscribers (email, source) VALUES ($1, $2)")
+        .bind(&form.email)
+        .bind(form.source.as_deref().unwrap_or("website"))
+        .execute(pool.get_ref())
+        .await
+        .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     Ok(HttpResponse::Ok().json(serde_json::json!({
         "success": true,
@@ -706,16 +699,16 @@ async fn submit_feedback(
     let user = get_user_from_session(&session, pool.get_ref()).await;
     let user_id = user.map(|u| u.id);
     
-    sqlx::query!(
+    sqlx::query(
         r#"INSERT INTO feedback (user_id, name, email, rating, message, page_url)
-           VALUES ($1, $2, $3, $4, $5, $6)"#,
-        user_id,
-        form.name,
-        form.email,
-        form.rating,
-        form.message,
-        form.page_url
+           VALUES ($1, $2, $3, $4, $5, $6)"#
     )
+    .bind(user_id)
+    .bind(&form.name)
+    .bind(&form.email)
+    .bind(form.rating)
+    .bind(&form.message)
+    .bind(&form.page_url)
     .execute(pool.get_ref())
     .await
     .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
@@ -965,11 +958,11 @@ async fn check_badges(
         
         if earned {
             // Award badge
-            let _ = sqlx::query!(
-                "INSERT INTO user_achievements (user_id, achievement_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
-                user.id,
-                badge.id
+            let _ = sqlx::query(
+                "INSERT INTO user_achievements (user_id, achievement_id) VALUES ($1, $2) ON CONFLICT DO NOTHING"
             )
+            .bind(user.id)
+            .bind(badge.id)
             .execute(pool.get_ref())
             .await;
             

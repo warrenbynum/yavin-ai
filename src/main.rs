@@ -1121,13 +1121,26 @@ async fn main() -> std::io::Result<()> {
     log::info!("Starting Yavin AI server v0.2.0...");
     
     // Database connection - Railway uses DATABASE_URL or DATABASE_PRIVATE_URL
-    let database_url = std::env::var("DATABASE_URL")
+    // Render uses internalConnectionString (preferred) or connectionString
+    let mut database_url = std::env::var("DATABASE_URL")
         .or_else(|_| std::env::var("DATABASE_PRIVATE_URL"))
         .expect("DATABASE_URL must be set");
     
+    // For Render, add sslmode if not present and using external connection
+    if std::env::var("RENDER").is_ok() && !database_url.contains("sslmode=") {
+        // Internal connections don't need SSL, external ones do
+        if !database_url.contains("internal") {
+            if database_url.contains('?') {
+                database_url.push_str("&sslmode=require");
+            } else {
+                database_url.push_str("?sslmode=require");
+            }
+        }
+    }
+    
     log::info!("Connecting to database...");
     
-    // Retry connection up to 5 times (Railway DB might take time to be ready)
+    // Retry connection up to 5 times (Railway/Render DB might take time to be ready)
     let mut pool = None;
     for attempt in 1..=5 {
         match PgPoolOptions::new()
@@ -1235,9 +1248,20 @@ async fn main() -> std::io::Result<()> {
     let pool_data = web::Data::new(pool);
     
     // Session key (use a persistent key in production)
-    let session_key = std::env::var("SESSION_SECRET")
-        .map(|s| Key::from(s.as_bytes()))
-        .unwrap_or_else(|_| Key::generate());
+    // Key::from requires at least 64 bytes, so we derive a proper key from the secret
+    let session_key = match std::env::var("SESSION_SECRET") {
+        Ok(secret) => {
+            // Pad or derive a 64-byte key from the secret
+            let mut key_bytes = [0u8; 64];
+            let secret_bytes = secret.as_bytes();
+            // Simple key derivation: repeat the secret to fill 64 bytes
+            for i in 0..64 {
+                key_bytes[i] = secret_bytes[i % secret_bytes.len()];
+            }
+            Key::from(&key_bytes)
+        }
+        Err(_) => Key::generate(),
+    };
     
     // Server binding
     let host = std::env::var("RENDER")

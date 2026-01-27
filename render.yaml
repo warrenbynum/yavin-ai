@@ -10,13 +10,21 @@ services:
       - key: DATABASE_URL
         fromDatabase:
           name: yavin-db
+          property: internalConnectionString
+      - key: DATABASE_URL_EXTERNAL
+        fromDatabase:
+          name: yavin-db
           property: connectionString
+      - key: PGSSLMODE
+        value: require
       - key: SESSION_SECRET
         generateValue: true
       - key: PORT
         value: 8080
       - key: RUST_LOG
         value: info
+      - key: RENDER
+        value: "true"
 
 databases:
   - name: yavin-db
